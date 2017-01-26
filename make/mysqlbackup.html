@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 数据库的自动备份与数据库被破坏后的恢复（ mysqlhotcopy ） &gt;</strong>  （最近更新日：2006/09/01）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　当数据库服务器建立好以后，我们首先要做的不是考虑要在这个支持数据库的服务器运行哪些受MySQL提携的程序，而是当数据库遭到破坏后，怎样安然恢复到最后一次正常的状态，使得数据的损失达到最小。<br />
+          <br />
+　　或者说，仅仅是数据库服务器的建立，只能说明它能做些什么，并不代表它能稳定的做些什么。灾难恢复的效率及全面性，也是系统的稳定性的一个准因素，尤其对于一个服务器系统。<br />
+<br />
+　　这一节，介绍数据库自动备份以及数据库被破坏后的恢复的方法。在这里，我们使用mysqlhotcopy，并且定义一段Shell脚本来实现数据库的自动备份，并且，让整个数据自动备份与数据恢复过程都基于Shell。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">建立数据库备份所需条件</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+[1] 建立自动备份脚本<br />
+<br />
+　　在这里，为了使数据库备份和恢复的符合我们的实际要求，用一段符合要求的Shell脚本来实现整个备份过程的自动化。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi mysql-backup.sh</span>　            <span class="intro">← 建立数据库自动备份脚本，如下：</span><br />
+      <br />
+      <p class="conffile">#!/bin/bash</p>
+      <p class="conffile">PATH=/usr/local/sbin:/usr/bin:/bin</p>
+      <p class="conffile"># The Directory of Backup<br />
+        BACKDIR=/backup/mysql</p>
+      <p class="conffile"># The Password of MySQL<br />
+        ROOTPASS=<span class="att1">********</span>　            <span class="intro">← 将星号替换成MySQL的root密码</span></p>
+      <p class="conffile"># Remake the Directory of Backup<br />
+        rm -rf $BACKDIR<br />
+        mkdir -p $BACKDIR</p>
+      <p class="conffile"># Get the Name of Database<br />
+        DBLIST=`ls -p /var/lib/mysql | grep / | tr -d /`</p>
+      <span class="message"># Backup with Database<br />
+        for dbname in $DBLIST<br />
+        do<br />
+        mysqlhotcopy $dbname -u root -p $ROOTPASS $BACKDIR | logger -t mysqlhotcopy<br />
+      done</span></td>
+  </tr>
+</table>
+<br />
+[2] 运行数据库自动备份脚本<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">chmod 700 mysql-backup.sh</span>　            <span class="intro">← 改变脚本属性，让其只能让root用户执行</span><br />
+      <br />
+[root@sample ~]# <span class="command">./mysql-backup.sh</span>        　            <span class="intro">← 运行脚本</span><br />
+<br />
+[root@sample ~]# <span class="command">ls -l /backup/mysql/</span>        　            <span class="intro">← 确认一下是否备份成功</span><br />
+<br />
+total 8 <br />
+drwxr-x---  2 mysql mysql  4096 Sep  1 16:54 <span class="att1">mysql</span>                    　            <span class="intro">← 已成功备份到/backup/mysql目录中</span></td>
+  </tr>
+</table>
+<br />
+[3] 让数据库备份脚本每天自动运行<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">crontab -e</span>　               <span class="intro">← 编辑自动运行规则（然后会出现编辑窗口，操作同vi）<br />
+              </span><br />
+                <span class="after">00 03 * * * /root/mysql-backup.sh</span>              　               <span class="intro">← 添加这一行到文件中，让数据库备份每天凌晨3点进行</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">测试自动备份正常运转与否（备份恢复的方法）</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　这里，以通过实际操作的过程来介绍问题出现后的恢复方法。<br />
+          <br />
+[1] 当数据库被删除后的恢复方法<br />
+<br />
+　　首先建立一个测试用的数据库。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">mysql -u root -p</span>              　                 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      <span class="message">Enter password:</span>　                 <span class="intro">← 输入MySQL的root用户密码</span><br />
+      <span class="message"><br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 8 to server version: 4.1.20      </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">create database test;</span>　                 <span class="intro">← 建立一个测试用的数据库test</span><br />
+        Query OK, 1 row affected (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　                 <span class="intro">← 连接到这个数据库 </span><br />
+        Database changed<br />
+        <br />
+        mysql&gt; <span class="command">create table test(num int, name varchar(50));</span>　                 <span class="intro">← 在数据库中建立一个表</span><br />
+        Query OK, 0 rows affected (0.07 sec)</p>
+      <p class="message">mysql&gt; <span class="command">insert into test values(1,'Hello,BSD');</span>　                 <span class="intro">← 插入一个值到这个表（这里以“Hello,BSD”为例）</span><br />
+        Query OK, 1 row affected (0.02 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　                 <span class="intro">← 查看数据库中的内容</span><br />
+        +------+-------------+<br />
+        | num  | name      　　 |<br />
+        +------+-------------+<br />
+        |1　　 | <span class="att1">Hello,BSD</span> |　                 <span class="intro">← 确认刚刚插入到表中的值的存在</span><br />
+        +------+-------------+<br />
+        1 row in set (0.01 sec)</p>
+      <span class="message">mysql&gt;</span> <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      <span class="message">Bye</span></td>
+  </tr>
+</table>
+<br />
+　　然后，运行刚才建立的数据库备份脚本，备份刚刚建立的测试用的数据库。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">cd</span>　<span class="intro">← 回到脚本所在的root用户的根目录</span><br />
+      <br />
+      <span class="message">[root@sample ~]#</span> <span class="command">./mysql-backup.sh</span>　            <span class="intro">← 运行脚本进行数据库备份</span><br /></td>
+  </tr>
+</table>
+<br />
+　　接下来，我们再次登录到MySQL服务器中，删除刚刚建立的测试用的数据库test，以便于测试数据恢复能否成功。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　                 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　<span class="intro">                 ← 输入MySQL的root用户密码</span><br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 13 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　                 <span class="intro">← 连接到测试用的test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">drop table test;</span>　                 <span class="intro">← 删除数据中的表</span><br />
+        Query OK, 0 rows affected (0.04 sec)</p>
+      <p class="message">mysql&gt; <span class="command">drop database test;</span>　                 <span class="intro">← 删除测试用数据库test</span><br />
+        Query OK, 0 rows affected (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span><br />
+        +-------------+<br />
+        | Database |<br />
+        +-------------+<br />
+        | mysql　　    |　                 <span class="intro">← 确认测试用的test数据库已不存在、已被删除</span><br />
+        +-------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye </p></td>
+  </tr>
+</table>
+<br />
+　　以上，我们就等于模拟了数据库被破坏的过程。接下来，是数据库被“破坏”后，用备份进行恢复的方法。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/bin/cp -Rf /backup/mysql/test/ /var/lib/mysql/</span>　                 <span class="intro">← 复制备份的数据库test到相应目录</span><br />
+      <br />
+[root@sample ~]# <span class="command">chown -R mysql:mysql /var/lib/mysql/test/</span>　<span class="intro">                 ← 改变数据库test的归属为mysql</span><br />
+<br />
+[root@sample ~]# <span class="command">chmod 700 /var/lib/mysql/test/</span>　                 <span class="intro">← 改变数据库目录属性为700</span><br />
+<br />
+[root@sample ~]# <span class="command">chmod 660 /var/lib/mysql/test/*</span>　                 <span class="intro">← 改变数据库中数据的属性为660</span></td>
+  </tr>
+</table>
+<br />
+　　然后，再次登录到MySQL服务器上，看是否已经成功恢复了数据库。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　                 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　                 <span class="intro">← 输入MySQL的root用户密码</span><br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 14 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span>　                 <span class="intro">← 查看当前存在的数据库</span><br />
+        +-------------+<br />
+        | Database |<br />
+        +-------------+<br />
+        | mysql　　    |<br />
+        | <span class="att1">test</span>　　　     |　                 <span class="intro">← 确认刚刚被删除的test数据库已经成功被恢复回来！</span><br />
+        +------------+<br />
+        2 rows in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　                 <span class="intro">← 连接到test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">show tables;</span>　<span class="intro">                 ← 查看test数据库中存在的表</span><br />
+        +-------------------+<br />
+        | Tables_in_test |<br />
+        +-------------------+<br />
+        | test           　　　　　|<br />
+        +-------------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　                 <span class="intro">← 查看数据库中的内容</span><br />
+        +------+--------------+<br />
+        | num  | name　　　      |<br />
+        +------+--------------+<br />
+        |    1 　　| <span class="att1">Hello,BSD</span> |　                 <span class="intro">← 确认数据表中的内容与删除前定义的“Hello,BSD”一样！</span><br />
+        +------+--------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye </p></td>
+  </tr>
+</table>
+<br />
+　　以上结果表示，数据库被删除后，用备份后的数据库成功的将数据恢复到了删除前的状态。<br />
+<br />
+[2] 当数据库被修改后的恢复方法<br />
+<br />
+　　数据库被修改，可能存在着多方面的原因，被入侵、以及相应程序存在Bug等等，这里不作详细介绍。这里将只介绍在数据库被修改后，如果恢复到被修改前状态的方法。<br />
+<br />
+　　具体和上面所述的“数据库被删除后的恢复方法”相类似。这里，测试用数据库接着使用刚刚在前面用过的test。这里为了使刚刚接触数据库的朋友不至于理解混乱，我们再次登录到MySQL服务器上确认一下刚刚建立的测试用的数据库test的相关信息。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　 ← 输入MySQL的root用户密码<br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 14 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span>　 <span class="intro">← 查看当前存在的数据库</span><br />
+        +-------------+<br />
+        | Database |<br />
+        +-------------+<br />
+        | mysql　　    |<br />
+        | test　　　     |<br />
+        +------------+<br />
+        2 rows in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　 <span class="intro">← 连接到test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">show tables;</span>　 <span class="intro">← 查看test数据库中存在的表</span><br />
+        +-------------------+<br />
+        | Tables_in_test |<br />
+        +-------------------+<br />
+        | test           　　　　　|<br />
+        +-------------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　<span class="intro"> ← 查看数据库中的内容</span><br />
+        +------+--------------+<br />
+        | num  | name　　　      |<br />
+        +------+--------------+<br />
+        |    1 　　| Hello,BSD |<br />
+        +------+--------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye </p></td>
+  </tr>
+</table>
+<br />
+　　然后，我们再次运行数据库备份脚本，将当前状态的数据库，再做一次备份。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">cd</span> 　<span class="intro">← 回到脚本所在的root用户的根目录</span><br />
+      <br />
+[root@sample ~]# <span class="command">./mysql-backup.sh</span>　 <span class="intro">← 运行脚本进行数据库备份</span></td>
+  </tr>
+</table>
+<br />
+　　接下来，我们再次登录到MySQL服务器中，对测试用的数据库test进行一些修改，以便于测试数据恢复能否成功。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　 <span class="intro">← 输入MySQL的root用户密码</span><br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 15 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　 <span class="intro">← 连接到test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">update test set name='Shit,Windows';</span>　 <span class="intro">← 然后将test中表的值重新定义为“Shit,Windows”（原来为“Hello,BSD”）</span><br />
+        Query OK, 1 row affected (0.07 sec)<br />
+        Rows matched: 1  Changed: 1  Warnings: 0</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　 <span class="intro">← 确认test中的表被定义的值</span><br />
+        +------+--------------------+<br />
+        | num  | name         　　　　　|<br />
+        +------+-------------------+<br />
+        |    1　　 | <span class="att1">Shit,Windows</span> |　 <span class="intro">← 确认已经将原test数据库表中的值修改为新的值“Shit,Windows”</span><br />
+        +------+-------------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye</p></td>
+  </tr>
+</table>
+<br />
+　　以上，我们就等于模拟了数据库被篡改的过程。接下来，是数据库被“篡改”后，用备份进行恢复的方法。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/bin/cp -Rf /backup/mysql/test/ /var/lib/mysql/</span>　 <span class="intro">← 复制备份的数据库test到相应目录</span></td>
+  </tr>
+</table>
+<br />
+　　然后，再次登录到MySQL服务器上，看数据库是否被恢复到了被“篡改”之前的状态。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　 <span class="intro">← 输入MySQL的root用户密码<br />
+      </span><br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 16 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　 <span class="intro">← 连接到test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">select * from test;</span>　 <span class="intro">← 查看数据库中的内容</span><br />
+        +------+----------------+<br />
+        | num  | name　　　      |<br />
+        +------+----------------+<br />
+        |    1　　| <span class="att1">Hello,BSD </span>　|　<span class="intro">← 确认数据表中的内容与被修改前定义的“Hello,BSD”一样！</span><br />
+        +------+----------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye</p></td>
+  </tr>
+</table>
+<br />
+　　以上结果表示，数据库被修改后，用备份后的数据库成功的将数据恢复到了被“篡改”前的状态。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">测试后…</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　测试完成后，将测试用过的遗留信息删除。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><p class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　 <span class="intro">← 用root登录到MySQL服务器</span><br />
+      Enter password:　 <span class="intro">← 输入MySQL的root用户密码</span><br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 19 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　 <span class="intro">← 连接到test数据库</span><br />
+        Reading table information for completion of table and column names<br />
+        You can turn off this feature to get a quicker startup with -A</p>
+      <p class="message">Database changed<br />
+  mysql&gt; <span class="command">drop table test;</span>　 <span class="intro">← 删除test数据库中的表</span><br />
+        Query OK, 0 rows affected (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">drop database test;</span>　 <span class="intro">← 删除测试用数据库test</span><br />
+        Query OK, 0 rows affected (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span>　 <span class="intro">← 查看当前存在的数据库</span><br />
+        +-------------+<br />
+        | Database |<br />
+        +-------------+<br />
+        | mysql    　　|　 <span class="intro">← 确认测试用数据库test不存在、已被删除</span><br />
+        +-------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; exit　                   <span class="intro">← 退出MySQL服务器</span><br />
+      Bye</p></td>
+  </tr>
+</table>
+<br />
+--------<br />
+　　以上介绍了用我们自己建立的一段Shell脚本，通过mysqlhotcopy来备份数据库的方法。<br />
+<br />
+　　对于许多个人爱好者来说，组建服务器可能不是很考虑数据被破坏以及数据被破坏后的恢复工作。但不能不说，对于服务器来说，数据破坏后的恢复效率也是区  别业余和专业的因素之一。所以笔者建议，在您配置好了Web服务器以及MySQL服务器等等的时候，千万不要急于应用它，而要想办法在有限的（硬件、软  件）条件下使它“坚不可摧”之后，再考虑应用的问题。<br />
+<br />
+　　而且，以上介绍的方法中提到的数据库自动备份脚本虽然被设置为每天定时运行，但当您运行某些与MySQL相关联的程序（论坛、社区等等）时，做一些可  能危及数据安全的操作的时候，运行数据库备份脚本即时备份当前状态数据库，也是非常有帮助的，至少可以在出现问题后保证数据库方面的可恢复性。<br />
+<br />
+<br />
+<table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

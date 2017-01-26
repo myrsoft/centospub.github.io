@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 让服务器支持安全 HTTP 协议（ HTTPS ） &gt;</strong>  （最近更新日：2006/08/26）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在我们通常用“http://”这样的方式来访问网站的时候，传输内容是可能被别人截获的，因为其内容是通过明文传输，所以在传递一些隐私、以及密码相关的信息时，就显得非常的不安全。在一些比较正式的网站、以及一些银行相关的网站中，一些需要提交隐私或者重要级别比较高的密码时，都采用  “https://”的方式，来将传输内容加密，从而保证用户安全和避免隐私的泄漏。<br />
+          <br />
+　　在这里，我们通过mod_ssl来使我们的服务器也支持HTTPS。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装 mod_ssl</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先通过yum来在线安装mod_ssl。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample html]#</span> <span class="command">yum -y install mod_ssl</span>　            <span class="intro">← 在线安装mod_ssl</span><br />
+                <br />
+                <p class="message">Setting up Install Process<br />
+                Setting up repositories<br />
+                Reading repository metadata in from local files<br />
+                Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+                Finished<br />
+                Parsing package install arguments<br />
+                Resolving Dependencies<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for mod_ssl to pack into transaction set.<br />
+                mod_ssl-2.0.52-28.ent.cen 100% |=========================|  25 kB    00:00<br />
+                ---&gt; Package mod_ssl.i386 1:2.0.52-28.ent.centos4 set to be updated<br />
+                --&gt; Running transaction check<br />
+                --&gt; Processing Dependency: libnal.so.1 for package: mod_ssl<br />
+                --&gt; Processing Dependency: libdistcache.so.1 for package: mod_ssl<br />
+                --&gt; Restarting Dependency Resolution with new changes.<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for distcache to pack into transaction set.<br />
+                distcache-1.4.5-6.i386.rp 100% |=========================| 7.2 kB    00:00<br />
+                ---&gt; Package distcache.i386 0:1.4.5-6 set to be updated<br />
+                --&gt; Running transaction check</p>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                Package                 Arch       Version          Repository        Size<br />
+                =============================================================================<br />
+                Installing:<br />
+                mod_ssl                 i386       1:2.0.52-28.ent.centos4  base               98 k<br />
+                Installing for dependencies:<br />
+                distcache               i386       1.4.5-6          base              111 k</p>
+                <p class="message">Transaction Summary<br />
+                =============================================================================<br />
+                Install      2 Package(s)<br />
+                Update       0 Package(s)<br />
+                Remove       0 Package(s)<br />
+                Total download size: 209 k<br />
+                Downloading Packages:<br />
+                (1/2): distcache-1.4.5-6. 100% |=========================| 111 kB    00:00<br />
+                (2/2): mod_ssl-2.0.52-28. 100% |=========================|  98 kB    00:00<br />
+                Running Transaction Test<br />
+                Finished Transaction Test<br />
+                Transaction Test Succeeded<br />
+                Running Transaction<br />
+                Installing: distcache                    ######################### [1/2]<br />
+                Installing: mod_ssl                      ######################### [2/2]</p>
+                <span class="message">Installed: mod_ssl.i386 1:2.0.52-28.ent.centos4<br />
+                Dependency Installed: distcache.i386 0:1.4.5-6<br />
+              Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">为 HTTP 服务器配置 mod_ssl</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1] 建立服务器密钥<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">cd /etc/httpd/conf</span>　 <span class="intro">← 进入HTTP服务器配置文件所在目录</span><br />
+                <br />
+                <span class="message">[root@sample conf]#</span> <span class="command">rm -f ssl.*/server.*</span>　 <span class="intro">← 删除默认或残留的服务器证书相关文件</span><br />
+                    <br />
+                    <span class="message">[root@sample conf]#</span> <span class="command">make genkey</span>　 <span class="intro">← 建立服务器密钥</span><br />
+                    <span class="message">umask 77 ; \<br />
+                    /usr/bin/openssl genrsa -des3 1024 &gt; /etc/httpd/conf/ssl.key/server.key<br />
+                  Generating RSA private key, 1024 bit long modulus<br />
+                  ................++++++<br />
+                  .................................................................................................++++++<br />
+                  e is 65537 (0x10001)<br />
+                  Enter pass phrase:</span>　 <span class="intro">← 在这里输入口令</span><br />
+                  <span class="message">Verifying - Enter pass phrase:</span>　 <span class="intro">← 确认口令，再次输入</span><br />
+  <br />
+                  <span class="message">[root@sample conf]#</span> <span class="command">openssl rsa -in ssl.key/server.key -out ssl.key/server.key</span>　 <span class="intro">← 从密钥中删除密码（以避免系统启动后被询问口令）</span><br />
+  <br />
+                  <span class="message">Enter pass phrase for ssl.key/server.key:</span>　 <span class="intro">← 输入口令</span><br />
+                  <span class="message">writing RSA key</span></td>
+            </tr>
+          </table>
+          <br />
+          [2] 建立服务器公钥<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">make certreq</span>　 <span class="intro">← 建立服务器密钥</span><br />
+                <br />
+                <span class="message">umask 77 ; \<br />
+/usr/bin/openssl req -new -key /etc/httpd/conf/ssl.key/server.key -out /etc/httpd/conf/ssl.csr/server.csr<br />
+You are about to be asked to enter information that will be incorporated<br />
+into your certificate request.<br />
+What you are about to enter is what is called a Distinguished Name or a DN.<br />
+There are quite a few fields but you can leave some blank<br />
+For some fields there will be a default value,<br />
+If you enter '.', the field will be left blank.<br />
+-----<br />
+Country Name (2 letter code) [GB]:</span><span class="command">CN</span>　 <span class="intro">← 输入国名</span><br />
+<span class="message">State or Province Name (full name) [Berkshire]:</span><span class="command">Heilongjiang</span>　 <span class="intro">← 输入省名</span><br />
+<span class="message">Locality Name (eg, city) [Newbury]:</span><span class="command">Harbin</span>　 <span class="intro">← 输入城市名</span><br />
+<span class="message">Organization Name (eg, company) [My Company Ltd]:</span><span class="command">www.centospub.com</span>　 <span class="intro">← 输入组织名（任意）</span><br />
+<span class="message">Organizational Unit Name (eg, section) []:</span>　 <span class="intro">← 不输入，直接回车</span><br />
+<span class="message">Common Name (eg, your name or your server's hostname) []:</span><span class="command">www.centospub.com</span>　 <span class="intro">← 输入通称（任意）</span><br />
+<span class="message">Email Address []:</span><span class="command">yourname@yourserver.com</span>                            　 <span class="intro">← 输入电子邮箱地址</span>
+<span class="message">Please enter the following 'extra' attributes<br />
+  to be sent with your certificate request<br />
+  A challenge password []:</span>　 <span class="intro">← 不输入，直接回车</span><br />
+  <span class="message">An optional company name []:</span>                   　 <span class="intro">← 不输入，直接回车</span></td>
+            </tr>
+          </table>
+          <br />
+          [3] 建立服务器证书<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">openssl x509 -in ssl.csr/server.csr -out ssl.crt/server.crt -req -signkey ssl.key/server.key -days 365</span>　 <span class="intro">← 建立服务器证书<br />
+              </span><br />
+              <span class="message">Signature ok<br />
+subject=/C=CN/ST=Heilongjiang/L=Harbin/O=www.centospub.com/CN=www.centospub.com/emailAddress=yourname@yourserver.com<br />
+Getting Private key</span></td>
+            </tr>
+          </table>
+          <br />
+          [4] 设置SSL<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">vi /etc/httpd/conf.d/ssl.conf</span>　 <span class="intro">← 修改SSL的设置文件</span><br />
+                <br />
+                <span class="before">#DocumentRoot &quot;/var/www/html&quot;</span>　 <span class="intro">← 找到这一行，将行首的“#”去掉</span><br />
+<span class="intro">　↓</span><br />
+<span class="after">DocumentRoot &quot;/var/www/html&quot;</span>　<span class="intro"> ← 变为此状态</span></td>
+            </tr>
+          </table>
+          <br />
+          [5] 重新启动HTTP服务器，让SSL生效<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span> 　<span class="intro">← 重新启动HTTP服务器 </span><br />
+                <br />
+                <span class="message">Stopping httpd:    　　　　　　　　　　　　　                                        [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting httpd:　　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          [6] 设置防火墙允许SSL<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample conf]#</span> <span class="command">vi /etc/sysconfig/iptables</span> 　 <span class="intro">← 编辑防火墙配置文件 </span><br />
+              <span class="message"><br />
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</span>　 <span class="intro">← 找到这一行，接着添加如下行：</span><br />
+<span class="after">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT</span>　 <span class="intro">← 开放443号端口，允许SSL</span><span class="message"><br />
+<br />
+[root@sample conf]#</span> <span class="command">/etc/rc.d/init.d/iptables restart</span> 　 <span class="intro">← 重新启动防火墙，使设置生效</span><br />
+<br />
+<span class="message">Flushing firewall rules:                                   　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]<br />
+Setting chains to policy ACCEPT: filter　　　                    [  </span><span class="after">OK</span><span class="message"> ]<br />
+Unloading iptables modules:　　　　　　　　                                [  </span><span class="after">OK</span><span class="message"> ]<br />
+Applying iptables firewall rules:　　　　　　                          [  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">测试SSL</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　可以通过自用PC来测试SSL。打开浏览器，在地址栏输入“https://服务器IP地址”或者“https://你的域名”后，如果出现提示安装服务器证明书的窗口（图样如下），说明服务器已经支持SSL。<br />
+          <br />
+          <img src="zend/sslcli.gif" width="571" height="367" /><br />
+          <br />
+          　　这时，如果选择“永远接受此证书”，然后点击确定后，再次通过HTTPS协议访问该站点，将不会再弹出此窗口提示安装服务器证书。<br />
+          <p><br />
+          </p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

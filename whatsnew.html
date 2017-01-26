@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="./css/centospub.css">
+		<link rel="shortcut icon" href="favicon.ico" >
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="make.html">配置详解</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="whatsnew.html">最近更新</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="about.html"></a>	  </div>
+
+		<div id="docs-headerbar">		</div>
+
+	<div id="docs-content"><br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2007/01/29</td>
+          <td width="90%">　　增加了文件服务器 -- Samba 的构建方法。<br />            　　增加了通过 SWAT 让 Samba 服务器管理温和化的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/12/24</td>
+          <td width="90%">　　对初始环境设置的相关内容进行了补充。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/11/17</td>
+          <td width="90%">　　增加了通过 top 监视服务器 CPU 进程状态以及内存使用率的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/10/18</td>
+          <td width="90%">　　增加了基于 SSL 对邮件进行加密的方法。（POP3S,IMAPS,SMTPS）</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/10/14</td>
+          <td width="90%">　　增加了让邮件服务器（Postfix）支持虚拟域名的方法。</td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/10/11</td>
+          <td width="90%">　　增加了用Dovecot配置POP/IMAP服务器的方法。</td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/28</td>
+          <td width="90%">　　增加了用Postfix配置SMTP服务器的方法。</td>
+        </tr>
+      </table>
+	  <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/23</td>
+          <td width="90%">　　对 <strong>&lt;<a href="make/sshd.html">用OpenSSH构建SSH服务器</a>&gt; </strong>一节进行了补充，增加了对外网用户禁止SSH连接的部分…以确保最大限度减少不安全因素。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/21</td>
+          <td width="90%">　　增加了用Tomcat5构建Servlet/JSP服务器的方法。本文启发于本站成员xaay原创文档“<strong><a href="http://www.centospub.com/bbs/viewthread.php?tid=127&amp;extra=page=1" target="_blank">CENTOS4配置JSP教程</a></strong>”一文，原文请参见论坛相关板块（仅限于论坛注册用户可见）。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/15</td>
+          <td width="90%">　　对站点页面做了调整，在配置详解中增加了高亮度字体分别各种项目，以便于对照本站文档配置服务器时，能够容易、正确的区分各种项目。</td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/13</td>
+          <td width="90%">　　增加了用Awstats构建站点统计分析系统的方法。</td>
+        </tr>
+      </table>
+	  <br />
+<table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/08</td>
+          <td width="90%">　　为了更方便的解决大家的问题，本站即日起开通论坛。在您遇到问题的时候，欢迎到论坛上发贴讨论。（本站地址改为 <a href="http://www.centospub.com" target="_blank">http://www.centospub.com</a>）</td>
+        </tr>
+      </table>
+	  <br />
+<table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/07</td>
+          <td width="90%">　　增加了用FTP客户端登录到FTP服务器的方法。（本站介绍的FTP服务器构建过程中，应用了TLS，并且对于一些网络条件的限制，您将可能用一般的  FTP客户端软件及配置方法无法登录FTP服务器。本次更新以Smart FTP为例介绍了如何登录FTP服务器的方法，特别推荐依照本站 <strong>&lt;<a href="make/proftpd.html">用 ProFTPD 构建 FTP 服务器</a>&gt; </strong>一节中介绍的办法构建FTP服务器的朋友参照。）</td>
+        </tr>
+      </table>
+	  <br />
+<table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/05</td>
+          <td width="90%">　　对SSH服务器的构建以及通过客户端连接到服务器的方法进行了修改。在这之前，本站介绍的SSH服务器构建方法的主旨是将SSH服务作为远程系统管理  以及用户登录的工具，但基于用户密码的认证方式等等脆弱的方式使得服务器安全性下降。所以，本次更新将SSH服务的连接基于“钥匙”的方式。而且，我们让  SSH服务只做为管理员进行系统管理的工具。<br />
+            <br />
+　　在本次更新前按照本站方法构建SSH服务器的朋友，请考虑重新配置SSH服务器，以提高服务器安全性。（另外，有文件传输操作需要的时候，请参照本站FTP服务器的构建方法配置基于FTP的文件传输环境。）</td>
+        </tr>
+      </table>
+	  <br />
+<table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/02</td>
+          <td width="90%">　　增加了用ProFTPD构建FTP服务器的方法。<br />
+            <br />
+　　CentOS官方刚刚发布了CentOS  4.4，而本站在这以前的配置讲解都基于CentOS 4.3。为了保证稳定与安全的配置方法，本站也第一时间将所有配置讲解按照CentOS  4.4的标准进行了全面修改，并且在CentOS官方发布下一个版本之前，本站新增内容将基于CentOS 4.4（并兼容CentOS 4.3）。</td>
+        </tr>
+      </table>
+	  <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/09/01</td>
+          <td width="90%">　　增加了用mysqlhotcopy自动备份数据，以及当数据库被破坏后，恢复数据库的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/31</td>
+          <td width="90%">　　增加了用phpMyAdmin来实现通过浏览器来管理MySQL数据库及相关用户的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/30</td>
+          <td width="90%">　　增加了MySQL服务器的构建，以及部分初级的通过SQL指令对数据库进行操作的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/27</td>
+          <td width="90%">　　增加了开放一般用户Web发布方面的配置方法。<br />
+　　增加了虚拟主机的配置方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/26</td>
+          <td width="90%">　　增加了让HTTP服务器支持SSL的配置方法。<br />
+　　在HTTP服务器服务器构建中补充了提高PHP执行效率的 Zend Optimizer 的安装及配置的方法。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/25</td>
+          <td width="90%">　　增加了构建病毒查杀系统的方法。<br />
+　　增加了HTTP服务器的安装及配置相关的内容。</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/23</td>
+          <td width="90%">　　增加了构建数据完整性监测系统的方法。</td>
+        </tr>
+      </table>
+      <br />
+<table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/21</td>
+          <td width="90%">　　增加了申请动态域名以及配置动态域名方法相关的内容。</td>
+        </tr>
+      </table><br />
+	  <table width="100%" border="3">
+        <tr>
+          <td width="10%" valign="top">2006/08/20</td>
+          <td width="90%">　　增加了SSH服务器的构建方法以及在Microsoft Windows下通过SSH客户端软件连接到服务器的方法。</td>
+        </tr>
+      </table>
+	  <p>&nbsp;</p>
+
+       <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

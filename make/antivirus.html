@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 病毒查杀系统的构建（ Clam AntiVirus ） &gt;</strong>  （最近更新日：2006/08/15）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　UNIX下的杀毒软件有好多是商业版本的。但和Windows系统下一样，杀毒软件的质量决定于病毒库的量已及更新的速度。在这里，我们使用自由软件  Clam AntiVirus 来建立Linux下的病毒查杀系统。并且为了消除后来的隐患，建议务必在服务器公开以前构建病毒查杀系统。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">安装 Clam AntiVirus</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　由于Clam Antivirus不存在于CentOS中yum的官方库中，所以用yum安装Clam Antivirus需要定义非官方的库。请先确认相应非官方库文件的存在。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">ls -l /etc/yum.repos.d/dag.repo<span class="message">　 </span><span class="intro">← 确认相应库文件的存在性</span><br />
+                </span><br />
+                <span class="message">-rw-r--r--  1 root root 143 Oct  1 21:33 /etc/yum.repos.d/dag.repo　<span class="intro">← 确认其存在（否则不能通过yum安装Clamd）</span></span></td>
+            </tr>
+          </table>
+          <br />
+　　如果以上，dag.repo文件不存在，则不能通过yum安装Clam Antivirus，需要定义非官方库。定义非官方库的方法请见 “<a href="newenv.html" target="_blank"><strong>CentOS的下载、安装及初始环境设置</strong></a>”一节中yum的相关设置。而且，在此前提下也要<span class="before">保证所定义的dag.repo文件的语法的正确性。</span><br />
+<br />
+　　然后，通过yum来在线安装 Clam Antivirus 。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install clamd</span>　            <span class="intro">← 在线安装 Clam AntiVirus</span> <br />
+  <span class="message">Setting up Install Process<br />
+  Setting up repositories<br />
+  dag                       100% |=========================| 1.1 kB    00:00<br />
+  update                    100% |=========================|  951 B    00:00<br />
+  base                      100% |=========================| 1.1 kB    00:00<br />
+  addons                    100% |=========================|  951 B    00:00<br />
+  extras                    100% |=========================| 1.1 kB    00:00<br />
+  Reading repository metadata in from local files<br />
+  primary.xml.gz            100% |=========================| 1.6 MB    00:08<br />
+  dag       : ################################################## 4610/4610<br />
+  Added 4610 new packages, deleted 0 old in 94.91 seconds<br />
+  primary.xml.gz            100% |=========================| 103 kB    00:05<br />
+  update    : ################################################## 256/256<br />
+  Added 56 new packages, deleted 0 old in 4.25 seconds<br />
+  Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+  Finished<br />
+  Parsing package install arguments<br />
+  Resolving Dependencies<br />
+  --&gt; Populating transaction set with selected packages. Please wait.<br />
+  ---&gt; Downloading header for clamd to pack into transaction set.<br />
+  clamd-0.88.4-1.el4.rf.i38 100% |=========================| 5.3 kB    00:00<br />
+  ---&gt; Package clamd.i386 0:0.88.4-1.el4.rf set to be updated<br />
+  --&gt; Running transaction check<br />
+  --&gt; Processing Dependency: clamav = 0.88.4-1.el4.rf for package: clamd<br />
+  --&gt; Processing Dependency: libclamav.so.1 for package: clamd<br />
+  --&gt; Restarting Dependency Resolution with new changes.<br />
+  --&gt; Populating transaction set with selected packages. Please wait.<br />
+  ---&gt; Downloading header for clamav to pack into transaction set.<br />
+  clamav-0.88.4-1.el4.rf.i3 100% |=========================| 8.1 kB    00:00<br />
+  ---&gt; Package clamav.i386 0:0.88.4-1.el4.rf set to be updated<br />
+  --&gt; Running transaction check<br />
+  --&gt; Processing Dependency: clamav-db = 0.88.4-1.el4.rf for package: clamav<br />
+  --&gt; Restarting Dependency Resolution with new changes.<br />
+  --&gt; Populating transaction set with selected packages. Please wait.<br />
+  ---&gt; Downloading header for clamav-db to pack into transaction set.<br />
+  clamav-db-0.88.4-1.el4.rf 100% |=========================| 3.2 kB    00:00<br />
+  ---&gt; Package clamav-db.i386 0:0.88.4-1.el4.rf set to be updated<br />
+  --&gt; Running transaction check</span>
+<p class="message">Dependencies Resolved</p>
+<p class="message">=============================================================================<br />
+  Package                 Arch       Version          Repository        Size<br />
+  =============================================================================<br />
+  Installing:<br />
+  clamd                   i386       0.88.4-1.el4.rf  dag                64 k<br />
+  Installing for dependencies:<br />
+  clamav                  i386       0.88.4-1.el4.rf  dag               724 k<br />
+  clamav-db               i386       0.88.4-1.el4.rf  dag               5.6 M</p>
+<p class="message">Transaction Summary<br />
+  =============================================================================<br />
+  Install      3 Package(s)<br />
+  Update       0 Package(s)<br />
+  Remove       0 Package(s)<br />
+  Total download size: 6.4 M<br />
+  Downloading Packages:<br />
+  (1/3): clamd-0.88.4-1.el4 100% |=========================|  64 kB    00:01<br />
+  (2/3): clamav-0.88.4-1.el 100% |=========================| 724 kB    00:04<br />
+  (3/3): clamav-db-0.88.4-1 100% |=========================| 5.6 MB    00:25<br />
+  Running Transaction Test<br />
+  Finished Transaction Test<br />
+  Transaction Test Succeeded<br />
+  Running Transaction<br />
+  Installing: clamav-db                    ######################### [1/3]<br />
+  Installing: clamav                       ######################### [2/3]<br />
+  Installing: clamd                        ######################### [3/3]</p>
+<span class="message">Installed: clamd.i386 0:0.88.4-1.el4.rf<br />
+  Dependency Installed: clamav.i386 0:0.88.4-1.el4.rf clamav-db.i386 0:0.88.4-1.el4.rf<br />
+  Complete!</span> 　            <span class="intro">← 安装完毕！</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置 Clam AntiVirus</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　接下来配置 Clam Antivirus 。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/clamd.conf</span>　              <span class="intro">← 修改clamd的配置文件</span><br />
+                <br />
+                <span class="before">ArchiveBlockMax　<span class="intro">← 找到这一行，在行首加上“#”（不把大容量的压缩文件看作被感染病毒的文件）<br />
+　↓</span><br />
+<span class="after">#ArchiveBlockMax</span>　<span class="intro">← 变为此状态</span><br />
+<br />
+                User clamav </span>　<span class="intro">← 找到这一行，在行首加上“#”（不允许一般用户控制）<br />
+　↓</span><br />
+<span class="after">#User clamav</span>             　<span class="intro">← 变为此状态</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">运行 Clam AntiVirus</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　让 Clam Antivirus 开始运行，并设置其为自启动。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# <span class="command">chkconfig clamd on</span> 　<span class="intro"> ← 将其设置为自系统启动后启动<br />
+              </span><br />
+[root@sample ~]# <span class="command">chkconfig --list clamd</span><br />
+clamd           0:off   1:off <span class="att1">2:on    3:on    4:on    5:on</span> 6:off　 <span class="intro">← 确认2--5为on的状态就OK</span><br />
+<br />
+              [root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/clamd start</span>　              <span class="intro">← 启动clamd服务（运行Clam AntiVirus）</span><br />
+                <br />
+              <span class="message">Starting Clam AntiVirus Daemon:                            　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span>　              <span class="intro">← 启动成功</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">更新 Clam AntiVirus 的病毒库</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　安装后建议立即更新病毒库，以保证最新病毒的查杀。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">freshclam</span>　              <span class="intro">← 更新clam的病毒库</span><br />
+                <br />
+                <span class="message">ClamAV update process started at Fri Aug 25 18:39:26 2006<br />
+Downloading main.cvd [*]<br />
+main.cvd updated (version: 40, sigs: 64138, f-level: 8, builder: tkojm)<br />
+Downloading daily.cvd [*]<br />
+daily.cvd updated (version: 1728, sigs: 2565, f-level: 8, builder: ccordes)<br />
+Database updated (66703 signatures) from db.cn.clamav.net (IP: 58.221.253.171)<br />
+Clamd successfully notified about the update.</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">病毒扫描</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后进行病毒扫描的测试，在这里，我们首先下载测试用的病毒文件。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">clamdscan</span>　 <span class="intro">← 进行病毒扫描</span><br />
+                <br />
+                  <span class="message">/root: OK</span>
+                <p><span class="message">----------- SCAN SUMMARY -----------<br />
+  Infected files: 0</span>　 <span class="intro">← 没有发现病毒</span><br />
+                  <span class="message">Time: 5.074 sec (0 m 5 s)<br />
+                  <br />
+                  [root@sample ~]#</span> <span class="command">wget http://www.eicar.org/download/eicar.com</span>　 <span class="intro">← 下载带毒文件</span><br />
+                  <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">wget http://www.eicar.org/download/eicar_com.zip</span>　 <span class="intro">←  下载带毒文件</span></p></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，再次进行病毒到描。附加“remove”选项后，会在查出病毒后自动删除染毒文件。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">clamdscan --remove</span>　 <span class="intro">← 再次进行病毒扫描，并附加删除选项</span><br />
+              <span class="message"><br />
+                /root/eicar.com: Eicar-Test-Signature FOUND　 </span><span class="intro">← 发现被病毒感染的文件</span><span class="message"><br />
+                    /root/eicar.com: Removed.　 </span><span class="intro">← 删除被病毒感染的文件</span><span class="message"><br />
+                    /root/eicar_com.zip: Eicar-Test-Signature FOUND　 </span><span class="intro">← 发现被病毒感染的文件</span><span class="message"><br />
+                    /root/eicar_com.zip: Removed.　 </span><span class="intro">← 删除被病毒感染的文件</span>
+                ----------- SCAN SUMMARY -----------<br />
+                  <span class="message">Infected files: 2 <br />
+              Time: 2.201 sec (0 m 2 s)</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">让病毒扫描定期运行</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi scan.sh</span>　 <span class="intro">← 建立自动扫描脚本，如下：</span><br />
+                <p class="conffile">#!/bin/bash</p>
+                <span class="conffile">PATH=/usr/bin:/bin<br />
+                CLAMSCANTMP=`mktemp`<br />
+                clamdscan --recursive --remove / &gt; $CLAMSCANTMP<br />
+                [ ! -z &quot;$(grep FOUND$ $CLAMSCANTMP)&quot; ] &amp;&amp; \<br />
+                grep FOUND $CLAMSCANTMP | mail -s &quot;Virus Found in `hostname`&quot; root<br />
+                rm -f $CLAMSCANTMP</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">chmod 700 scan.sh</span>　 <span class="intro">← 赋予脚本可被执行的权限</span><br />
+  <br />
+              <span class="message">[root@sample ~]#</span> <span class="command">crontab -e </span>　<span class="intro"> ← 编辑计划任务，添加如下行<br />
+              <br />
+              </span><span class="after">00 03 * * * /root/scan.sh              　<span class="intro"> ← 添加这一行，让其在每天3点钟执行扫描 </span></span></td>
+            </tr>
+          </table>
+          <br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

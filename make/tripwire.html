@@ -1,0 +1,637 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 数据完整性监测系统的构建（ Tripwire ） &gt;</strong>  （最近更新日：2006/08/23）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　当服务器遭到黑客攻击时，在多数情况下，黑客可能对系统文件等等一些重要的文件进行修改。对此，我们用Tripwire建立数据完整性监测系统。虽然  它不能抵御黑客攻击以及黑客对一些重要文件的修改，但是可以监测文件是否被修改过以及哪些文件被修改过，从而在被攻击后有的放矢的策划出解决办法。<br />
+          <br />
+　　Tripwire的原理是Tripwire被安装、配置后，将当前的系统数据状态建立成数据库，随着文件的添加、删除和修改等等变化，通过系统数据现状与不断更新的数据库进行比较，来判定哪些文件被添加、删除和修改过。正因为初始的数据库是在Tripwire本体被安装、配置后建立的原因，我们务必应该在服务器开放前，或者说操作系统刚被安装后用Tripwire构建数据完整性监测系统。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装 Tripwire</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先来安装 Tripwire 。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget http://jaist.dl.sourceforge.net/sourceforge/tripwire/tripwire-2.3.1-2.tar.gz</span>　<span class="intro">← 下载源代码</span><br />
+                    <br />
+                    <span class="message">--02:21:30--  http://jaist.dl.sourceforge.net/sourceforge/tripwire/tripwire-2.3.1-2.tar.gz<br />
+                    =&gt; `tripwire-2.3.1-2.tar.gz'<br />
+                Resolving jaist.dl.sourceforge.net... 150.65.7.130<br />
+                Connecting to jaist.dl.sourceforge.net|150.65.7.130|:80... connected.<br />
+                HTTP request sent, awaiting response... 200 OK<br />
+                Length: 1,514,955 (1.4M) [application/x-gzip]</span>
+                <p class="message">100%[====================================&gt;] 1,514,955      1.29M/s</p>
+                <p class="message">02:21:32 (1.28 MB/s) - `tripwire-2.3.1-2.tar.gz' saved [1514955/1514955]</p>
+                <p><span class="message">[root@sample ~]#</span> <span class="command">tar zxvf tripwire-2.3.1-2.tar.gz</span>　<span class="intro">← 将被压缩的文件展开</span><br />
+                    <br />
+                    <span class="message">[root@sample ~]#</span> <span class="command">cd tripwire-2.3.1-2</span>　<span class="intro">← 进入被解压缩的目录</span><br />
+  <br />
+                  <span class="message">[root@sample tripwire-2.3.1-2]#</span> <span class="command">wget http://distfiles-od.opendarwin.org/tw-20030919.patch.gz</span>　<span class="intro">← 下载 Tripwire Patch文件</span> <br />
+  <br />
+                  <span class="message">--02:28:43--  http://distfiles-od.opendarwin.org/tw-20030919.patch.gz<br />
+                  =&gt; `tw-20030919.patch.gz'<br />
+                  Resolving distfiles-od.opendarwin.org... 216.73.106.93<br />
+                  Connecting to distfiles-od.opendarwin.org|216.73.106.93|:80... connected.<br />
+                  HTTP request sent, awaiting response... 200 OK<br />
+                  Length: 786,411 (768K) [application/x-gzip]</span></p>
+                <p class="message">100%[====================================&gt;] 786,411      164.35K/s    ETA 00:00</p>
+                <p class="message">02:28:50 (154.51 KB/s) - `tw-20030919.patch.gz' saved [786411/786411]</p>
+                <p><span class="message">[root@sample tripwire-2.3.1-2]#</span> <span class="command">gunzip tw-20030919.patch.gz</span>　<span class="intro">← 将 Tripwire Patch 文件解压缩</span><br />
+                    <br />
+                    <span class="message">[root@sample tripwire-2.3.1-2]#</span> <span class="command">patch -p1 &lt; tw-20030919.patch</span>　<span class="intro">← Patch编译</span> <br />
+  <br />
+                  <span class="message">[root@sample tripwire-2.3.1-2]#</span> <span class="command">chmod 755 configure</span>　<span class="intro">← 赋予配置文件configure可执行的权限</span> </p>
+                <p><span class="message">[root@sample tripwire-2.3.1-2]#</span> <span class="command">./configure --sysconfdir=/etc/tripwire</span>　<span class="intro">← 运行configure</span><br />
+                  <span class="message">checking build system type... i686-pc-linux-gnu<br />
+                  checking host system type... i686-pc-linux-gnu<br />
+                  checking target system type... i686-pc-linux-gnu<br />
+                  checking for a BSD compatible install... /usr/bin/install -c</span><br />
+                  <span class="intro">……………………………………<br />
+                  ……………………………………<br />
+                  ……中间提示信息省略……<br />
+                  ……………………………………<br />
+                  ……………………………………</span><br />
+                  <span class="message">config.status: creating src/twprint/Makefile<br />
+                  config.status: creating src/twadmin/Makefile<br />
+                  config.status: creating src/siggen/Makefile<br />
+                  config.status: creating src/tripwire/Makefile<br />
+                  config.status: creating config.h<br />
+                  <br />
+                  [root@sample tripwire-2.3.1-2]#</span> <span class="command">make</span>　<span class="intro">← 编译</span><br />
+  <br />
+                  <span class="message">cd . &amp;&amp; /bin/sh /root/tripwire-2.3.1-2/missing --run autoheader<br />
+                  configure.in:9: warning: do not use m4_patsubst: use patsubst or m4_bpatsubst<br />
+                  aclocal.m4:546: AM_CONFIG_HEADER is expanded from...<br />
+                  configure.in:9: the top level<br />
+                  configure.in:401: warning: do not use m4_regexp: use regexp or m4_bregexp<br />
+                  aclocal.m4:559: _AM_DIRNAME is expanded from...<br />
+                  configure.in:401: the top level<br />
+                  cd . \<br />
+&amp;&amp; CONFIG_FILES= CONFIG_HEADERS=config.h \<br />
+                  /bin/sh ./config.status</span><br />
+                  <span class="intro">……………………………………<br />
+                  ……………………………………<br />
+                  ……中间提示信息省略……<br />
+                  ……需要花费一段时间……<br />
+                  ……………………………………<br />
+                  ……………………………………</span><br />
+                  <span class="message">make[2]: Leaving directory `/root/tripwire-2.3.1-2/src'<br />
+                  make[2]: Entering directory `/root/tripwire-2.3.1-2'<br />
+                  make[2]: Nothing to be done for `all-am'.<br />
+                  make[2]: Leaving directory `/root/tripwire-2.3.1-2'<br />
+                  make[1]: Leaving directory `/root/tripwire-2.3.1-2'<br />
+                  <br />
+                  [root@sample tripwire-2.3.1-2]#</span> <span class="command">make install</span>　<span class="intro">← 安装配置</span><br />
+  <br />
+                  <span class="message">Making install in man<br />
+                  make[1]: Entering directory `/root/tripwire-2.3.1-2/man'<br />
+                  Making install in man4<br />
+                  make[2]: Entering directory `/root/tripwire-2.3.1-2/man/man4'<br />
+                  make[3]: Entering directory `/root/tripwire-2.3.1-2/man/man4'<br />
+                  make[3]: Nothing to be done for `install-exec-am'.<br />
+                  /bin/sh ../../mkinstalldirs /usr/local/man/man4<br />
+                  mkdir /usr/local/man</span><br />
+                  <span class="intro">……………………………………<br />
+                  ……………………………………<br />
+                  ……中间提示信息省略…………<br />
+                  ……………………………………<br />
+                  ……………………………………</span><br />
+                  <span class="message">Copyright (C) 1998-2000 Tripwire (R) Security Systems, Inc.  Tripwire (R)<br />
+                  is a registered trademark of the Purdue Research Foundation and is<br />
+                  licensed exclusively to Tripwire (R) Security Systems, Inc.<br />
+                  </span></p>
+                <p class="message">LICENSE AGREEMENT for Tripwire(R) 2.3 Open Source</p>
+                <p class="message">Please read the following license agreement.  You must accept the<br />
+                  agreement to continue installing Tripwire.</p>
+                <p><span class="message">Press ENTER to view the License Agreement. </span>　<span class="intro">← 按回车键阅读协议</span><br />
+                  <span class="intro">……………………………………<br />
+                  ……………………………………<br />
+                  协议浏览中按空格键翻页<br />
+                  ……………………………………<br />
+                  ……………………………………</span><br />
+                  <span class="message">Please type &quot;accept&quot; to indicate your acceptance of this<br />
+                  license agreement. [do not accept]</span> <span class="command">accept</span>　<span class="intro">← 输入“accept”同意协议</span> <br />
+                  <span class="message">Using configuration file ./install/install.cfg</span></p>
+                <p class="message">Checking for programs specified in install configuration file....</p>
+                <p class="message">/usr/sbin/sendmail exists.  Continuing installation.</p>
+                <p class="message">/bin/vi exists.  Continuing installation.<br />
+                </p>
+                <p class="message">----------------------------------------------<br />
+                  Verifying existence of binaries...</p>
+                <p class="message">./bin/siggen found<br />
+                  ./bin/tripwire found<br />
+                  ./bin/twprint found<br />
+                  ./bin/twadmin found</p>
+                <p class="message">This program will copy Tripwire files to the following directories:</p>
+                <p class="message"> TWBIN: /usr/local/sbin<br />
+                  TWMAN: /usr/local/man<br />
+                  TWPOLICY: /etc/tripwire<br />
+                  TWREPORT: /usr/local/lib/tripwire/report<br />
+                  TWDB: /usr/local/lib/tripwire<br />
+                  TWSITEKEYDIR: /etc/tripwire<br />
+                  TWLOCALKEYDIR: /etc/tripwire</p>
+                <p class="message">CLOBBER is false.</p>
+                <p><span class="message">Continue with installation? [y/n]</span> <span class="command">y</span>　<span class="intro">← 键入y继续安装</span><br />
+                    <br />
+                    <span class="message">----------------------------------------------<br />
+                  Creating directories...</span></p>
+                <p class="message">/usr/local/sbin: already exists<br />
+                  /etc/tripwire: created<br />
+                  /usr/local/lib/tripwire/report: created<br />
+                  /usr/local/lib/tripwire: already exists<br />
+                  /etc/tripwire: already exists<br />
+                  /etc/tripwire: already exists<br />
+                  /usr/local/man: already exists<br />
+                  /usr/local/doc/tripwire: created</p>
+                <p class="message">----------------------------------------------<br />
+                  Copying files...</p>
+                <p class="message">/usr/local/doc/tripwire/README: copied<br />
+                  /usr/local/doc/tripwire/Release_Notes: copied<br />
+                  /usr/local/doc/tripwire/COPYING: copied<br />
+                  /usr/local/doc/tripwire/TRADEMARK: copied<br />
+                  /usr/local/doc/tripwire/policyguide.txt: copied<br />
+                  /etc/tripwire/twpol-Linux.txt: copied</p>
+                <p class="message">----------------------------------------------<br />
+                  The Tripwire site and local passphrases are used to<br />
+                  sign a variety of files, such as the configuration,<br />
+                  policy, and database files.</p>
+                <p class="message">Passphrases should be at least 8 characters in length<br />
+                  and contain both letters and numbers.</p>
+                <p class="message">See the Tripwire manual for more information.</p>
+                <p class="message">----------------------------------------------<br />
+                  Creating key files...</p>
+                <p class="message">(When selecting a passphrase, keep in mind that good passphrases typically<br />
+                  have upper and lower case letters, digits and punctuation marks, and are<br />
+                  at least 8 characters in length.)</p>
+                <p><span class="message">Enter the site keyfile passphrase:</span> 　<span class="intro">← 输入“site keyfile”口令（输入后不会显示），并且记住这个口令</span><br />
+                  <span class="message">Verify the site keyfile passphrase:</span> 　<span class="intro">← 再次确认“site keyfile”口令</span><br />
+                  <span class="message">Generating key (this may take several minutes)...Key generation complete.</span></p>
+                <p class="message">(When selecting a passphrase, keep in mind that good passphrases typically<br />
+                  have upper and lower case letters, digits and punctuation marks, and are<br />
+                  at least 8 characters in length.)</p>
+                <p><span class="message">Enter the local keyfile passphrase:</span> 　<span class="intro">← 输入“local keyfile”口令（输入后不会显示），并且记住这个口令</span><br />
+                  <span class="message">Verify the local keyfile passphrase:</span> 　<span class="intro">← 再次确认“local keyfile”口令</span><br />
+                  <span class="message">Generating key (this may take several minutes)...Key generation complete.</span></p>
+                <p class="message">----------------------------------------------<br />
+                  Generating Tripwire configuration file...</p>
+                <p><span class="message">----------------------------------------------<br />
+                  Creating signed configuration file...<br />
+                  Please enter your site passphrase:</span> 　<span class="intro">← 输入“site keyfile”口令（输入后不会显示）</span><br />
+                  <span class="message">Wrote configuration file: /etc/tripwire/tw.cfg</span></p>
+                <p class="message">A clear-text version of the Tripwire configuration file<br />
+                  /etc/tripwire/twcfg.txt<br />
+                  has been preserved for your inspection.  It is recommended<br />
+                  that you delete this file manually after you have examined it.<br />
+                </p>
+                <p class="message">----------------------------------------------<br />
+                  Customizing default policy file...</p>
+                <p><span class="message">----------------------------------------------<br />
+                  Creating signed policy file...<br />
+                  Please enter your site passphrase:</span> 　<span class="intro">← 输入“site keyfile”口令（输入后不会显示）</span><br />
+                  <span class="message">Wrote policy file: /etc/tripwire/tw.pol</span></p>
+                <p class="message">A clear-text version of the Tripwire policy file<br />
+                  /etc/tripwire/twpol.txt<br />
+                  has been preserved for your inspection.  This implements<br />
+                  a minimal policy, intended only to test essential<br />
+                  Tripwire functionality.  You should edit the policy file<br />
+                  to describe your system, and then use twadmin to generate<br />
+                  a new signed copy of the Tripwire policy.<br />
+                </p>
+                <p class="message">----------------------------------------------<br />
+                  The installation succeeded.</p>
+                <p class="message">Please refer to /usr/local/doc/tripwire/Release_Notes<br />
+                  for release information and to the printed user documentation<br />
+                  for further instructions on using Tripwire 2.3 Open Source.</p>
+                <span class="message">make[3]: Leaving directory `/root/tripwire-2.3.1-2'<br />
+                  make[2]: Leaving directory `/root/tripwire-2.3.1-2'<br />
+                  make[1]: Leaving directory `/root/tripwire-2.3.1-2'<br />
+                  <br />
+                  [root@sample tripwire-2.3.1-2]#</span> <span class="command">cd</span>　<span class="intro">← 回到root用户的根目录</span><br />
+  <br />
+              <span class="message">[root@sample ~]#</span> <span class="command">rm -rf tripwire-2.3.1-2 tripwire-2.3.1-2.tar.gz</span>　<span class="intro">← 删除安装用过的原文件</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置 Tripwire</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/tripwire/twcfg.txt</span>　                <span class="intro">← 修改文本格式的Tripwire配置文件</span><br />
+                <br />
+                <span class="before">LOOSEDIRECTORYCHECKING =false</span>　                <span class="intro">← 找到这一个行，将false的值变为true（不监测所属目录的数据完整性）</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">LOOSEDIRECTORYCHECKING =true</span>                  　                <span class="intro">← 变为此状态</span><br />
+<br />
+<span class="before">REPORTLEVEL   =3</span>　                <span class="intro">← 找到这一行，将3变为4（改变监测结果报告的等级）<br />
+　↓</span><br />
+<span class="after">REPORTLEVEL   =4</span>　                <span class="intro">← 变为此状态</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">twadmin --create-cfgfile -S /etc/tripwire/site.key /etc/tripwire/twcfg.txt</span>　                <span class="intro">← 从文本配置文件建立加密格式配置文件</span><br />
+<br />
+<span class="message">Please enter your site passphrase: 　</span><span class="intro">← 输入“site keyfile”口令（输入后不会显示）</span><span class="message"><br />
+Wrote configuration file: /etc/tripwire/tw.cfg<br />
+<br />
+[root@sample ~]#</span> <span class="command">rm -f /etc/tripwire/twcfg.txt</span>　<span class="intro">← 为不留安全隐患，删除文本格式的配置文件</span></td>
+            </tr>
+          </table>
+          <br />
+          注：恢复文本格式的Tripwire配置文件，可通过执行“twadmin --print-cfgfile &gt; /etc/tripwire/twcfg.txt”。<br />
+          <br />
+[2] Policy文件的配置 <br />
+<br />
+　　Tripwire的数据库是基于Policy文件建立的。但默认的Policy文件并没有有效的依照我们的需要建立数据完整性监测规则，所以这里通过一段Perl脚本来让数据监测实际满足于我们的需要。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/tripwire/twpolmake.pl</span>　          <span class="intro">← 建立用于建立Policy文件的Perl脚本</span>
+      <p class="conffile">#!/usr/bin/perl<br />
+        # Tripwire Policy File customize tool<br />
+        # ----------------------------------------------------------------<br />
+        # Copyright (C) 2003 Hiroaki Izumi<br />
+        # This program is free software; you can redistribute it and/or<br />
+        # modify it under the terms of the GNU General Public License<br />
+        # as published by the Free Software Foundation; either version 2<br />
+        # of the License, or (at your option) any later version.<br />
+        # This program is distributed in the hope that it will be useful,<br />
+        # but WITHOUT ANY WARRANTY; without even the implied warranty of<br />
+        # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br />
+        # GNU General Public License for more details.<br />
+        # You should have received a copy of the GNU General Public License<br />
+        # along with this program; if not, write to the Free Software<br />
+        # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.<br />
+        # ----------------------------------------------------------------<br />
+        # Usage:<br />
+        #    perl twpolmake.pl {Pol file}<br />
+        # ----------------------------------------------------------------<br />
+        #<br />
+        $POLFILE=$ARGV[0];</p>
+      <p class="conffile">open(POL,&quot;$POLFILE&quot;) or die &quot;open error: $POLFILE&quot; ;<br />
+        my($myhost,$thost) ;<br />
+        my($sharp,$tpath,$cond) ;<br />
+        my($INRULE) = 0 ;</p>
+      <p class="conffile">while (&lt;POL&gt;) {<br />
+        chomp;<br />
+        if (($thost) = /^HOSTNAME\s*=\s*(.*)\s*;/) {<br />
+        $myhost = `hostname` ; chomp($myhost) ;<br />
+        if ($thost ne $myhost) {<br />
+        $_=&quot;HOSTNAME=\&quot;$myhost\&quot;;&quot; ;<br />
+        }<br />
+        }<br />
+        elsif ( /^{/ ) {<br />
+        $INRULE=1 ;<br />
+        }<br />
+        elsif ( /^}/ ) {<br />
+        $INRULE=0 ;<br />
+        }<br />
+        elsif ($INRULE == 1 and ($sharp,$tpath,$cond) = /^(\s*\#?\s*)(\/\S+)\b(\s+-&gt;\s+.+)$/) {<br />
+        $ret = ($sharp =~ s/\#//g) ;<br />
+        if ($tpath eq '/sbin/e2fsadm' ) {<br />
+        $cond =~ s/;\s+(tune2fs.*)$/; \#$1/ ;<br />
+        }<br />
+        if (! -s $tpath) {<br />
+        $_ = &quot;$sharp#$tpath$cond&quot; if ($ret == 0) ;<br />
+        }<br />
+        else {<br />
+        $_ = &quot;$sharp$tpath$cond&quot; ;<br />
+        }<br />
+        }<br />
+        print &quot;$_\n&quot; ;<br />
+        }<br />
+        close(POL) ;</p>
+      <span class="message">[root@sample ~]#</span> <span class="command">perl /etc/tripwire/twpolmake.pl /etc/tripwire/twpol.txt &gt; /etc/tripwire/twpol.txt.out</span>　          <span class="intro">← 建立Policy文件</span><br />
+          <br />
+          <span class="message">[root@sample ~]#</span> <span class="command">rm -f /etc/tripwire/twpol.txt</span>              　          <span class="intro">← 删除默认Policy文件</span> <br />
+  <br />
+        <span class="message">[root@sample ~]#</span> <span class="command">mv /etc/tripwire/twpol.txt.out /etc/tripwire/twpol.txt</span>　          <span class="intro">← 将新建立的Policy文件的名改为默认Policy文件的文件名<br />
+        </span><br />
+        <span class="message">[root@sample ~]#</span> <span class="command">vi /etc/tripwire/twpol.txt</span>　<span class="intro">          ← 编辑Policy文件</span><br />
+  <br />
+        <span class="message">$(TWREPORT)                          　　　-&gt; $(SEC_CONFIG) (recurse=0) ;</span>　          <span class="intro">← 找到这一行，在这一行的下一行添加语句（113行前后）</span><br />
+        <span class="after">!$(TWDB)/$(HOSTNAME).twd ;</span>　          <span class="intro">← 添加这一句（不对数据库进行监测）</span><br />
+  <br />
+        <span class="message">[root@sample ~]#</span> <span class="command">twadmin --create-polfile -S /etc/tripwire/site.key /etc/tripwire/twpol.txt</span>　                <span class="intro">← 从文本配置文件建立加密格式配置文件</span><br />
+  <br />
+        <span class="message">Please enter your site passphrase:</span>　<span class="intro">← 输入“site keyfile”口令（输入后不会显示）</span><br />
+        <span class="message">Wrote policy file: /etc/tripwire/tw.pol</span><br />
+  <br />
+      <span class="message">[root@sample ~]#</span> <span class="command">rm -f /etc/tripwire/twcfg.txt</span>　<span class="intro">← 为不留安全隐患，删除文本格式的配置文件</span></td>
+  </tr>
+</table>
+<br />
+<span class="before">注：恢复文本格式的Tripwire配置文件，可通过执行“twadmin --print-cfgfile &gt; /etc/tripwire/twcfg.txt”。</span><br />
+<br />
+[3] 建立数据库
+<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">tripwire --init</span>　<span class="intro">← 建立数据库</span><br />
+      <br />
+      <span class="message">Please enter your local passphrase:</span> 　<span class="intro">← 输入“local keyfile”口令（输入后不会显示）</span><br />
+      <span class="message">Parsing policy file: /etc/tripwire/tw.pol<br />
+Generating the database...<br />
+*** Processing Unix File System ***<br />
+Wrote database file: /usr/local/lib/tripwire/sample.centospub.com.twd<br />
+The database was successfully generated.</span></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">运行 Tripwire</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　下面开始测试并让Tripwire开始工作。<br />
+<br />
+[1] 建立Tripwire运行脚本：<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi tripwire-check</span>　<span class="intro">← 建立Tripwire运行脚本</span>
+      <p class="conffile">#!/bin/bash</p>
+      <p class="conffile">PATH=/usr/local/sbin:/usr/bin:/bin<br />
+        SITEPASS=<span class="att1">********</span> # Site Key Passphrase　<span class="intro">← 将星号部分换为Site Keyfile的口令</span> <br />
+        LOCALPASS=<span class="att1">********</span> # Local Key Passphrase　<span class="intro">← 将星号部分换为Local Keyfile的口令</span><br />
+        REPORTFILE=/usr/local/lib/tripwire/report/`hostname`-`date +%Y%m%d`.twr</p>
+      <p class="conffile"># Run the Tripwire<br />
+  tripwire --check -r &quot;$REPORTFILE&quot;| logger -t tripwire</p>
+      <p class="conffile"># Mail the Tripwire Report to root<br />
+        cd /etc/tripwire<br />
+        REPORTPRINT=`mktemp`<br />
+        twprint -m r -c tw.cfg -r &quot;$REPORTFILE&quot; -L `hostname`-local.key -t 4 &gt; $REPORTPRINT<br />
+        if [ -z &quot;$(grep 'Total violations found:  0' $REPORTPRINT)&quot; ]; then<br />
+        cat $REPORTPRINT | mail -s &quot;Tripwire(R) Integrity Check Report in `hostname`&quot; root<br />
+        fi<br />
+        rm -f $REPORTPRINT</p>
+      <p class="conffile"># Update the Policy File<br />
+        cd /etc/tripwire<br />
+        twadmin --print-polfile &gt; twpol.txt<br />
+        perl twpolmake.pl twpol.txt &gt; twpol.txt.out<br />
+        twadmin --create-polfile -S site.key -Q $SITEPASS twpol.txt.out | logger -t tripwire<br />
+        rm -f twpol.*</p>
+      <span class="conffile"># update the Database<br />
+        rm -f /usr/local/lib/tripwire/`hostname`.twd<br />
+        tripwire --init -P $LOCALPASS | logger -t tripwire</span><br />
+  <br />
+      <span class="message">[root@sample ~]#</span> <span class="command">chmod 700 tripwire-check</span>　<span class="intro">← 赋予运行脚本文件可执行的权限</span></td>
+  </tr>
+</table>
+<br />
+注：Tripwire的监测报告会被加密保存到/usr/local/lib/tripwire/report目录下。日志被保存在/var/log/messages中。
+<p>[2] 测试运行脚本</p>
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">./tripwire-check</span>            　<span class="intro">← 运行一次脚本<br />
+</span><span class="att2">由于增加了运行脚本本身，也被认作系统被作了改动，会发邮件通知root…查看邮箱回收到监测报告</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">./tripwire-check</span>　<span class="intro">← 再次运行一次脚本<br />
+</span><span class="att2">由于两次连续运行，之间不太可能有文件变更，所以请确认不会发送E-mail给root</span></td>
+  </tr>
+</table>
+<br />
+[3] 在服务器本地监测报告的浏览<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">ls -l /usr/local/lib/tripwire/report/</span>　<span class="intro">← 监测报告所在目录的文件列表</span><br />
+        <span class="message">total 32<br />
+        -rw-r--r--  1 root root 8222 Aug 23 05:46 sample.centospub.com-20060823.twr</span>　<span class="intro">← 比如想浏览此篇报告</span><br />
+        <span class="message">-rw-r--r--  1 root root 8230 Aug 23 05:46 sample.centospub.com-20060823.twr.bak<br />
+        <br />
+        [root@sample ~]#</span> <span class="command">cd /etc/tripwire</span>　<span class="intro">← 进入Tripwire配置文件所在目录</span><br />
+  <br />
+      <span class="message">[root@sample tripwire]#</span> <span class="command">twprint -m r -c tw.cfg -r  &quot;/usr/local/lib/tripwire/report/sample.centospub.com-20060823.twr&quot; -L  sample.centospub.com-local.key -t 4 &gt; tripwire-report</span>　<span class="intro">← 将监测报告保存到名为tripwire-report的文件中</span><br />
+  <br />
+      <span class="message">[root@sample tripwire]#</span> <span class="command">cat tripwire-report</span>　<span class="intro">← 浏览监测报告</span><br />
+      <span class="message">Note: Report is not encrypted.<br />
+      Tripwire(R) 2.3.0 Integrity Check Report</span>
+      <p class="message">Report generated by:          root<br />
+        Report created on:            Wed 23 Aug 2006 05:45:01 AM CST<br />
+        Database last updated on:     Never</p>
+      <p class="message">===============================================================================<br />
+        Report Summary:<br />
+        ===============================================================================</p>
+      <p class="message">Host name:                    sample.centospub.com<br />
+        Host IP address:              127.0.0.1<br />
+        Host ID:                      None<br />
+        Policy file used:             /etc/tripwire/tw.pol<br />
+        Configuration file used:      /etc/tripwire/tw.cfg<br />
+        Database file used:           /usr/local/lib/tripwire/sample.centospub.com.twd<br />
+        Command line used: tripwire --check -r  /usr/local/lib/tripwire/report/sample.centospub.com-20060823.twr</p>
+      <p class="message">===============================================================================<br />
+        Rule Summary:<br />
+        ===============================================================================</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        Section: Unix File System<br />
+        -------------------------------------------------------------------------------</p>
+      <p class="message"> Rule Name                       Severity Level    Added    Removed  Modified<br />
+        ---------                       --------------    -----    -------  --------<br />
+        Invariant Directories           66                0        0        0<br />
+        Tripwire Data Files             100               0        0        0<br />
+        Temporary directories           33                0        0        0<br />
+        Critical devices                100               0        0        0<br />
+        (/proc/kcore)<br />
+        Tripwire Binaries               100               0        0        0<br />
+        Libraries                       66                0        0        0<br />
+        User binaries                   66                0        0        0<br />
+        Critical system boot files      100               0        0        0<br />
+        File System and Disk Administraton Programs<br />
+        100               0        0        0<br />
+        Kernel Administration Programs  100               0        0        0<br />
+        Networking Programs             100               0        0        0<br />
+        System Administration Programs  100               0        0        0<br />
+        Hardware and Device Control Programs<br />
+        100               0        0        0<br />
+        System Information Programs     100               0        0        0<br />
+        Application Information Programs<br />
+        100               0        0        0<br />
+        (/sbin/rtmon)<br />
+        Shell Related Programs          100               0        0        0<br />
+        Operating System Utilities      100               0        0        0<br />
+        Critical Utility Sym-Links      100               0        0        0<br />
+        Shell Binaries                  100               0        0        0<br />
+        OS executables and libraries    100               0        0        0<br />
+        System boot changes             100               0        0        0<br />
+        Critical configuration files    100               0        0        0<br />
+        Security Control                100               0        0        0<br />
+        Login Scripts                   100               0        0        0<br />
+        * Root config files               100               0        0        1</p>
+      <p class="message">Total objects scanned:  17363<br />
+        Total violations found:  1</p>
+      <p class="message">===============================================================================<br />
+        Object Summary:<br />
+        ===============================================================================</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        # Section: Unix File System<br />
+        -------------------------------------------------------------------------------</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        Rule Name: Root config files (/root)<br />
+        Severity Level: 100<br />
+        -------------------------------------------------------------------------------</p>
+      <p class="message">Modified:<br />
+&quot;/root/tripwire-check&quot;</p>
+      <p class="message">===============================================================================<br />
+        Object Detail:<br />
+        ===============================================================================</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        Section: Unix File System<br />
+        -------------------------------------------------------------------------------</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        Rule Name: Root config files (/root)<br />
+        Severity Level: 100<br />
+        -------------------------------------------------------------------------------<br />
+        ----------------------------------------<br />
+        Modified Objects: 1<br />
+        ----------------------------------------</p>
+      <p class="message">Modified object name:  /root/tripwire-check</p>
+      <p class="message"> Property:            Expected                    Observed<br />
+        -------------        -----------                 -----------<br />
+        Object Type          Regular File                Regular File<br />
+        Device Number        64768                       64768<br />
+        File Device Number   0                           0<br />
+        Inode Number         351317                      351317<br />
+        Mode                 -rwx------                  -rwx------<br />
+        Num Links            1                           1<br />
+        UID                  root (0)                    root (0)<br />
+        GID                  root (0)                    root (0)<br />
+        * Size                 953                         951<br />
+        * Modify Time          Wed 23 Aug 2006 05:21:26 AM CST<br />
+        Wed 23 Aug 2006 05:43:10 AM CST<br />
+        * Change Time          Wed 23 Aug 2006 05:21:26 AM CST<br />
+        Wed 23 Aug 2006 05:43:10 AM CST<br />
+        Blocks               16                          16<br />
+        * CRC32                Ay0oV9                      BDzM8Y<br />
+        * MD5                  BoeMoWfjEKCSLOJCs/E7mj      ABQN3hl5wF0PyTcXugPE5U</p>
+      <p class="message">&nbsp;</p>
+      <p class="message">===============================================================================<br />
+        Error Report:<br />
+        ===============================================================================</p>
+      <p class="message">No Errors</p>
+      <p class="message">-------------------------------------------------------------------------------<br />
+        *** End of report ***</p>
+      <span class="message">Tripwire 2.3 Portions copyright 2000 Tripwire, Inc. Tripwire is a registered<br />
+        trademark of Tripwire, Inc. This software comes with ABSOLUTELY NO WARRANTY;<br />
+        for details use --version. This is free software which may be redistributed<br />
+        or modified only under certain conditions; see COPYING for details.<br />
+        All rights reserved.<br />
+        <br />
+        [root@sample tripwire]#</span> <span class="command">rm -f tripwire-report</span>　<span class="intro">← 删除监测报告</span></td>
+  </tr>
+</table>
+<br />
+[4] 让监测脚本每天自动运行<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample tripwire]#</span> <span class="command">cd</span>　            <span class="intro">← 进入Tripwire运行脚本所在的root目录</span><br />
+      <br />
+      <span class="message">[root@sample ~]#</span> <span class="command">mv tripwire-check /etc/cron.daily/</span>　              <span class="intro">← 转移脚本到每天自动运行的目录中</span></td>
+  </tr>
+</table>
+<br />
+　　放在/etc/cron.daily下的脚本，会在每天4点02分自动被运行。这样通过数据完整性监测来监视系统文件的状况。如果增加、修改或删除的情况，将会给root发送邮件，并自动转送到初始环境设置中设置的转送邮箱中。<br />
+<br />
+<br />
+<table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

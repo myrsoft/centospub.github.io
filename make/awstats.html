@@ -1,0 +1,384 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 基于日志的站点统计系统的构建（ Awstats ） &gt;</strong>  （最近更新日：2006/09/13）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　通过我们构建的HTTP服务器将Web发布后，随着不断被访问，Apache会记下每个访客的基本信息。CentOS的情况下，这些信息通常保存在位于/var/log/httpd/下的相应日志文件中。但Apache单调的日志，除了提供给我们一些最基本的服务器被访信息、以及出错信息之外，我们很难单纯的通过日志文件得到更多、更系统的关于时间、规律性、地点方面的信息。这也使得很难通过单纯的日志去系统的分析流量。<br />
+          <br />
+　　但通过Awstats，我们可以把Apache的日志作为一种有效资源，获得更加系统化的信息。<br />
+<br />
+　　实质上，Awstats就是一套分析系统，它将日志文件统计学式的进行分析与统计，然后提供一个能够反映规律性的界面给我们。Awstats并不是仅能应用于分析Apache的日志，在邮件服务器等等方面，它也被广泛的应用。但在这一节中，只介绍在Web服务器中运用Awstats建立统计系统的方法。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">下载并安装 Awstats</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　        首先下载并安装Awstats。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget http://nchc.dl.sourceforge.net/sourceforge/awstats/awstats-6.5-1.noarch.rpm</span>　 <span class="intro">← 下载Awstats的rpm包</span><br />
+                <br />
+                <span class="message">--15:34:59--  http://nchc.dl.sourceforge.net/sourceforge/awstats/awstats-6.5-1.noarch.rpm<br />
+                =&gt; `awstats-6.5-1.noarch.rpm'<br />
+Resolving nchc.dl.sourceforge.net... 211.79.61.10<br />
+Connecting to nchc.dl.sourceforge.net|211.79.61.10|:80... connected.<br />
+HTTP request sent, awaiting response... 200 OK<br />
+Length: 1,095,131 (1.0M) [text/plain]                </span>
+                <p class="message">100%[====================================&gt;] 1,095,131    155.28K/s    ETA 00:00</p>
+<p class="message">15:35:06 (158.94 KB/s) - `awstats-6.5-1.noarch.rpm' saved [1095131/1095131]</p>
+<p><span class="message">[root@sample ~]#</span> <span class="command">rpm -ivh awstats-6.5-1.noarch.rpm</span>　<span class="intro">← 安装Awstats</span><br />
+    <br />
+    <span class="message">Preparing...                ########################################### [100%]<br />
+  1:awstats                ########################################### [100%]</span></p>
+<p class="message">----- AWStats 6.5 - Laurent Destailleur -----<br />
+  AWStats files have been installed in /usr/local/awstats</p>
+<span class="message">If first install, follow instructions in documentation<br />
+  (/usr/local/awstats/docs/index.html) to setup AWStats in 3 steps:<br />
+  Step 1 : Install and Setup with awstats_configure.pl (or manually)<br />
+  Step 2 : Build/Update Statistics with awstats.pl<br />
+  Step 3 : Read Statistics</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后删除安装后的遗留源文件。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">rm -f awstats-6.5-1.noarch.rpm</span>　<span class="intro"> ← 删除安装后的遗留源文件</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置 Awstats</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　        接下来对Awstats进行初始配置。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">/usr/local/awstats/tools/awstats_configure.pl</span>　<span class="intro"> ← 运行初始配置脚本</span>
+                <p class="message">----- AWStats awstats_configure 1.0 (build 1.6) (c) Laurent Destailleur -----<br />
+                This tool will help you to configure AWStats to analyze statistics for<br />
+                one web server. You can try to use it to let it do all that is possible<br />
+                in AWStats setup, however following the step by step manual setup<br />
+                documentation (docs/index.html) is often a better idea. Above all if:<br />
+                - You are not an administrator user,<br />
+                - You want to analyze downloaded log files without web server,<br />
+                - You want to analyze mail or ftp log files instead of web log files,<br />
+                - You need to analyze load balanced servers log files,<br />
+                - You want to 'understand' all possible ways to use AWStats...<br />
+                Read the AWStats documentation (docs/index.html).</p>
+                <p><span class="message">-----&gt; Running OS detected: Linux, BSD or Unix<br />
+                Warning: AWStats standard directory on Linux OS is '/usr/local/awstats'.<br />
+                If you want to use standard directory, you should first move all content<br />
+                of AWStats distribution from current directory:<br />
+                /root<br />
+                to standard directory:<br />
+                /usr/local/awstats<br />
+                And then, run configure.pl from this location.<br />
+                Do you want to continue setup from this NON standard directory [yN] ?</span> <span class="command">y</span>　 <span class="intro">← 选择y，同意安装到默认目录下</span></p>
+                <p class="message">-----&gt; Check for web server install</p>
+                <p><span class="message">Enter full config file path of your Web server.<br />
+                Example: /etc/httpd/httpd.conf<br />
+                Example: /usr/local/apache2/conf/httpd.conf<br />
+                Example: c:\Program files\apache group\apache\conf\httpd.conf<br />
+                Config file path ('none' to skip web server setup):<br />
+&gt;</span> <span class="command">/etc/httpd/conf/httpd.conf</span>　 <span class="intro">← 指定Apache配置文件所在位置</span></p>
+                <p class="message">-----&gt; Check and complete web server config file '/etc/httpd/conf/httpd.conf'<br />
+  Add 'Alias /awstatsclasses &quot;/root/wwwroot/classes/&quot;'<br />
+  Add 'Alias /awstatscss &quot;/root/wwwroot/css/&quot;'<br />
+  Add 'Alias /awstatsicons &quot;/root/wwwroot/icon/&quot;'<br />
+  Add 'ScriptAlias /awstats/ &quot;/root/wwwroot/cgi-bin/&quot;'<br />
+  Add '&lt;Directory&gt;' directive<br />
+                AWStats directives added to Apache config file.</p>
+                <p class="message">-----&gt; Update model config file '/etc/awstats/awstats.model.conf'<br />
+                File awstats.model.conf updated.</p>
+                <p><span class="message">-----&gt; Need to create a new config file ?<br />
+                Do you want me to build a new AWStats config/profile<br />
+                file (required if first install) [y/N] ?</span> <span class="command">y</span>　 <span class="intro">← 选择y，同意创建一个新的对象配置文件</span></p>
+                <p><span class="message">-----&gt; Define config file name to create<br />
+                What is the name of your web site or profile analysis ?<br />
+                Example: www.mysite.com<br />
+                Example: demo<br />
+                Your web site, virtual server or profile name:<br />
+&gt;</span> <span class="command">www.centospub.com</span>　 <span class="intro">← 为统计对象创建代号（推荐以网站URL作为代号）</span></p>
+                <p><span class="message">-----&gt; Define config file path<br />
+                In which directory do you plan to store your config file(s) ?<br />
+                Default: /etc/awstats<br />
+                Directory path to store config file(s) (Enter for default):<br />
+&gt;</span>　 <span class="intro">← 直接按回车，接受将Awstats的配置文件置于/etc/awstats下</span></p>
+                <p class="message">-----&gt; Create config file '/etc/awstats/awstats.www.centospub.com.conf'<br />
+                Config file /etc/awstats/awstats.www.centospub.com.conf created.</p>
+                <p><span class="message">-----&gt; Restart Web server with '/sbin/service httpd restart'</span>　<span class="intro"> ← HTTP服务重新启动</span></p>
+                <p class="message">Stopping httpd:　　　　　　　　　　　　　　 [ OK ]<br />
+                Starting httpd:　　　　　　　　　　　　　　 [ OK ]</p>
+                <p><span class="message">-----&gt; Add update process inside a scheduler<br />
+                Sorry, configure.pl does not support automatic add to cron yet.<br />
+                You can do it manually by adding the following command to your cron:<br />
+                /root/wwwroot/cgi-bin/awstats.pl -update -config=www.centospub.com<br />
+                Or if you have several config files and prefer having only one command:<br />
+                /root/tools/awstats_updateall.pl now<br />
+                Press ENTER to continue...</span>　<span class="intro"> ← 按回车继续进行配置</span></p>
+                <p class="message">A SIMPLE config file has been created: /etc/awstats/awstats.www.centospub.com.conf<br />
+                You should have a look inside to check and change manually main parameters.<br />
+                You can then manually update your statistics for 'www.centospub.com' with command:<br />
+&gt; perl awstats.pl -update -config=www.centospub.com<br />
+                You can also read your statistics for 'www.centospub.com' with URL:<br />
+&gt; http://localhost/awstats/awstats.pl?config=www.centospub.com</p>
+              <span class="message">Press ENTER to finish...</span>　 <span class="intro">← 按回车结束初始配置</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后对刚刚创建的对象配置文件进行配置。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/awstats/awstats.www.centospub.com.conf</span>　            <span class="intro">← 修改对象配置文件（文件名与上一步初始配置中设置的域名对应）</span><br />
+                <br />
+                <span class="before">LogFile=&quot;/var/log/httpd/mylog.log&quot;</span>　<span class="intro">            ← 找到这一行，修改日至文件所在位置（指定Apache的日志文件）</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">LogFile=&quot;/var/log/httpd/access_log&quot;</span>              　            <span class="intro">← 变为此状态</span><br />
+<br />
+<span class="before">DirData=&quot;/var/lib/awstats&quot;</span>　            <span class="intro">← 找到这一行，更改Awstats数据的保存位置<br />
+　↓</span><br />
+<span class="after">DirData=&quot;.&quot;</span>　            <span class="intro">← 变为此状态，让数据与awstats.pl脚本在同目录下</span><br />
+<br />
+<span class="before">Lang=&quot;auto&quot;</span>　            <span class="intro">← 找到这一行，将auto改为cn</span><br />
+<span class="intro">　↓</span><br />
+<span class="after">Lang=&quot;cn&quot;</span>                　            <span class="intro">←  变为此状态，让语言默认为中文</span><br />
+<br />
+<span class="before">SkipHosts=&quot;&quot;</span>　            <span class="intro">← 找到这一行，在&quot;&quot;之间添加无效访问规则<br />
+　↓</span><br />
+<span class="after">SkipHosts=&quot;127.0.0.1 REGEX[^192\.168\.]&quot;</span>                      　            <span class="intro">← 变为此状态，本地及内部的访问不做分析统计</span><br />
+<br />
+<span class="before">LevelForWormsDetection=0</span>　            <span class="intro">← 找到这一行，将0改为2<br />
+　↓</span><br />
+<span class="after">LevelForWormsDetection=2</span>　            <span class="intro">← 变为此状态，将来自Worm的访问也不做分析统计</span></td>
+            </tr>
+          </table>
+          <br />
+          　　接下来，再对httpd.conf中面向Awstats的部分进行必要设置。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf/httpd.conf</span>　             <span class="intro">← 编辑Apache的配置文件</span><br />
+                <br />
+                <span class="message">#<br />
+# Directives to allow use of AWStats as a CGI<br />
+#</span><br />
+<span class="before">----------------------------------------------------<br />
+Alias /awstatsclasses &quot;<s>/root/</s>wwwroot/classes/&quot;<br />
+Alias /awstatscss &quot;<s>/root/</s>wwwroot/css/&quot;<br />
+Alias /awstatsicons <s>&quot;/root/</s>wwwroot/icon/&quot;<br />
+ScriptAlias /awstats/ &quot;<s>/root/</s>wwwroot/cgi-bin/&quot;<br />
+----------------------------------------------------</span><br />
+<br />
+<span class="intro">找到以上水平线间的语句群，对相应路径进行正确修改。变为下面水平线间状态：</span><br />
+<br />
+<span class="after">----------------------------------------------------<br />
+Alias /awstatsclasses &quot;</span><span class="att1">/usr/local/awstats/</span><span class="after">wwwroot/classes/&quot;<br />
+Alias /awstatscss &quot;</span><span class="att1">/usr/local/awstats/</span><span class="after">wwwroot/css/&quot;<br />
+Alias /awstatsicons &quot;</span><span class="att1">/usr/local/awstats/</span><span class="after">wwwroot/icon/&quot;<br />
+ScriptAlias /awstats/ &quot;</span><span class="att1">/usr/local/awstats/</span><span class="after">wwwroot/cgi-bin/&quot;<br />
+----------------------------------------------------</span><br />
+<br />
+<span class="message">#<br />
+# This is to permit URL access to scripts/files in AWStats directory.<br />
+#</span><br />
+<span class="before">&lt;Directory &quot;/root/wwwroot&quot;&gt;</span>　 <span class="intro">← 找到这一行，对相应路径进行正确修改<br />
+　↓</span><br />
+<span class="after">&lt;Directory &quot;/usr/local/awstats/wwwroot&quot;&gt;</span>　<span class="intro"> ← 变为此状态</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，重新启动HTTP服务，使新的设置生效。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span>　             <span class="intro">← 重新启动HTTP服务，使设置生效</span><br />
+                <br />
+                <span class="message">Stopping httpd:　　　　　　　　　　　　　　                                            [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting httpd:                                            　　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">对日志进行分析统计</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　配置完毕后，我们可以通过各种适用于自己的方式，定义统计的方式以及输出的结果。在这里，介绍最简单，也是最广泛的统计方法，如下：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /root/awstats.sh</span>　              <span class="intro">← 建立统计用脚本如下：</span><br />
+                <br />
+                <span class="conffile">#!/bin/bash<br />
+/usr/local/awstats/wwwroot/cgi-bin/awstats.pl -update -config=</span><span class="att1">www.centospub.com</span><br />
+<span class="att2">（以上紫色字体部分的域名请根据实际情况设置）</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">chmod 700 /root/awstats.sh</span>            　              <span class="intro">← 赋予脚本可被执行的属性</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">/root/awstats.sh</span>            　              <span class="intro">← 运行脚本，开始进行统计（如日志量比较大的话，要花一段时间）<br />
+</span><br />
+<span class="message">Update for config &quot;/etc/awstats/awstats.www.centospub.com.conf&quot;<br />
+With data in log file &quot;/var/log/httpd/access_log&quot;...<br />
+Phase 1 : First bypass old records, searching new record...<br />
+Searching new records from beginning of log file...<br />
+Phase 2 : Now process new records (Flush history on disk after 20000 hosts)...<br />
+Jumped lines in file: 0<br />
+Parsed lines in file: 55<br />
+Found 52 dropped records,<br />
+Found 0 corrupted records,<br />
+Found 0 old records,<br />
+Found 3 new qualified records.</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后在客户端的浏览器上访问 http://服务器IP地址（或你的域名）/awstats/awstats.pl?config=www.centospub.com 即可看到详细的分析统计资料，如下图：<br />
+          <br />
+          <img src="zend/awstats.gif" width="768" height="558" border="1" /><br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">定制统计分析规则及相应外观设置</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1]  完成以上配置，我们已经可以通过客户端的浏览器，掌握Web服务器的访问量、来路等等详细的信息，但由于Awstats的统计是基于Apache日志的，  我们必须通过awstats.pl对当前最新的日志文件进行统计才能得到最新的统计结果。也就是说，在我们运行自行创建的awstats.sh脚本之前，  当前在客户端能够看到的统计分析结果，只是上一次运行awstats.sh脚本时统计的结果。想得到最新的统计结果，必须再次运行awstats.sh。  在这里，我们将其设置为每天定时自动运行，以便于每天都能查看到最新的信息。如下：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">crontab -e</span>　                 <span class="intro">← 对定期任务执行时间表进行编辑，添加如下一行：</span><br />
+                <br />
+                <span class="after">00 00 * * * /root/awstats.sh</span>              　<span class="intro">← 添加此行到其中，让统计分析在每天0点更新</span><br />
+<br />
+<span class="att2">（以上操作方法与vi编辑器相同）</span></td>
+            </tr>
+          </table>
+          <br />
+      <p>[2] 在一些情况，可能并不希望外界看到日志统计分析的结果。对此，我们可以为Apache添加面向于Awstats的访问限制，如下：</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf.d/awstats.conf</span>　                               <span class="intro">← 创建面向于Awstats的配置文件</span><br />
+                <br />
+                <span class="conffile">&lt;Files &quot;awstats.pl&quot;&gt;                <br />
+AllowOverride None<br />
+Order deny,allow<br />
+Deny from all <br />
+Allow from 192.168.0　                               </span><span class="intro">← 只允许局域网内访问</span><span class="conffile"><br />
+&lt;/Files&gt;</span><br />
+<br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span>　 <span class="intro">← 重新启动HTTP服务，使设置生效</span><br />
+<span class="message"><br />
+Stopping httpd:                                            　　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]<br />
+Starting httpd:                                            　　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <p><br />
+          [3] 用Firefox浏览分析结果时，字体会显得很难看（因为Firefox和IE识别11px字体不一样），所以用Firefox浏览器的情况，可以通过修改awstats.pl输出css的相关字体尺寸进行修改，而达到用Firefox浏览时也和IE一样能够正确显示出适当尺寸的字体。方法就是直接编辑&quot;/usr/local/awstats/wwwroot/cgi-bin/awstats.pl&quot;，将文件中所有“11px”的地方都替换为“12px。<br />
+          </p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

@@ -1,0 +1,104 @@
+body {
+	background-color: #fff;
+	color: #000;
+	margin: 0;
+	padding: 0;
+	font-family: arial,sans-serif;
+}
+hr {
+	border: 1px solid #bbb;
+	border-width: 1px 0 0;
+}
+#docs-header {
+	background: #b5b5b5 url("../images/tab-topline.png") repeat-x bottom;
+	color: #fff;
+}
+#docs-header {
+	height: 80px;
+}
+#docs-header #docs-rhlogo {
+	border: 0;
+}
+#docs-header a {
+	text-decoration: none;
+}
+#docs-header ul {
+}
+#docs-headerbar {
+	height: 10px;
+	background: #fff url("../images/tab-bar.png") repeat-x;
+}
+#docs-content {
+	font-size: 14px;
+	padding: 2em 8em;
+}
+#docs-footer {
+	margin-top: 0.5em;
+	text-align: center;
+	font-size: x-small;
+	letter-spacing: 2px;
+	color: #999;
+}
+.table-title {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+li + li {
+	margin-top: 1em;
+}
+
+.tab-set {
+	display: inline;
+	/* IE/Win needs a bit of help */
+	margin-bottom: -3px;
+	padding: 0;
+	border-collapse: collapse;
+	font-size: 14px;
+}
+body>div .tab-set {
+	/* Hidden from IE */
+	margin: 0;
+}
+table[class~=tab-set] {
+	/* Move for Konq */
+	position: relative;
+	bottom: 27px;
+	left: 200px;
+}
+table[class ~=tab-set] {
+	/* Reset for non-Konq */
+	position: static;
+}
+.tab-set a {
+	text-decoration: none;
+	color: rgb(63,63,63);
+}
+.tab-label, .current-tab-label {
+	margin-left: 4px;
+	padding: 5px 0 2px 10px;
+}
+.tab-label {
+	background: rgb(225,225,225) url("../images/tab-unselected.png") no-repeat;
+	border-bottom: 1px solid #000;
+}
+.current-tab-label {
+	background: #4668ad url("../images/tab-selected.png") no-repeat;
+	color: white;
+}
+.tab-end, .current-tab-end { width: 10px; }
+.tab-end { background: url("../images/tab-unselected-end.png") no-repeat top left; }
+.tab-end { border-bottom: 1px solid #000; }
+.current-tab-end { background: url("../images/tab-selected-end.png") no-repeat top left; }
+.tab-spacer { width: 3px; }
+
+#docs-owl {
+	position: absolute;
+	top: 28px;
+	right: 20px;
+	border: 0;
+}
+body>div #docs-owl {
+	/* Hidden from IE */
+	top: 25px;
+}
+body {background-image:url(../images/backimg.gif); background-repeat:repeat; background-attachment:fixed}

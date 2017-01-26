@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 入侵监测系统的构建（ chkrootkit ） &gt;</strong>  （最近更新日：2006/08/24）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　所谓 rootkit ，是一类入侵者经常使用的工具。这类工具通常非常的隐秘、令用户不易察觉，通过这类工具，入侵者建立了一条能够常时入侵系统，或者说对系统进行实时控制的途径。所以，我们用自由软件 chkrootkit 来建立入侵监测系统，来保证对系统是否被安装了 rootkit 进行监测。<br />
+          <br />
+　　chkrootkit 在监测 rootkit 是否被安装的过程中，需要使用到一些操作系统本身的命令。但不排除一种情况，那就是入侵者有针对性的已经将  chkrootkit 使用的系统命令也做修改，使得 chkrootkit 无法监测 rootkit ，从而达到即使系统安装了 chkrootkit 也无法检测出 rootkit 的存在，从而依然对系统有着控制的途径，而达到入侵的目的。那样的话，用 chkrootkit 构建入侵监测系统将失去任何意义。对此，我  们在操作系统刚被安装之后，或者说服务器开放之前，让 chkrootkit 就开始工作。而且，在服务器开放之前，备份 chkrootkit 使用的系统命  令，在一些必要的时候（怀疑系统命令已被修改的情况等等），让 chkrootkit 使用初始备份的系统命令进行工作。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装 chkrootkit</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先来下载和安装 chkrootkit 工具。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz</span>　<span class="intro">← 下载chkrootkit</span><br />
+                    <br />
+                    <span class="message">--03:05:31--  ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz<br />
+                    =&gt; `chkrootkit.tar.gz'<br />
+                Resolving ftp.pangeia.com.br... 200.239.53.35<br />
+                Connecting to ftp.pangeia.com.br|200.239.53.35|:21... connected.<br />
+                Logging in as anonymous ... Logged in!<br />
+                ==&gt; SYST ... done.    ==&gt; PWD ... done.<br />
+                ==&gt; TYPE I ... done.  ==&gt; CWD /pub/seg/pac ... done.<br />
+                ==&gt; PASV ... done.    ==&gt; RETR chkrootkit.tar.gz ... done.<br />
+                Length: 37,140 (36K) (unauthoritative)</span>
+                <p class="message">100%[====================================&gt;] 37,140         5.67K/s    ETA 00:00</p>
+                <span class="message">03:05:46 (5.30 KB/s) - `chkrootkit.tar.gz' saved [37140]<br />
+                    <br />
+                    [root@sample ~]#</span> <span class="command">tar zxvf chkrootkit.tar.gz</span>              　<span class="intro">← 展开被压缩的源代码</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">cd chkrootkit*</span> 　<span class="intro">← 进入chkrootkit源代码的目录</span><br />
+  <br />
+                  <span class="message">[root@sample chkrootkit-0.46a]#</span> <span class="command">make sense</span> 　<span class="intro">← 编译</span><br />
+  <br />
+                  <span class="message">[root@sample chkrootkit-0.46a]#</span> <span class="command">cd ..</span>                  　<span class="intro">← 返回上层目录</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">cp -r chkrootkit-* /usr/local/chkrootkit</span> 　<span class="intro">← 复制编译后文件所在的目录到指定位置</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">rm -rf chkrootkit*</span>              　<span class="intro">← 删除遗留的源代码目录及相关文件</span><br />
+              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">测试 chkrootkit</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后测试 chkrootkit 是否能够正常运行。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">cd /usr/local/chkrootkit</span>　            <span class="intro">← 进入chkrootkit的目录</span><br />
+                <br />
+                <span class="message">[root@sample chkrootkit]#</span> <span class="command">./chkrootkit | grep INFECTED</span>　            <span class="intro">← 测试运行chkrootkit</span><br />
+                <span class="att2">稍等片刻…如果没有显示“INFECTED”字样，而直接出现命令行提示符，说明一切OK！</span><br />
+<br />
+<span class="message">[root@sample chkrootkit]#</span> <span class="command">cd</span>              　            <span class="intro">← 回到root用户目录</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">让 chkrootkit 的监测自动化</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　用Shell Script编写一段脚本，通过这个脚本让chkrootkit的监测自动化。如有rootkit被发现的时候，发送邮件通知root用户，并且将运行结果保存在/var/log/messages文件中。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi chkrootkit</span>　              <span class="intro">← 建立chkrootkit自动运行脚本</span><br />
+                    <br />
+                    <span class="conffile">#!/bin/bash</span>
+                <p class="conffile">PATH=/usr/bin:/bin</p>
+                <p class="conffile">TMPLOG=`mktemp`</p>
+                <p class="conffile"># Run the chkrootkit<br />
+  /usr/local/chkrootkit/chkrootkit &gt; $TMPLOG</p>
+                <p class="conffile"># Output the log<br />
+                  cat $TMPLOG | logger -t chkrootkit</p>
+                <p class="conffile"># bindshe of SMTPSllHow to do some wrongs<br />
+  if [ ! -z &quot;$(grep 465 $TMPLOG)&quot; ] &amp;&amp; \<br />
+                  [ -z $(/usr/sbin/lsof -i:465|grep bindshell) ]; then<br />
+                  sed -i '/465/d' $TMPLOG<br />
+                  fi</p>
+                <p class="conffile"># If the rootkit have been found,mail root<br />
+  [ ! -z &quot;$(grep INFECTED $TMPLOG)&quot; ] &amp;&amp; \<br />
+  grep INFECTED $TMPLOG | mail -s &quot;chkrootkit report in `hostname`&quot; root</p>
+                <span class="conffile">rm -f $TMPLOG</span><br />
+                    <br />
+                    <span class="message">[root@sample ~]#</span> <span class="command">chmod 700 chkrootkit</span>　              <span class="intro">← 赋予脚本可被执行的权限</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">mv chkrootkit /etc/cron.daily/</span>　 <span class="intro">← 将脚本移动到每天自动运行的目录中</span><br />
+              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">chkrootkit 相关的系统命令的备份</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　如前言所述，当chkrootkit使用的系统命令被入侵者更改后，chkrootkit对  rootkit的监测将失效。所以，我们事前将chkrootkit使用的系统命令进行备份，在需要的时候使用备份的原始命令，让chkrootkit对  rootkit进行检测。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">mkdir /root/commands/</span>　<span class="intro">              ← 建立暂时容纳命令备份的目录</span><br />
+                <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">cp `which --skip-alias awk cut echo egrep find head  id ls netstat ps strings sed uname` /root/commands/</span>　<span class="intro"> ← （连续输入无换行）备份系统命令到建立好的目录</span> <br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">/usr/local/chkrootkit/chkrootkit -p /root/commands|grep INFECTED</span>　              <span class="intro">← 用备份的命令运行chkrootkit<br />
+</span><br />
+<span class="message">[root@sample ~]#</span> <span class="command">tar cvf /root/commands.tar /root/commands/</span>　<span class="intro">← 将命令打包</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">gzip /root/commands.tar</span>　              <span class="intro">← 将打包的文件压缩</span><br />
+<span class="intro">然后将压缩后的commands.tar.gz用SCP软件下载到安全的地方</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">rm -rf commands*</span>                　              <span class="intro">← 为安全起见，删除服务器端备份的系统命令及相关文件</span></td>
+            </tr>
+          </table>
+          <br />
+          　　如果以后想通过备份的原始系统命令来运行chkrootkit的时候，只需用SCP软件将备份的命令打包压缩文件上传至服务器端已知位置并解压缩，然后运行在chkrootkit的时候指定相应的目录即可。例如，假设已经将备份上传至root用户目录的情况如下：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">tar zxvf /root/commands.tar.gz</span>　 <span class="intro">← 解开压缩的命令备份</span><br />
+                <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">/usr/local/chkrootkit/chkrootkit -p /root/commands|grep INFECTED</span>　<span class="intro">← 用备份的命令运行chkrootkit</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后在运行后删除相应遗留文件即可。<br />
+          <br />
+          <br />
+      <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

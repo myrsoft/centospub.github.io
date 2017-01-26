@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 用 ProFTPD 构建 FTP 服务器 &gt;</strong>  （最近更新日：2006/09/02）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　FTP服务被广泛的应用着，常见的，一些大学、组织、机构等等，都有通过FTP服务器向外发布数据…但在这里，我们将要构建的FTP服务器将主要针对  用于用户更新自己的网站。也就是说，让用户（root除外）只可以访问自己的Web目录（本站前面介绍的HTTP服务器构建中以public_html为  例）。<br />
+          <br />
+　　另外，为了避免通过平文传输时，数据被截获，从而泄漏隐私与密码，我们采用TLS方式，加密FTP传输过程中的数据，以确保安全。<br />
+<br />
+（构建FTP服务器，您将有多种选择，比如通过vsftpd等等FTP服务器软件。但ProFTPD在一些方面，更能够符合我们的实际条件，尤其对于ADSL方式接入网络的服务器，ProFTPD能够很好的应对不断变化的IP地址造成的问题。）<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装 ProFTPD</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　由于ProFTPD不存在于CentOS中yum的官方库中，所以用yum安装ProFTPD需要定义非官方的库。请先确认相应非官方库文件的存在。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">ls -l /etc/yum.repos.d/dag.repo<span class="message">　 </span><span class="intro">← 确认相应库文件的存在性</span><br />
+    </span><br />
+      <span class="message">-rw-r--r--  1 root root 143 Oct  1 21:33 /etc/yum.repos.d/dag.repo　<span class="intro">← 确认其存在（否则不能通过yum安装ProFTPD）</span></span></td>
+  </tr>
+</table>
+<br />
+　　如果以上，dag.repo文件不存在，则不能通过yum安装ProFTPD，需要定义非官方库。定义非官方库的方法请见 “<a href="newenv.html" target="_blank"><strong>CentOS的下载、安装及初始环境设置</strong></a>”一节中yum的相关设置。而且，在此前提下也要<span class="before">保证所定义的dag.repo文件的语法的正确性。</span><br />
+<br />
+　　然后，通过yum来在线安装ProFTPD。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">yum -y install proftpd</span><span class="message">　            </span><span class="intro">← 安装ProFTPD</span><span class="message"><br />
+        <br />
+                                            </span>
+      <p class="message">Setting up Install Process<br />
+  Setting up repositories<br />
+  Reading repository metadata in from local files<br />
+  Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+  Finished<br />
+  Parsing package install arguments<br />
+  Resolving Dependencies<br />
+  --&gt; Populating transaction set with selected packages. Please wait.<br />
+  ---&gt; Downloading header for proftpd to pack into transaction set.<br />
+  proftpd-1.2.10-10.2.el4.r 100% |=========================|  15 kB    00:00<br />
+  ---&gt; Package proftpd.i386 0:1.2.10-10.2.el4.rf set to be updated<br />
+  --&gt; Running transaction check</p>
+<p class="message">Dependencies Resolved</p>
+<p class="message">=============================================================================<br />
+  Package                 Arch       Version          Repository        Size<br />
+  =============================================================================<br />
+  Installing:<br />
+  proftpd                 i386       1.2.10-10.2.el4.rf  dag               699 k</p>
+<p class="message">Transaction Summary<br />
+  =============================================================================<br />
+  Install      1 Package(s)<br />
+  Update       0 Package(s)<br />
+  Remove       0 Package(s)<br />
+  Total download size: 699 k<br />
+  Downloading Packages:<br />
+  (1/1): proftpd-1.2.10-10. 100% |=========================| 699 kB    00:03<br />
+  Running Transaction Test<br />
+  Finished Transaction Test<br />
+  Transaction Test Succeeded<br />
+  Running Transaction<br />
+  Installing: proftpd                      ######################### [1/1]</p>
+<p class="message">Installed: proftpd.i386 0:1.2.10-10.2.el4.rf<br />
+  Complete!</p></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">配置 ProFTPD</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　然后，通过修改相应配置文件配置ProFTPD。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/proftpd.conf</span>　                 <span class="intro">← 修改ProFTPD的配置文件</span><br />
+      <br />
+      <span class="before">ServerType                      　　　　　　　standalone</span>                　                 <span class="intro">← 找到这一行，在行首添加“#”</span><br />
+      <span class="intro">　↓</span><br />
+      <span class="after">#ServerType                      　　　　　　　standalone</span>                　                 <span class="intro">← 变为此状态，不使用常驻模式</span><br />
+<br />
+<span class="before">#ServerType                     　　　　　　inetd</span>                　                 <span class="intro">← 找到这一行，去掉行首的“#”</span><br />
+<span class="intro">　↓</span><br />
+<span class="after">ServerType　　　　　　                     inetd</span>                                　                 <span class="intro">← 变为此状态，通过超级服务器来启动ProFTPD</span><br />
+<br />
+<span class="before">DefaultRoot                     　　　　　　　~ !adm</span>              　                 <span class="intro">← 找到这一行，将“ !adm”改为“/public_html !wheel”</span><br />
+<span class="intro">　↓</span><br />
+<span class="after">DefaultRoot                     　　　　　　　~/public_html !wheel</span>              　                 <span class="intro">← 变为此状态，使除wheel组用户的根目录为public_html</span><br />
+<br />
+<span class="intro">找到TLS设置的语句群，如下：</span><br />
+<span class="message"># TLS<br />
+# Explained at http://www.castaglia.org/proftpd/modules/mod_tls.html</span><br />
+<span class="before">----------------------------------------------------------------<br />
+#TLSEngine                      　　　　　　　　on<br />
+#TLSRequired　　　　　　　                    on<br />
+#TLSRSACertificateFile　　　/usr/share/ssl/certs/proftpd.pem<br />
+#TLSRSACertificateKeyFile　/usr/share/ssl/certs/proftpd.pem<br />
+#TLSCipherSuite　　　　　　ALL:!ADH:!DES<br />
+#TLSOptions　　　　　　　　NoCertRequest<br />
+#TLSVerifyClient                　　　　　　off<br />
+##TLSRenegotiate　　　　　ctrl 3600 data 512000 required off timeout 300<br />
+#TLSLog　　　　　　　　　　                         /var/log/proftpd/tls.log<br />
+----------------------------------------------------------------</span><br />
+<br />
+　<span class="intro">↓将以上水平线间部分的语句，每行行首的“#”都去掉，变为下面水平线间的状态：</span><br />
+<br />
+<span class="after">----------------------------------------------------------------<br />
+TLSEngine                       　　　　　　　　　on<br />
+TLSRequired                     　　　　　　　　on　                 </span><span class="intro">← 只允许TLS方式的连接（如果将on改为off，普通方式也被允许）</span><span class="after"><br />
+TLSRSACertificateFile　　　　/usr/share/ssl/certs/proftpd.pem<br />
+TLSRSACertificateKeyFile　　/usr/share/ssl/certs/proftpd.pem<br />
+TLSCipherSuite　　　　　　　ALL:!ADH:!DES<br />
+TLSOptions　　　　　　　　　NoCertRequest<br />
+TLSVerifyClient　　　　　　　off<br />
+#TLSRenegotiate　　　　　　ctrl 3600 data 512000 required off timeout 300<br />
+TLSLog　　　　　　　　　　　                          /var/log/proftpd/tls.log<br />
+----------------------------------------------------------------</span><br />
+<br />
+<span class="intro">然后在配置文件的末尾填如下几行：</span><br />
+<br />
+<span class="after">ExtendedLog             　　　　　　　/var/log/proftpd/access.log WRITE,READ default　                 </span><span class="intro">← 记录连接日志到相应日志文件</span><span class="after"><br />
+ExtendedLog　　　　　　　             /var/log/proftpd/auth.log AUTH auth　                 </span><span class="intro">← 记录认证日志到相应日志文件</span><span class="after"><br />
+MasqueradeAddress       　　　digeast.no-ip.info　</span><span class="intro"> ← 定义服务器域名</span><span class="after"><br />
+PassivePorts　　　　　　　 50000 50030　</span><span class="intro"> ← 为PASV模式连接时指定端口号（1024以后存在的任意端口号）</span></td>
+  </tr>
+</table>
+<br />
+　　然后，为服务器建立证书。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">cd /usr/share/ssl/certs</span>　                 <span class="intro">← 进入相应的目录</span><br />
+                <br />
+[root@sample certs]# <span class="command">make proftpd.pem</span>　                 <span class="intro">← 建立服务器证书</span><br />
+<br />
+umask 77 ; \<br />
+PEM1=`/bin/mktemp /tmp/openssl.XXXXXX` ; \<br />
+PEM2=`/bin/mktemp /tmp/openssl.XXXXXX` ; \<br />
+/usr/bin/openssl req -newkey rsa:1024 -keyout $PEM1 -nodes -x509 -days 365 -out $PEM2 ; \<br />
+cat $PEM1 &gt;  proftpd.pem ; \<br />
+echo &quot;&quot;    &gt;&gt; proftpd.pem ; \<br />
+cat $PEM2 &gt;&gt; proftpd.pem ; \<br />
+rm -f $PEM1 $PEM2<br />
+Generating a 1024 bit RSA private key<br />
+.........++++++<br />
+............++++++<br />
+writing new private key to '/tmp/openssl.sG3126'<br />
+-----<br />
+You are about to be asked to enter information that will be incorporated<br />
+into your certificate request.<br />
+What you are about to enter is what is called a Distinguished Name or a DN.<br />
+There are quite a few fields but you can leave some blank<br />
+For some fields there will be a default value,<br />
+If you enter '.', the field will be left blank.<br />
+-----<br />
+Country Name (2 letter code) [GB]:<span class="command">CN</span>　                 <span class="intro">← 输入国家简写</span><br />
+State or Province Name (full name) [Berkshire]:<span class="command">Hei Long Jiang</span>　                 <span class="intro">← 输入省份</span><br />
+Locality Name (eg, city) [Newbury]:<span class="command">Harbin</span>　                 <span class="intro">← 输入城市</span><br />
+Organization Name (eg, company) [My Company Ltd]:<span class="command">www.centospub.com</span>　                 <span class="intro">← 输入组织名（任意）</span><br />
+Organizational Unit Name (eg, section) []:　<span class="intro">                 ← 直接回车跳过</span><br />
+Common Name (eg, your name or your server's hostname) []:<span class="command">www.centospub.com</span>            　                 <span class="intro">← FTP服务器名反馈</span> <br />
+Email Address []:<span class="command">yourname@yourserver.com</span>　 <span class="intro">← 输入E-mail地址</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">启动 ProFTPD</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　启动之前，先对超级服务器的ProFTPD的启动脚本做一些修改。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample certs]#</span> <span class="command">vi /etc/xinetd.d/xproftpd</span>　                 <span class="intro">← 编辑ProFTPD启动脚本</span><br />
+                <br />
+                <span class="before">log_on_success          += DURATION USERID</span>　                 <span class="intro">← 找到此行，将“DURATION USERID”改为“HOST PID”<br />
+　↓</span><br />
+<span class="after">log_on_success          += HOST PID</span>  　                 <span class="intro">← 变为此状态，防止登录时要等待30秒</span><br />
+<br />
+<span class="before">log_on_failure          += USERID</span>　                 <span class="intro">← 找到此行，将“USERID”改为“HOST”<br />
+　↓</span><br />
+<span class="after">log_on_failure          += HOST</span>  　                 <span class="intro">← 变为此状态，防止登录时要等待30秒</span><br />
+<br />
+<span class="before">disable                 = yes</span>　                 <span class="intro">← 找到此行，将yes改为no<br />
+　↓</span><br />
+<span class="after">disable                 = no</span>  　                 <span class="intro">← 变为此状态，让ProFTPD通过超级服务器启动</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，通过重新启动超级服务器间接启动ProFTPD。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample certs]# <span class="command">chkconfig xproftpd on</span>　 <span class="intro">← 设置ProFTPD自启动</span><br />
+                <br />
+[root@sample certs]# <span class="command">chkconfig --list xproftpd</span>　 <span class="intro">← 查看ProFTPD自启动</span><br />
+<br />
+xproftpd <span class="att1">on</span>　 <span class="intro">← 确认为on的状态就OK</span><br />
+                <br />
+                [root@sample certs]# <span class="command">/etc/rc.d/init.d/xinetd restart</span>　 <span class="intro">← 重新启动超级服务器</span><br />
+                <br />
+Stopping xinetd:　　　　　　　　　　　　　　　　[  <span class="after">OK</span>  ]<br />
+Starting xinetd:                                           　　　　　　　　　　　　　　　　[  <span class="after">OK</span>  ]</td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">连接到FTP服务器</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　当我们成功的启动了FTP服务之后，就可以通过客户端软件连接到服务器进行文件的上传和下载了。但由于，本站介绍的方法，把安全、传输的保密性放在了  第一位，这也就使得好多不支持TSL的FTP软件无法连接到服务器。支持TSL的FTP客户端软件，比较有代表性的有Staff-FTP，  SmartFTP。本站将以SmartFTP为例（下一节），介绍如何从客户端通过FTP连接到服务器的方法。<br />
+          <br />
+          <br />
+      <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 让邮件服务器支持虚拟域名 &gt;</strong>  （最近更新日：2006/10/14）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">前　　言</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　通常，一个域名都对应一个邮件服务器，但在一些时候，为了资源的活用，可以将多个域名应用于同一个邮件服务器。好多虚拟主机提供商也在用此功能提供虚拟主机用户对应的邮件服务。<br />
+          <br />
+          　　当多个域名应用于同一个邮件服务器时，我们可以将这些域名指向邮件服务器的主域名（在Postfix中被设置的域名）。也就是说，通过这些虚拟域名（非主域名）发送到服务器的邮件，将被视作发送至主域名的邮件，而被邮件服务器接收。这个过程也同样可以精确到用户，比如发送到虚拟域名下的某个用户的邮件，可以被视作发送给邮件服务器上某个实际存在的用户，而被该用户接收。<br />
+          <br />
+          　　以本站为例，目前有两个域名同时应用于本站所在的邮件服务器。它们分别为：digeast.no-ip.info 和 centospub.com 。在邮件服务器（Postfix）设置中 centospub.com 被设置为了主域名，digeast.no-ip.info 也指向邮件服务器，但在没有定义虚拟域名规则之前，它无法直接被应用于邮件服务器（具体表现就是：别人通过youruser@digeast.no-ip.info发送给你邮件会发送不成功）。但通过配置虚拟域名，可以实现，发送给user@digeast.no-ip.info的邮件 == user@centospub.com 。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">前　　言</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+      [1] 对 Postfix 的虚拟域名相关选项进行配置。 <br />
+      <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/postfix/main.cf<span class="intro"><span class="message">　 </span>← 编辑Postfix的配置文件，在文尾添加如下行：</span><br />
+              </span><span class="after"><br />
+              virtual_alias_maps= hash:/etc/postfix/virtual<span class="intro"><span class="message">　 </span>← 定义虚拟域名转送规则文件</span></span></td>
+            </tr>
+          </table>
+      <p>[2] 定义虚拟域名转送规则。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/postfix/virtual</span><span class="intro"><span class="message">　 </span>← 编辑Postfix的虚拟域名相关配置文件，在文尾添加如下行</span><br />
+              <br />
+              <span class="after">digeast.no-ip.info anything<br />
+              @digeast.no-ip.info @centospub.com<br />
+              <br />
+              </span><span class="message">[root@sample ~]#</span><span class="message"> postmap /etc/postfix/virtual<span class="intro">　 ← 更新虚拟域名规则</span></span></td>
+            </tr>
+          </table>
+          <p>　　以上一本站为例，定义规则：将发送至 <span class="before">user@digeast.no-ip.info</span> 的邮件视作发送至 <span class="before">user@centospub.com 。</span> <br />
+            <br />
+            [3] 重新启动Postfix，使设置生效。          </p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/etc/rc.d/init.d/postfix restart</span><br />
+                <br />
+                Shutting down postfix:　　　　　　　　                                     [  <span class="after">OK</span>  ]<br />
+              Starting postfix:                                          　　　　　　　　　　　[  <span class="after">OK</span>  ]</td>
+            </tr>
+          </table>
+          <p>[4] 测试。<br />
+            <br />
+          　　最后，发送测试邮件到虚拟域名（本站为digeast.no-ip.info，请根据你的实际情况设置），然后接收邮件，确认能够收到邮件。<br />
+          </p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

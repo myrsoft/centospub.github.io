@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; POP / IMAP 服务器的构建（ Dovecot ） &gt;</strong>  （最近更新日：2006/10/11）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">前言</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　POP / IMAP 是 MUA 从邮件服务器中读取邮件时使用的协议。其中，与 POP3 是从邮件服务器中下载邮件比起来，IMAP4 则是将邮件留在服务器端直接对邮件进行管理、操作。这里，我们用 Dovecot 来实现对 POP3 及 IMAP4 等协议支持的邮件接收服务器的搭建。<br />
+          <br />
+          　　Dovecot 是一个比较新的软件，由 Timo Sirainen 开发，最初发布于 2002年7月。作者将安全性考虑在第一，所以 Dovecot 在安全性方面比较出众。另外，Dovecot 支持多种认证方式，所以在功能方面也比较符合一般的应用。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">安装 Dovecot</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　首先，安装 Dovecot 。 <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install dovecot</span><span class="intro"><span class="message">　 </span>← 在线安装 Dovecot</span><br />
+                <br />
+                    <span class="message">Setting up Install Process<br />
+                Setting up repositories<br />
+                dag                       100% |=========================| 1.1 kB    00:00<br />
+                update                    100% |=========================|  951 B    00:00<br />
+                base                      100% |=========================| 1.1 kB    00:00<br />
+                addons                    100% |=========================|  951 B    00:00<br />
+                extras                    100% |=========================| 1.1 kB    00:00<br />
+                Reading repository metadata in from local files<br />
+                Parsing package install arguments<br />
+                Resolving Dependencies<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for dovecot to pack into transaction set.<br />
+                dovecot-0.99.11-4.EL4.i38 100% |=========================|  15 kB    00:00<br />
+                ---&gt; Package dovecot.i386 0:0.99.11-4.EL4 set to be updated<br />
+                --&gt; Running transaction check<br />
+                --&gt; Processing Dependency: libmysqlclient.so.14(libmysqlclient_14) for package: dovecot<br />
+                --&gt; Processing Dependency: libpq.so.3 for package: dovecot<br />
+                --&gt; Processing Dependency: libmysqlclient.so.14 for package: dovecot<br />
+                --&gt; Restarting Dependency Resolution with new changes.<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for postgresql-libs to pack into transaction set.<br />
+                postgresql-libs-7.4.13-2. 100% |=========================|  11 kB    00:00<br />
+                ---&gt; Package postgresql-libs.i386 0:7.4.13-2.RHEL4.1 set to be updated<br />
+                ---&gt; Downloading header for mysql to pack into transaction set.<br />
+                mysql-4.1.20-1.RHEL4.1.i3 100% |=========================|  35 kB    00:00<br />
+                ---&gt; Package mysql.i386 0:4.1.20-1.RHEL4.1 set to be updated<br />
+                --&gt; Running transaction check<br />
+                --&gt; Processing Dependency: perl(DBI) for package: mysql<br />
+                --&gt; Restarting Dependency Resolution with new changes.<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for perl-DBI to pack into transaction set.<br />
+                perl-DBI-1.40-8.i386.rpm  100% |=========================|  11 kB    00:00<br />
+                ---&gt; Package perl-DBI.i386 0:1.40-8 set to be updated<br />
+                --&gt; Running transaction check</span>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                  Package                 Arch       Version          Repository        Size<br />
+                  =============================================================================<br />
+                  Installing:<br />
+                  dovecot                 i386       0.99.11-4.EL4    base              612 k<br />
+                  Installing for dependencies:<br />
+                  mysql                   i386       4.1.20-1.RHEL4.1  base              2.9 M<br />
+                  perl-DBI                i386       1.40-8           base              466 k<br />
+                  postgresql-libs         i386       7.4.13-2.RHEL4.1  base              146 k</p>
+                <p class="message">Transaction Summary<br />
+                  =============================================================================<br />
+                  Install      4 Package(s)<br />
+                  Update       0 Package(s)<br />
+                  Remove       0 Package(s)<br />
+                  Total download size: 4.1 M<br />
+                  Downloading Packages:<br />
+                  (1/4): dovecot-0.99.11-4. 100% |=========================| 612 kB    00:00<br />
+                  (2/4): postgresql-libs-7. 100% |=========================| 146 kB    00:00<br />
+                  (3/4): mysql-4.1.20-1.RHE 100% |=========================| 2.9 MB    00:02<br />
+                  (4/4): perl-DBI-1.40-8.i3 100% |=========================| 466 kB    00:00<br />
+                  Running Transaction Test<br />
+                  Finished Transaction Test<br />
+                  Transaction Test Succeeded<br />
+                  Running Transaction<br />
+                  Installing: perl-DBI                     ######################### [1/4]<br />
+                  Installing: mysql                        ######################### [2/4]<br />
+                  Installing: postgresql-libs              ######################### [3/4]<br />
+                  Installing: dovecot                      ######################### [4/4]</p>
+                <span class="message">Installed: dovecot.i386 0:0.99.11-4.EL4<br />
+                  Dependency Installed: mysql.i386 0:4.1.20-1.RHEL4.1 perl-DBI.i386 0:1.40-8 postgresql-libs.i386 0:7.4.13-2.RHEL4.1<br />
+                  Complete!<br />
+              </span>              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">配置 Dovecot</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <p>　　然后，修改相应配置文件，配置 Dovecot 。 </p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/dovecot.conf</span><span class="intro"><span class="message">　 </span>← 编辑Dovecot 的配置文件</span><br />
+              <br />
+              <span class="before">#protocols = imap imaps</span><span class="intro"><span class="message">　 </span>← 找到这一行，将协议设置为imap与pop3</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">protocols = imap pop3</span><span class="intro"><span class="message">　 </span>← 变为此状态</span><br />
+              <br />
+              <span class="before">#default_mail_env =</span><span class="intro"><span class="message">　 </span>← 找到这一行，定义邮件目录</span><br />
+              <span class="after"><span class="intro">　↓</span><br />
+              default_mail_env = maildir:~/Maildir</span><span class="intro"><span class="message">　 </span>← 定义邮件目录为用户目录下的Maildir目录</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">添加防火墙规则</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <p>　　由于 POP3 协议与 IMAP4 协议要分别用到110号和143号端口，所以在启动服务前，配置防火墙，开通这两个端口。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/sysconfig/iptables</span><span class="intro"><span class="message">　 </span>← 编辑防火墙规则</span><br />
+              <br />
+              <span class="message">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 25 -j ACCEPT</span><span class="intro"><span class="message">　 </span>← 找到此行，接着添加如下两行：</span><br />
+              <span class="after">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 110 -j ACCEPT<span class="intro"><span class="message">　 </span>← 允许POP使用的110号端口</span><br />
+              -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 143 -j ACCEPT<span class="intro"><span class="message">　 </span>← 允许IMAP使用的143号端口</span><br />
+              </span><span class="message"><br />
+              [root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/iptables restart</span><span class="after"><span class="intro"><span class="message">　 </span>← 重新启动防火墙，使新的设置生效</span><br />
+              <br />
+              </span><span class="message">Flushing firewall rules:</span><span class="after">　　　　　　　　　 [  OK  ]<br />
+              </span><span class="message">Setting chains to policy ACCEPT: filter</span><span class="after">　　 [  OK  ]<br />
+              </span><span class="message">Unloading iptables modules:　　　　　　</span><span class="after"> [  OK  ]<br />
+              </span><span class="message">Applying iptables firewall rules:</span><span class="after"> 　　　　　[  OK  ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">启动 Dovecot</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　最后，启动 Dovecot ，并将其设置为自启动。 <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">chkconfig dovecot on</span><span class="intro">　 ← 设置Dovecot为自启动</span><br />
+                <br />
+                [root@sample ~]# <span class="command">chkconfig --list dovecot</span><br />
+                dovecot         0:off   1:off   <span class="att1">2:on    3:on    4:on    5:on</span>    6:off<span class="intro">　 ← 确认2~5为on的状态就OK</span><br />
+                <br />
+                [root@sample ~]# <span class="command">/etc/rc.d/init.d/dovecot start</span><span class="intro">　 ← 启动Dovecot服务</span><br />
+                <br />
+              Starting Dovecot Imap:                                     　　　　　　　[  <span class="after">OK</span>  ]</td>
+            </tr>
+          </table>
+          <br />
+          　　至此，配合Postfix，就可以通过E-mail客户端软件实现电子邮件的收发了。<br />
+          <br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

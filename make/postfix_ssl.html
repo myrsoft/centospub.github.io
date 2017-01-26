@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 用 SSL 对邮件加密的支持 &gt;</strong>  （最近更新日：2006/10/18）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">前　　言</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　通常，我们发送的邮件在传输过程中都采用明文传输。当发送重要信息的时候，仍然存在邮件被第三方获取，泄露隐私及密码等等的安全隐患。在 Web 服务器中，通过用 SSL 实现对 HTTPS 协议的支持，实现了对传输内容的加密，在邮件服务器中，我们也同样能够依靠 SSL 来实现对邮件的加密，从而提高通过用邮件传递信息的安全性。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">证书与密钥的确认</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在这里，可以为邮件服务器建立新的证书，但为了管理上的便利性，我们直接引用 Web 服务器的证书，作为邮件服务器的证书。<br />
+          <br />
+          　　首先确认 Web 服务器证书的存在。
+      <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">ls -l /etc/httpd/conf/ssl.crt/server.crt</span><span class="intro">　 ← 确认证书的存在性</span><br />
+                <br />
+                -rw-r--r--  1 root root 956 Oct 14 08:51 /etc/httpd/conf/ssl.crt/server.crt<span class="intro">　 ← 证书存在</span><br />
+                <br />
+                [root@sample ~]# <span class="command">ls -l /etc/httpd/conf/ssl.key/server.key</span><span class="intro">　 ← 确认密钥的存在性</span><br />
+                <br />
+              -rw-------  1 root root 887 Oct 14 08:49 /etc/httpd/conf/ssl.key/server.key<span class="intro">　 ← 密钥存在</span></td>
+            </tr>
+          </table>
+          <br />
+          　　如果以上确认，没有发现相关的证书和密钥的存在，请参见 “<strong><a href="ssl.html" target="_blank">让服务器支持安全 HTTP 协议（ HTTPS ）</a></strong>”
+          中的方法来建立相关的证书和密钥。
+          <br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">SMTP服务器（Postfix）方面的相关设置</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1] 编辑 Postfix 的 mail.cf 配置文件。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/postfix/main.cf</span><span class="intro">　 ← 编辑 Postfix 配置文件，在文尾添加如下行：</span><br />
+              <br />
+              <span class="after">smtpd_use_tls = yes<br />
+              smtpd_tls_session_cache_database = btree:/etc/postfix/smtpd_scache<br />
+              smtpd_tls_cert_file = /etc/httpd/conf/ssl.crt/server.crt<br />
+              smtpd_tls_key_file = /etc/httpd/conf/ssl.key/server.key</span></td>
+            </tr>
+          </table>
+          <br />
+[2] 编辑
+          Postfix 的 master.cf 配置文件。 <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/postfix/master.cf</span><span class="intro">　 ← 编辑 master.cf </span><br />
+                <br />
+                    <span class="before">smtp      　　inet  　　n       　　-       　　n　　       -　　       -       　　smtpd<span class="intro">　 ← 找到此行，在行首加“#”</span></span><span class="before"><br />
+                    </span><span class="intro">　↓</span><br />
+                <span class="after">#smtp      　　inet  　　n       　　-       　　n　　       -　　       -       　　smtpd</span><span class="intro">　 ← 改为此状态，禁用SMTP协议</span><br />
+                <span class="before"><br />
+                #smtps　　    inet  　　n       　　-       　　n       　　-       　　-       　　smtpd</span><span class="intro">　 ← 找到此行，去掉行首的“#”</span><br />
+                <span class="after"><span class="intro">　↓</span><br />
+                smtps　　    inet  　　n       　　-       　　n       　　-       　　-       　　smtpd</span><span class="intro">　 ← 改为此状态，使用SMTPS协议</span><br />
+                <br />
+                <span class="before">#  -o smtpd_tls_wrappermode=yes -o smtpd_sasl_auth_enable=yes</span><span class="intro">　 ← 找到此行，去掉行首的“#”</span><br />
+                <span class="intro">　↓</span><br />
+                  <span class="after">-o smtpd_tls_wrappermode=yes -o smtpd_sasl_auth_enable=yes<span class="intro">　 ← 改为此状态</span></span>
+              </td>
+            </tr>
+          </table>
+          <br />
+          [3] 编辑 Dovecot 的配置文件。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/dovecot.conf</span><span class="intro">　 ← 编辑 Dovecot 的配置文件</span><br />
+                <br />
+                <span class="before">protocols = imap pop3<span class="intro">　 ← 找到此行，将“=”后面的部分改为如下状态</span><br />
+                </span><span class="intro">　↓</span><br />
+                <span class="after">protocols = imaps pop3s</span><span class="intro">　 ← 改为此状态，让其只支持imaps和pop3s协议</span><br />
+              <br />
+              <span class="before">#ssl_disable = no</span><span class="intro">　 ← 找到此行，去掉行首的“#”</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">ssl_disable = no</span><span class="intro">　 ← 改为此状态，让其支持 SSL 及 TLS </span><br />
+              <br />
+              <span class="before">#ssl_cert_file = /usr/share/ssl/certs/dovecot.pem</span><span class="intro">　 ← 找到此行，去掉行首的“#”，并指定证书所在位置</span><br />
+              <span class="after"><span class="intro">　↓</span><br />
+              ssl_cert_file =/etc/httpd/conf/ssl.crt/server.crt</span><span class="intro">　 ← 改为此状态，指定其证书为 Apache 的证书</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="before">#ssl_key_file = /usr/share/ssl/private/dovecot.pem</span><span class="intro">　 ← 找到此行，去掉行首的“#”，并指定密钥所在位置</span><br />
+              <br />
+              <span class="after">ssl_key_file = /etc/httpd/conf/ssl.key/server.key              </span><span class="intro">　 ← 改为此状态，指定其密钥为 Apache 的密钥</span><br />
+              </td>
+            </tr>
+          </table>
+          <br />
+      [4] 编辑防火墙规则，打开相应端口。<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="after">vi /etc/sysconfig/iptables</span><span class="intro">　 ← 编辑防火墙规则</span><br />
+          <br />
+          <span class="message">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 25 -j ACCEPT</span><span class="intro">　 ← 找到此行，接着添加如下行：</span><br />
+          <span class="after">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 465 -j ACCEPT<span class="intro">　 ← 允许SMTPS的465号端口</span><br />
+          -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 995 -j ACCEPT<span class="intro">　 ← 允许POP3S的995号端口</span><br />
+          -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 993 -j ACCEPT<span class="intro">　 ← 允许IMAPS的993号端口</span></span></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="0">
+        <tr>
+          <td bgcolor="#4665A6"><table  border="0">
+              <tr>
+                <td bgcolor="#333333" class="table-title">重新起动相关服务，使设置生效</td>
+              </tr>
+          </table></td>
+        </tr>
+      </table>
+      <br />
+      　　最后，重新启动所有相关的服务，使刚刚的设置生效。<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/etc/rc.d/init.d/postfix restart</span><span class="intro">　 ← 重新启动 Postfix </span><br />
+            <br />
+            Shutting down postfix:　　　　　　　　                                     [  <span class="after">OK</span>  ]<br />
+            Starting postfix:　　　　　　　　　　　[  <span class="after">OK</span>  ]<br />
+            <br />
+            [root@sample ~]# <span class="command">/etc/rc.d/init.d/dovecot restart</span><span class="intro">　 ← 重新启动 Dovecot </span><br />
+            <br />
+            Stopping Dovecot Imap:　　　　　　　                                     [  <span class="after">OK</span>  ]<br />
+            Starting Dovecot Imap:　　　　　　　　                                     [  <span class="after">OK</span>  ]<br />
+            <br />
+            [root@sample ~]# <span class="command">/etc/rc.d/init.d/iptables restart</span><span class="intro">　 ← 重新启动 iptables </span><br />
+            <br />
+            Flushing firewall rules:　　　　　　　　　                                   [  <span class="after">OK</span>  ]<br />
+            Setting chains to policy ACCEPT: filter　　                    [  <span class="after">OK</span>  ]<br />
+            Unloading iptables modules:　　　　　　                                [  <span class="after">OK</span>  ]<br />
+          Applying iptables firewall rules:　　　　　                          [  <span class="after">OK</span>  ]</td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="0">
+        <tr>
+          <td bgcolor="#4665A6"><table  border="0">
+              <tr>
+                <td bgcolor="#333333" class="table-title">邮件客户端的设置</td>
+              </tr>
+          </table></td>
+        </tr>
+      </table>
+      <br />
+          <p>　　这里，邮件客户端的设置以 Thunderbird 为例。<br />
+              <br />
+            * SMTP 方面：<br />
+              <br />
+            　　在 SMTP 服务器设置中，选择 SSL 方式。使用 Thunderbird 的情况下，选择 SSL 后，端口号会自动变成 465。其它邮件客户端软件请根据实际情况正确设置。 <br />
+              <br />
+              <img src="mailcli/thunderbird_ssl_04.gif" width="374" height="297" border="1" /><br />
+                <br />
+      * POP 方面：<br />
+          <br />
+            　　在 POP 服务器设置中，选择 SSL 方式。使用 Thunderbird 的情况下，选择 SSL 后，端口号会自动变成 995。其它邮件客户端软件请根据实际情况正确设置。 <br />
+          <br />
+              <img src="mailcli/thunderbird_ssl_03.gif" width="445" height="214" border="1" /><br />
+                <br />
+              　　在发送或接收邮件时，会弹出服务器证书相关的信息，如下：<br />
+                <br />
+                <img src="mailcli/thunderbird_ssl_01.gif" width="558" height="335" border="1" /><br />
+                  <br />
+                　　选择“确定”接受服务器证书。<br />
+                  <br />
+                  <img src="mailcli/thunderbird_ssl_02.gif" width="380" height="147" border="1" /><br />
+                    <br />
+                  　　再次点击”确定“信任此服务器证书。<br />
+                    <br />
+                  　　最后发送邮件到服务器的相应用户，并确认能够接收。<br />
+      </p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

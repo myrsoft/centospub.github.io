@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 用 phpMyAdmin 让 MySQL 数据库管理温和化 &gt;</strong>  （最近更新日：2006/08/31）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　这里所说的“温和化”不如说成“大众化”…<br />
+          <br />
+　　这一节介绍通过phpMyAdmin这个工具实现用浏览器来管理服务器MySQL的方法。<br />
+<br />
+　　但phpMyAdmin存在的意义只是为了让MySQL的管理变的让非专业人士更容易理解，其实质还是SQL命令的执行。在<a href="mysql.html">构建MySQL数据库服务器</a>中，对SQL命令的初级做了简单的演习。<br />
+<br />
+前言以下灰字部分为选读，如您时间宝贵，不读也不会妨碍您phpMyAdmin的安装与配置。<br />
+<br />
+<span class="message">　　操作系统的用户界面来说，可分为GUI方式（图形方式）和CUI方式（文字方式），习惯于装有Microsoft  Windows操作系统PC的用户，基本上没什么机会接触到CUI，因为Windows下，大多数的工作可通过鼠标控制窗体的动作来完成。而Linux下  的X Window System也同Microsoft  Windows一样提供给了用户一个GUI。无论CUI或GUI都无非为用户提供了一个用户与操作系统内核进行沟通的工具。但为何CUI依然无法被GUI  取代，笔者以为：第一，GUI方式操作的本质大多数还是由类似于CUI下命令在后台运行的方式来完成，也可以说CUI让用户离操作系统内核更近；第二，尤  其对于服务器来说，CUI显得高效与快捷--服务器的存在无非是为用户提供服务而存在，但如果GUI庞大的体积以及它消耗掉的巨大的系统资源，使的服务器  大部分的可利用资源用于系统本身组件（GUI）的运算而不是面对于反馈用户请求的运算，那服务器也就失去了大半的服务器的意义。这也是为什么本站介绍的所  有方法都是基于CUI方式的原因。而本节要介绍的phpMyAdmin也类似于MySQL的GUI--您可以通过浏览器来访问MySQL服务器，但笔者更  加推荐您通过服务器端的快捷的MySQL客户端以“CUI”的方式来管理您的数据库。</span><br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装 phpMyAdmin</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先下载phpMyAdmin，并安装。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">wget http://jaist.dl.sourceforge.net/sourceforge/phpmyadmin/phpMyAdmin-2.7.0-pl2.tar.gz</span><span class="message">　</span><span class="intro">← 下载phpMyAdmin（连续输入，无换行）</span><span class="message"><br />
+              <br />
+              --04:24:57--  http://jaist.dl.sourceforge.net/sourceforge/phpmyadmin/phpMyAdmin-2.7.0-pl2.tar.gz<br />
+              =&gt; `phpMyAdmin-2.7.0-pl2.tar.gz.1'<br />
+              Resolving jaist.dl.sourceforge.net... 150.65.7.130<br />
+              Connecting to jaist.dl.sourceforge.net|150.65.7.130|:80... connected.<br />
+              HTTP request sent, awaiting response... 200 OK<br />
+              Length: 3,355,025 (3.2M) [application/x-gzip] </span>
+                <p class="message">100%[====================================&gt;] 3,355,025    274.27K/s    ETA 00:00</p>
+                <span class="message">04:25:07 (345.11 KB/s) - `phpMyAdmin-2.7.0-pl2.tar.gz.1' saved [3355025/3355025]<br />
+                <br />
+                [root@sample ~]# </span><span class="command">tar zxvf phpMyAdmin-2.7.0-pl2.tar.gz</span><span class="message">　</span><span class="intro">← 展开被压缩的tar文件</span><span class="message"><br />
+                <br />
+                [root@sample ~]# </span><span class="command">mv phpMyAdmin-2.7.0-pl2/ /var/www/phpmyadmin</span><span class="message">　</span><span class="intro">← 移动到相应目录下</span><span class="message"><br />
+                <br />
+                [root@sample ~]# </span><span class="command">rm -f phpMyAdmin-2.7.0-pl2.tar.gz</span>　<span class="intro">← 删除遗留的源代码文件 </span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，安装php-mbstring，让phpmyadmin能够正确识别字符串。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">yum -y install php-mbstring</span><span class="message">　</span><span class="intro">← 在线安装php-mbstring</span><span class="message"><br />
+              <br />
+              Setting up Install Process<br />
+              Setting up repositories<br />
+              dag 100% |=========================| 1.1 kB 00:00<br />
+              update 100% |=========================| 951 B 00:00<br />
+              base 100% |=========================| 1.1 kB 00:00<br />
+              addons 100% |=========================| 951 B 00:00<br />
+              extras 100% |=========================| 1.1 kB 00:00<br />
+              Reading repository metadata in from local files<br />
+              primary.xml.gz 100% |=========================| 25 kB 00:00<br />
+              extras : ################################################## 98/98<br />
+              Added 1 new packages, deleted 0 old in 0.48 seconds<br />
+              Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+              Finished<br />
+              Parsing package install arguments<br />
+              Resolving Dependencies<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for php-mbstring to pack into transaction set.<br />
+              php-mbstring-4.3.9-3.15.i 100% |=========================| 18 kB 00:00<br />
+              ---&gt; Package php-mbstring.i386 0:4.3.9-3.15 set to be updated<br />
+              --&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                Package Arch Version Repository Size<br />
+                =============================================================================<br />
+                Installing:<br />
+                php-mbstring i386 4.3.9-3.15 base 920 k</p>
+                <p class="message">Transaction Summary<br />
+                =============================================================================<br />
+                Install 1 Package(s)<br />
+                Update 0 Package(s)<br />
+                Remove 0 Package(s)<br />
+                Total download size: 920 k<br />
+                Downloading Packages:<br />
+                (1/1): php-mbstring-4.3.9 100% |=========================| 920 kB 00:01<br />
+                Running Transaction Test<br />
+                Finished Transaction Test<br />
+                Transaction Test Succeeded<br />
+                Running Transaction<br />
+                Installing: php-mbstring ######################### [1/1]</p>
+                <span class="message">Installed: php-mbstring.i386 0:4.3.9-3.15<br />
+                Complete!</span><br />
+              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置 phpMyAdmin</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后配置phpMyAdmin。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">cp /var/www/phpmyadmin/config.default.php /var/www/phpmyadmin/config.inc.php</span><span class="message"><br />
+  　</span><span class="intro">← 复制默认配置文件模板--&gt;建立到应用配置文件config.inc.php</span><span class="message"><br />
+  [root@sample ~]# </span><span class="command">chmod 660 /var/www/phpmyadmin/config.inc.php</span><span class="message">　</span><span class="intro">← 改变其属性，使其具有可写性</span><span class="message"><br />
+  <br />
+  [root@sample ~]# </span><span class="command">vi /var/www/phpmyadmin/config.inc.php</span><span class="message">　</span><span class="intro">← 修改phpMyAdmin的配置文件</span><span class="message"><br />
+  <br />
+  </span><span class="after">$cfg['blowfish_secret'] = '</span><span class="att1">在此填入口令</span><span class="after">'; </span><span class="message">　</span><span class="intro">← 找到此行，并设置相应的口令（这个口令只是程序内部使用，并非登录相关的口令。口令长度限制在46个字符以内。）</span><span class="message"><br />
+  <br />
+  </span><span class="before">$cfg['Servers'][$i]['auth_type']     = 'config';</span><span class="message"> 　</span><span class="intro">← 找到此行，将“config”的值变为“cookie”<br />
+  　↓</span><span class="message"><br />
+  </span><span class="after">$cfg['Servers'][$i]['auth_type']     = 'cookie';</span><span class="message"> 　</span><span class="intro">← 变为此状态，使认证方式为cookie方式</span><span class="message"><br />
+                        </span>
+              <span class="message">[root@sample ~]# </span><span class="command">chown -R root.apache /var/www/phpmyadmin/</span>              　<span class="intro">← 改变phpMyAdmin的归属 </span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后建立phpMyAdmin与Apache的联系。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">vi /etc/httpd/conf.d/phpmyadmin.conf</span><span class="message">　</span><span class="intro">← 建立供Apache调用的phpMyAdmin配置文件如下：</span><span class="message"><br />
+              </span>
+                <span class="conffile">Alias /phpmyadmin /var/www/phpmyadmin <br />
+                <br />
+                </span><span class="att2">下面的部分使得外网没有权限访问和使用phpmyadmin，如果允许外网用户，请不要填加如下部分到配置文件中</span><span class="conffile"><br />
+&lt;Location /phpmyadmin&gt;<br />
+Order deny,allow<br />
+Deny from all<br />
+Allow from 127.0.0.1<br />
+Allow from 192.168.0<br />
+&lt;/Location&gt;</span><br />
+  <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span>　 <span class="intro">← 重新启动HTTP服务，使以上设置生效</span><br />
+                <span class="message">Stopping httpd:</span>　　　　　　　　　　　　　　                                            [ <span class="after">OK</span>  ]<br />
+                <span class="message">Starting httpd: </span>                                           　　　　　　　　　　　　　　[  <span class="after">OK</span>  ]</td>
+            </tr>
+          </table>
+          <span class="before"><br />
+          注：以上&lt;Location&gt;&lt;/Location&gt;标签，如果在一些希望对外网用户开放phpMyAdmin的情况下请不要添加。这里处于安全考虑，只允许服务器本地及局域网用户访问phpMyAdmin。 </span>
+          <br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">测试 phpMyAdmin</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，对phpMyAdmin进行一下简单的测试。<br />
+          <br />
+　　在浏览器中输入“http://服务器IP地址/phpmyadmin/”（局域网内的IP地址），如果出现如下画面，说明phpMyAdmin正在运行中。<br />
+<br />
+<img src="zend/phpmyadmin01.gif" width="811" height="479" border="1" /><br />
+<p> 　　要注意的是，浏览器的cookie功能要设置为接受的状态。<br />
+  <br />
+　　在使用中文版浏览器进行访问时，页面会默认成中文显示。如果默认不是中文，可以从language的选框中选择编码为GB2312的中文。这里以  MySQL服务器中的root用户进行登录为例（在MySQL服务器中建立的一般用户同样可以通过phpMyAdmin登录数据库服务器），截图如下：<br />
+<br />
+<img src="zend/phpmyadmin02.gif" width="788" height="501" border="1" /><br />
+<br />
+　　以上，通过phpMyAdmin可以完成一些基本的数据库管理及数据库相关用户管理的操作。其本质，与通过SQL指令的方式无区别。</p>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

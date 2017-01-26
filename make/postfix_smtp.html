@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; SMTP服务器的构建	（ Postfix ） &gt;</strong>  （最近更新日：2006/09/28）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在CentOS中，默认的邮件服务器（SMTP方面）是sendmail，但sendmail有若干的缺点，比如，配置复杂、安全漏洞曾被多次发现--并且依然存在隐患、邮件发送速度慢等等，这里就不再一一叙述。而另一个被广泛应用于邮件服务方面的“Postfix”的缺点就少得多，或者说它就是针对于sendmail的缺点，而被设计的。对应sendmail的短处，它在各方面也比较成熟。所以，无特殊要求，这里不推荐用sendmail来构建邮件服务器。本站介绍的邮件服务器配置方法，也将基于Postfix。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">添加MX记录（这里假设使用动态域名）</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　由于MX记录添加后，可能生效要等待一段时间（通常为数分钟或数十分钟，也可能马上生效），所以在安装配置前，我们首先为动态域名添加MX记录。添加方法也会因域名ISP的不同而不同，但大致信息如下：<br />
+          <br />
+          　　　　　mx <span class="att1">mail</span>.centospub.com. 10<br />
+          　　　　　a mail 服务器的IP地址<br />
+          <br />
+          　　mail为别名，10为优先度。这个别名指向服务器的IP地址。（如有疑问或需要帮忙请到 <a href="http://www.centospub.com/bbs">技术论坛</a> 发贴。）<br />
+          <br />
+          　　确认MX记录的添加是否生效的方法：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">host -t mx centospub.com</span><br />
+                <br />
+                <span class="message">centospub.com mail is handled by 10 mail.centospub.com.<span class="intro">　 ← 确认MX记录生效</span></span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">安装Postfix</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，安装Postfix。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install postfix</span><span class="intro">　 ← 在线安装Postfix</span><br />
+                <br />
+                <span class="message">Setting up Install Process<br />
+              Setting up repositories<br />
+              dag                       100% |=========================| 1.1 kB    00:00<br />
+              update                    100% |=========================|  951 B    00:00<br />
+              base                      100% |=========================| 1.1 kB    00:00<br />
+              addons                    100% |=========================|  951 B    00:00<br />
+              extras                    100% |=========================| 1.1 kB    00:00<br />
+              Reading repository metadata in from local files<br />
+              primary.xml.gz            100% |=========================|  28 kB    00:04<br />
+              update    : ################################################## 84/84<br />
+              Added 84 new packages, deleted 1499 old in 3.44 seconds<br />
+              primary.xml.gz            100% |=========================|  157 B    00:00<br />
+              Added 0 new packages, deleted 1499 old in 1.97 seconds<br />
+              primary.xml.gz            100% |=========================|  26 kB    00:00<br />
+              extras    : ################################################## 102/102<br />
+              Added 102 new packages, deleted 1499 old in 2.73 seconds<br />
+              Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+              Finished<br />
+              Parsing package install arguments<br />
+              Resolving Dependencies<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for postfix to pack into transaction set.<br />
+              postfix-2.2.10-1.RHEL4.2. 100% |=========================|  40 kB    00:00<br />
+              ---&gt; Package postfix.i386 2:2.2.10-1.RHEL4.2 set to be updated<br />
+              --&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                Package                 Arch       Version          Repository        Size<br />
+                =============================================================================<br />
+                Installing:<br />
+                postfix                 i386       2:2.2.10-1.RHEL4.2  base              3.0 M</p>
+                <p class="message">Transaction Summary<br />
+                =============================================================================<br />
+                Install      1 Package(s)<br />
+                Update       0 Package(s)<br />
+                Remove       0 Package(s)<br />
+                Total download size: 3.0 M<br />
+                Downloading Packages:<br />
+                (1/1): postfix-2.2.10-1.R 100% |=========================| 3.0 MB    00:05<br />
+                Running Transaction Test<br />
+                Finished Transaction Test<br />
+                Transaction Test Succeeded<br />
+                Running Transaction<br />
+                Installing: postfix                      ######################### [1/1]</p>
+                <span class="message">Installed: postfix.i386 2:2.2.10-1.RHEL4.2<br />
+              Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置Postfix及相关组件</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+      [1] 对Postfix进行配置。
+      <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/postfix/main.cf</span><span class="intro"><span class="message">　 </span>← 编辑Postfix的配置文件</span><br />
+              <br />
+              <span class="before">#myhostname = host.domain.tld</span><span class="intro"><span class="message">　 </span>← 找到此行，将等号后面的部分改写为主机名</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">myhostname = sample.centospub.com</span><span class="intro"><span class="message">　 </span>← 变为此状态，设置系统的主机名</span><br />
+              <br />
+              <span class="before">#mydomain = domain.tld</span><span class="intro"><span class="message">　 </span>← 找到此行，将等号后面的部分改写为域名</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">mydomain = centospub.com</span><span class="intro"><span class="message">　 </span>← 变为此状态，设置域名（我们将让此处设置将成为E-mail地址“@”后面的部分）</span><br />
+              <br />
+              <span class="before">#myorigin = $mydomain</span><span class="intro"><span class="message">　 </span>← 找到此行，将行首的#去掉</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">myorigin = $mydomain</span><span class="intro"><span class="message">　 </span>← 变为此状态，将发信地址“@”后面的部分设置为域名（非系统主机名）</span><br />
+              <br />
+              <span class="before">inet_interfaces = localhost</span><span class="intro"><span class="message">　 </span>← 找到此行，将“localhost”改为“all”</span><br />
+              <span class="after"><span class="intro">　↓</span><br />
+              inet_interfaces = all</span><span class="intro"><span class="message">　 </span>← 变为此状态，接受来自所有网络的请求</span><br />
+              <br />
+              <span class="before">mydestination = $myhostname, localhost.$mydomain, localhost</span><span class="intro"><span class="message">　 </span>← 找到此行，在行为添加“$mydomain”</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain</span><span class="intro"><span class="message">　 </span>← 变为此状态，指定发给本地邮件的域名</span><br />
+              <br />
+              <span class="before">#relay_domains = $mydestination</span><span class="intro"><span class="message">　 </span>← 找到此行，将行首的#去掉</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">relay_domains = $mydestination</span><span class="intro"><span class="message">　 </span>← 变为此状态，定义允许转发的域名</span><br />
+              <br />
+              <span class="before">#mynetworks = 168.100.189.0/28, 127.0.0.0/8</span><span class="intro"><span class="message">　 </span>← 找到此行，依照自己的内网情况修改</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">mynetworks = 168.100.189.0/28, 127.0.0.0/8</span><span class="intro"><span class="message">　 </span>← 变为此状态，指定内网和本地的IP地址范围</span><br />
+              <br />
+              <span class="before">#home_mailbox = Maildir/</span><span class="intro"><span class="message">　 </span>← 找到这一行，去掉行首的#</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">home_mailbox = Maildir/</span><span class="intro"><span class="message">　 </span>← 变为此状态，指定用户邮箱目录</span><br />
+              <br />
+              <span class="message"># SHOW SOFTWARE VERSION OR NOT<br />
+              #<br />
+              # The smtpd_banner parameter specifies the text that follows the 220<br />
+              # code in the SMTP server's greeting banner. Some people like to see<br />
+              # the mail version advertised. By default, Postfix shows no version.<br />
+              #<br />
+              # You MUST specify $myhostname at the start of the text. That is an<br />
+              # RFC requirement. Postfix itself does not care.<br />
+              #<br />
+              #smtpd_banner = $myhostname ESMTP $mail_name<br />
+              #smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)</span><span class="intro"><span class="message">　 </span>← 找到这一行，接此行添加如下行：</span><br />
+              <span class="after">smtpd_banner = $myhostname ESMTP unknow</span><span class="intro"><span class="message">　 </span>← 添加这一行，不显示SMTP服务器的相关信息</span><br />
+              <br />
+              <span class="intro">在配置文件的文尾，添加如下行：<br />
+              </span><br />
+              <span class="after">smtpd_sasl_auth_enable = yes<span class="intro"><span class="message">　 </span>← 服务器使用SMTP认证</span><br />
+              smtpd_sasl_local_domain = $myhostname<span class="intro"><span class="message">　 </span>← 指定SMTP认证的本地域名（主机名）</span><br />
+              smtpd_sasl_security_options = noanonymous
+              <span class="intro"><span class="message">　 </span>← 不允许匿名的方式认证</span><br />
+              smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+              <br />
+              message_size_limit = 15728640<span class="intro"><span class="message">　 </span>← 规定邮件最大尺寸为15MB</span></span></td>
+            </tr>
+          </table>
+          <br />
+          [2] 配置SMTP认证的相关选项<br />
+          <br />
+          　　为了提高安全性，我们不将系统用户的密码作为相应用户SMTP认证的密码，而将在后面为用户建立SMTP认证专用的密码。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /usr/lib/sasl2/smtpd.conf</span><span class="intro"><span class="message">　 </span>← 编辑SMTP认证的配置文件</span><br />
+              <br />
+              <span class="before">pwcheck_method: saslauthd</span><span class="intro"><span class="message">　 </span>← 找到此行，将“saslauthd”改为“auxprop”</span><br />
+              <span class="intro">　↓</span><br />
+              <span class="after">pwcheck_method: auxprop<span class="intro"><span class="message">　 </span>← 不使用系统用户密码作为用户的SMTP认证密码<br />
+              <br />
+              </span></span><span class="message">[root@sample ~]# </span><span class="command">vi /etc/sysconfig/saslauthd</span><span class="message"><br />
+              <br />
+              </span><span class="before">MECH=shadow</span><span class="message"><span class="intro">　 ← 找到这一行，在前面加# </span><br />
+              <span class="intro">　↓</span><br />
+</span><span class="after">#MECH=shadow</span><span class="message"><span class="intro">　 ← 不使用shadow机制</span><br />
+<br />
+              </span><span class="before">FLAGS=</span><span class="message"><span class="intro">　 ← 找到此行，在等号后面添加“sasldb”</span><br />
+              </span><span class="intro">　↓</span><span class="message"><br />
+              </span><span class="after">FLAGS=sasldb <span class="intro"><span class="message">　 </span>← 定义认证方式为sasldb2</span></span></td>
+            </tr>
+          </table>
+          <br />
+          [3] 
+          建立用户的邮箱目录<br />
+          <br />
+          　　首先建立用户模板下的邮箱目录，以便于建立新用户时，相应用户的邮箱目录自动被建立。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">mkdir /etc/skel/Maildir</span><span class="intro"><span class="message">　 </span>← 在用户模板下建立用户邮箱目录</span><br />
+              <br />
+              <span class="message">[root@sample ~]#</span> <span class="command">chmod 700 /etc/skel/Maildir<span class="intro"><span class="message">　 </span>← 设置用户邮箱目录属性为700</span></span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后再为已经存在的用户建立相应邮箱目录。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">mkdir /home/centospub/Maildir</span><span class="intro">　 ← 为用户（这里以centospub用户为例）建立邮箱目录</span><br />
+                <br />
+                [root@sample ~]# <span class="command">chmod 700 /home/centospub/Maildir</span><span class="intro">　 ← 设置该用户邮箱目录属性为700</span><br />
+                <br />
+              [root@sample ~]# <span class="command">chown centospub. /home/centospub/Maildir<span class="intro">　 ← 设置该用户邮箱目录为该用户所有</span></span></td>
+            </tr>
+          </table>
+          <br />
+      [4] 为用户设置SMTP认证密码<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">saslpasswd2 -u </span><span class="att1">sample.centospub.com</span><span class="command"> -c centospub</span><span class="intro">　 ← 为centospub用户设置SMTP认证密码 </span><br />
+            <br />
+            Password:<span class="intro">　 ← 在这里输入密码（不会显示）</span><br />
+          Again (for verification):<span class="intro">　 ← 再次输入密码</span></td>
+        </tr>
+      </table>   
+      <br />
+      [5] 改变SALS的属性及归属<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">chgrp postfix /etc/sasldb2</span><span class="intro">　 ← 将数据库归属改为postfix，</span><br />
+            <br />
+          [root@sample ~]# <span class="command">chmod 640 /etc/sasldb2<span class="intro">　 ← 将数据库属性改为640</span></span></td>
+        </tr>
+      </table>
+      <br />
+      [6] 关闭sendmail服务及设置默认MTA<br />
+      <br />
+      　　因为在用Postfix作为SMTP服务器的前提下，我们不准备再用sendmail，所以将sendmail服务关掉，以确保安全及节省系统资源。<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/etc/rc.d/init.d/sendmail stop</span><span class="intro">　 ← 关闭sendmail服务</span><br />
+            <br />
+            Shutting down sendmail:　　　　　　　　                                    [  <span class="after">OK</span>  ]<br />
+            Shutting down sm-client:                                   　　　　　　　　[  <span class="after">OK</span>  ]<br />
+            <br />
+            [root@sample ~]# <span class="command">chkconfig sendmail off</span><span class="intro">　 ← 关闭sendmail自启动</span><br />
+            <br />
+            [root@sample ~]# <span class="command">chkconfig --list sendmail</span><span class="intro">　 ← 确认sendmail自启动已被关闭（都为off就OK）</span><br />
+          sendmail        <span class="att1">0:off   1:off   2:off   3:off   4:off   5:off   6:off</span></td>
+        </tr>
+      </table>
+      <br />
+      　　然后再将默认的MTA设置为Postfix。<br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">alternatives --config mta</span><span class="intro">　 ← 设置默认MTA</span>
+            <p class="message">There are 2 programs which provide 'mta'.</p>
+            <p class="message"> Selection    Command<br />
+            -----------------------------------------------<br />
+            <span class="att1">*+</span> 1           /usr/sbin/sendmail.sendmail<span class="intro">　 ← 当前状态：sendmail为默认MTA</span><br />
+            　2           /usr/sbin/sendmail.postfix</p>
+            <span class="message">Enter to keep the current selection[+], or type selection number: </span><span class="command">2</span><span class="intro">　 ← 在这里输入2，使Postfix成为默认MTA</span></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="0">
+        <tr>
+          <td bgcolor="#4665A6"><table  border="0">
+              <tr>
+                <td bgcolor="#333333" class="table-title">启动相应服务</td>
+              </tr>
+          </table></td>
+        </tr>
+      </table>
+      <br />
+      　　最后，启动SMTP认证及Postfix服务，并设置相应服务为自启动。 <br />
+      <br />
+      <table width="100%" border="2">
+        <tr>
+          <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">chkconfig saslauthd on</span><span class="intro">　 ← 将SMTP-Auth设置为自启动</span><br />
+<br />
+[root@sample ~]# <span class="command">chkconfig --list saslauthd</span><span class="intro">　 ← 确认SMTP-Auth服务状态</span><br />
+saslauthd       0:off   1:off <span class="att1">2:on    3:on    4:on    5:on</span> 6:off<span class="intro">　 ← 确认2~5为on的状态就OK</span><br />
+            <br />
+            [root@sample ~]# <span class="command">/etc/rc.d/init.d/saslauthd start</span><span class="intro">　 ← 启动SMTP-Auth</span><br />
+            <br />
+            Starting saslauthd:                                    　　　　　　　　　　[  <span class="after">OK</span>  ]
+            <br />
+          <br />
+          [root@sample ~]# <span class="command">chkconfig postfix on</span><span class="intro">　 ← 将Postfix设置为自启动 </span><br />
+          <br />
+[root@sample ~]# <span class="command">chkconfig --list postfix</span><span class="intro">　 ← 确认Postfix服务状态</span><br />
+postfix         0:off   1:off <span class="att1">2:on    3:on    4:on    5:on</span> 6:off<span class="intro">　 ← 确认2~5为on的状态就OK</span><br />
+          <br />
+          [root@sample ~]# <span class="command">/etc/rc.d/init.d/postfix start</span><span class="intro">　 ← 启动Postfix</span><br />
+          <br />
+          Starting postfix:                                          　　　　　　　　　　　[  <span class="after">OK</span>  ]</td>
+        </tr>
+      </table>
+      <br />
+      　　至此，就完成了SMTP服务器方面的配置，但目前只具从备客户端通过服务器发送邮件的功能。做为完整的邮件服务器，还需具备从客户端通过POP/IMAP协议接受邮件到本地的功能。POP/IMAP服务器的构建请参见下一节 &lt; <a href="dovecot_pop3.html"><strong>POP / IMAP 服务器的构建（ Dovecot ）</strong></a> &gt;。<br />
+      <br />
+      <br />
+      <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

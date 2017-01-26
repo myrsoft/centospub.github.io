@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 开放一般用户的网页发布权限 &gt;</strong>  （最近更新日：2006/08/27）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　当我们想发布网页的时候，通常找一些免费空间，将我们的网页等等放在那个免费空间上。通常，我们申请到的免费空间的访问方式通常是通过“http:  //www.sample.com/~user”方式的。其中“user”通常为申请时提交的用户名。实质上，在Linux下，Apache服务器拥有让  一般用户发布网页的功能。我们要做的也只是更改Apache配置文件httpd.conf中的一些设置而已。对于一般用户来说，在用户目录中建立相应的子  目录，将这个子目录作为对外开放的Web根目录，并设置相应目录的相应属性，即可达到与服务器单独发布（把网页放在/var/www/html下）达到同  样的效果。而且，本节配置完成的服务器，也完全可以为别人提供网页存放、发布等等的服务。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">修改Apache的配置文件</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　首先来修改Apache的配置文件，使Apache支持通过一般用户目录发布网页的功能。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf/httpd.conf</span>　 <span class="intro">← 用vi打开SSH的配置文件</span><br />
+                <br />
+                <span class="before">UserDir disable</span>　<span class="intro">← 找到这一行，在行首增加“#”</span><br />
+　<span class="intro">↓</span><br />
+<span class="after">#UserDir disable</span>　<span class="intro">← 修改后变为此状态</span><br />
+<br />
+<span class="before">#UserDir public_html</span>　<span class="intro">← 找到这一行，去掉行首的“#”</span><br />
+<br />
+<span class="after">UserDir public_html</span>　<span class="intro">← 修改后变为次状态</span><br />
+<br />
+<span class="att2">找到下面水平线之间的部分行，<strong>将每行行首的“#”去掉</strong>，并在一些细节选项上按提示做修改</span><br />
+<span class="before">-------------------------------------------------------------------------------<br />
+#&lt;Directory /home/*/public_html&gt;<br />
+<s>#　　 AllowOverride FileInfo AuthConfig Limit</s>　            </span><span class="intro">← 找到此行，将相应选项删除后，赋予All选项<br />
+　　　　　　　↓</span><span class="before"><br />
+　　　</span><span class="after">AllowOverride All</span><span class="before"> 　            </span><span class="intro">← 变为此状态，允许使用.htaccess</span><span class="before"><br />
+<s>#　　 Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec</s>　 </span><span class="intro">← 找到此行，将相应选项删除<br />
+　　　　　　　　　　↓</span><span class="before"><br />
+　　　</span><span class="after">Options IncludesNoExec ExecCGI FollowSymLinks</span><span class="before"> 　            </span><span class="intro">← 变为此状态，允许执行CGI及SSI</span><span class="before"><br />
+#　　&lt;Limit GET POST OPTIONS&gt;<br />
+#　　　　Order allow,deny<br />
+#　　　　Allow from all<br />
+#　　&lt;/Limit&gt;<br />
+#　　&lt;LimitExcept GET POST OPTIONS&gt;<br />
+#　　　　Order deny,allow<br />
+#　　　　Deny from all<br />
+#　　&lt;/LimitExcept&gt;<br />
+#&lt;/Directory&gt;<br />
+-------------------------------------------------------------------------------</span><br />
+<br />
+<span class="att2">↓ 以上水平线之间的部分修改后，变为如下状态，尤其注意<strong>不要忘记将没行行首的“#”去掉</strong>！请核对。</span><br />
+<br />
+<span class="after">-------------------------------------------------------------------------------<br />
+&lt;Directory /home/*/public_html&gt;<br />
+　　　AllowOverride All<br />
+　　　Options IncludesNoExec ExecCGI FollowSymLinks<br />
+　　&lt;Limit GET POST OPTIONS&gt;<br />
+　　　　Order allow,deny<br />
+　　　　Allow from all<br />
+　　&lt;/Limit&gt;<br />
+　　&lt;LimitExcept GET POST OPTIONS&gt;<br />
+　　　　Order deny,allow<br />
+　　　　Deny from all<br />
+　　&lt;/LimitExcept&gt;<br />
+&lt;/Directory&gt;<br />
+-------------------------------------------------------------------------------</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">重新启动HTTP服务</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　重新启动HTTP服务，使以上的设置生效。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span> 　 <span class="intro">← 重新启动HTTP服务</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">一般用户的Web目录及相应属性的设置</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　一般用户对外开放Web，需要建立一般用户专用的Web目录，这里根据httpd.conf设置文件中的设置，需要将用户Web目录命名为“public_html”，并建立在一般用户的根目录下。一般用户的根目录属性也要设置为711。<br />
+          <br />
+　　在这里以centospub为例，假设系统中，欲开放名为centospub的用户对外开放Web的权限，其设置过程如下。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">chmod 711 /home/centospub/</span>　              <span class="intro">← 将欲开放Web的用户目录属性设置为711</span><br />
+      <br />
+      <span class="message">[root@sample ~]#</span> <span class="command">su  - centospub</span>　              <span class="intro">← 登录为欲开放Web的一般用户</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">cd</span> 　              <span class="intro">← 到用户根目录</span><br />
+<br />
+<span class="message">[centospub@sample ~]$</span> <span class="command">mkdir public_html</span>　              <span class="intro">← 在用户根目录下建立Web目录，名为“public_html”</span><br />
+<br />
+<span class="message">[centospub@sample ~]$</span> <span class="command">chmod 755 public_html</span>            　              <span class="intro">← 将用Web目录的属性设置为755</span></td>
+  </tr>
+</table>
+<br />
+　　然后，让每建立新用户的时候，用户目录下都能自动建立Web开放用的public_html目录，使得每个用户都有开放Web的机会。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">su -</span> 　          <span class="intro">← 再次登录为root用户</span><br />
+      <span class="message">Password:</span>              　          <span class="intro">← 在这里输入密码</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">mkdir /etc/skel/public_html</span>　          <span class="intro">← 建立相应目录，从而使得public_html自动建立</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">exit</span> 　          <span class="intro">← 退出root登录，返回一般用户（这里以返回centospub用户登录为例）</span></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">对用户Web支持进行全面测试</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+[1] 对HTML格式网页正确显示的测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">vi /home/centospub/public_html/index.html</span>　                 <span class="intro">← 在用户Web目录下建立测试页，如下：</span><br />
+      <br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World&lt;/title&gt;<br />
+&lt;body&gt;<br />
+Hello,World!<br />
+&lt;/body&gt;<br />
+&lt;/html&gt; </span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/~相应用户名（这里以centospub用户为例）”或者“http://你的域名/~相应用户名（这里以centospub用户为例）”，如果出现“Hello,World！”，并且浏览器读取编码为简体中文，就OK。<br />
+　　注：用户名前面不要忘了加上“ ~ ”符号。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">rm -f /var/www/html/index.html</span>　<span class="intro">← 删除测试页</span></td>
+  </tr>
+</table>
+<br />
+[2] 对CGI的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">vi /home/centospub/public_html/test.cgi</span>　 <span class="intro">← 在用户Web目录下建立测试页，如下：</span><br />
+      <br />
+      <span class="conffile">#!/usr/bin/perl<br />
+print &quot;Content-Type: text/html\n\n&quot;;<br />
+print &quot;&lt;html&gt;&lt;body&gt;&quot;; <br />
+print &quot;Hello,World!CGI is working!&lt;br&gt;&quot;;<br />
+print &quot;&lt;/body&gt;&lt;/html&gt;&quot;;<br />
+      </span><br />
+      <span class="message">[centospub@sample ~]#</span> <span class="command">chmod 755 /home/centospub/public_html/test.cgi</span>　 <span class="intro">← 更改CGI测试文件的</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/~相应用户名/test.cgi”或者“http:  //你的域名/~相应用户名/test.cgi”，如果正确显示“Hello,World!CGI is  working!”，说明用户Web目录对于CGI的支持没有问题。<br />
+<br />
+[3] 对PHP的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">vi /home/centospub/public_html/test.php</span>　 <span class="intro">← 建立PHP测试文件，内容如下：</span><br />
+        <br />
+        <span class="conffile">&lt;?php<br />
+          phpinfo();<br />
+          ?&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/~相应用户名/test.php”或者“http://你的域名/~相应用户名/test.php”后，正确的显示出了服务器上PHP的详细信息，说明用户Web目录对PHP可以正确的支持。<br />
+<br />
+[4] 对SSI的支持进行测试 <br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">vi /home/centospub/public_html/test.shtml</span>　 <span class="intro">← 在用户Web目录下建立SSI测试页，如下：</span><br />
+      <br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World!&lt;/title&gt;<br />
+&lt;body&gt;<br />
+TEST SSI<br />
+&lt;!--#config timefmt=&quot;%Y/%m/%d %H:%M:%S&quot; --&gt;<br />
+&lt;!--#echo var=&quot;DATE_LOCAL&quot; --&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/~相应用户名/test.shtml”或者“http://你的域名/~相应用户名/test.shtml”，如果正确显示当时的日期和时间，说明用户Web目录对于SSI的支持没有问题。<br />
+<br />
+[5] 对.htaccess的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">vi /home/centospub/public_html/index.shtml</span>　 <span class="intro">← 建立.htaccess测试用的页，内容如下：<br />
+      </span><br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World!&lt;/title&gt;<br />
+&lt;body&gt;<br />
+The name of the file is &lt;!--#echo var=&quot;DOCUMENT_NAME&quot; --&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/~相应用户名/”或者“http://你的域名/~相应用户名/”，如果显示“Forbidden”，说明.htaccess正常。<br />
+<br />
+　　然后在用户的Web目录下建立一个.htaccess文件，并定义相应规则，如下：<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample html]#</span> <span class="command">vi /home/centospub/public_html/.htaccess</span>　<span class="intro"> ← 建立.htaccess文件，内容如下：</span><br />
+      <br />
+      <span class="conffile">DirectoryIndex index.shtml</span></td>
+  </tr>
+</table>
+<br />
+　　这时，再次在浏览器中输入“http://服务器IP地址/~相应用户名/”或者“http://你  的域名/~相应用户名/”，如果正确显示“ The name of the file is  index.shtml”，说明.htaccess中的规则生效状态，OK。<br />
+<br />
+<br />
+[6] 删除测试用的遗留文件<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[centospub@sample ~]#</span> <span class="command">rm -f /home/centospub/public_html/* /home/centospub/public_html/.htaccess</span> 　<span class="intro">← 删除测试用过的遗留文件</span> <br />
+      <br />
+      <span class="message">[centospub@sample ~]#</span> <span class="command">exit</span> 　<span class="intro">← 退出用户登录（回到root登录的状态）</span></td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; Samba 服务器的构建 &gt;</strong>  （最近更新日：2007/01/29）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">前　　言</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在我们使用 Windows 作为客户机的时候，通常有文件、打印共享的需求。作为Windows 网络功能之一，通常可以在 Windows 客户机之间通过 Windows Network 固有的功能实现这些要求。然而，通过 Samba 我们也可以让一台 CentOS 主机来兼容 Windows 网络，实现同样的功能，进而充分发挥 CentOS 主机的可用性。<br />
+          <br />
+          　　本篇文档主要介绍怎样通过 Samba 服务器的构建实现 Windows 网络中的文件共享。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">安装 Samba </span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　首先，通过 yum 来在线安装 Samba 。<br /> 
+      <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install samba</span>　 <span class="intro">← 安装 Samba </span><br />
+                <br />
+                <span class="message">Setting up Install Process<br />
+              Setting up repositories<br />
+              update                    100% |=========================|  951 B    00:00<br />
+              base                      100% |=========================| 1.1 kB    00:00<br />
+              addons                    100% |=========================|  951 B    00:00<br />
+              extras                    100% |=========================| 1.1 kB    00:00<br />
+              Reading repository metadata in from local files<br />
+              primary.xml.gz            100% |=========================|  73 kB    00:00<br />
+              update    : ################################################## 212/212<br />
+              Added 212 new packages, deleted 0 old in 4.94 seconds<br />
+              primary.xml.gz            100% |=========================| 569 kB    00:00<br />
+              base      : ################################################## 1500/1500<br />
+              Added 1500 new packages, deleted 0 old in 28.97 seconds<br />
+              primary.xml.gz            100% |=========================|  157 B    00:00<br />
+              Added 0 new packages, deleted 0 old in 0.03 seconds<br />
+              primary.xml.gz            100% |=========================|  32 kB    00:00<br />
+              extras    : ################################################## 124/124<br />
+              Added 124 new packages, deleted 0 old in 1.93 seconds<br />
+              Parsing package install arguments<br />
+              Resolving Dependencies<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for samba to pack into transaction set.<br />
+              samba-3.0.10-1.4E.9.i386. 100% |=========================| 101 kB    00:00<br />
+              ---&gt; Package samba.i386 0:3.0.10-1.4E.9 set to be updated<br />
+              --&gt; Running transaction check<br />
+              --&gt; Processing Dependency: samba-common = 0:3.0.10 for package: samba<br />
+              --&gt; Restarting Dependency Resolution with new changes.<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for samba-common to pack into transaction set.<br />
+              samba-common-3.0.10-1.4E. 100% |=========================|  37 kB    00:00<br />
+              ---&gt; Package samba-common.i386 0:3.0.10-1.4E.9 set to be updated<br />
+              --&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                Package                 Arch       Version          Repository        Size<br />
+                =============================================================================<br />
+                Installing:<br />
+                samba                   i386       3.0.10-1.4E.9    base               13 M<br />
+                Installing for dependencies:<br />
+                samba-common            i386       3.0.10-1.4E.9    base              5.0 M</p>
+                <p class="message">Transaction Summary<br />
+                =============================================================================<br />
+                Install      2 Package(s)<br />
+                Update       0 Package(s)<br />
+                Remove       0 Package(s)<br />
+                Total download size: 18 M<br />
+                Downloading Packages:<br />
+                (1/2): samba-common-3.0.1 100% |=========================| 5.0 MB    00:04<br />
+                (2/2): samba-3.0.10-1.4E. 100% |=========================|  13 MB    00:11<br />
+                warning: rpmts_HdrFromFdno: V3 DSA signature: NOKEY, key ID 443e1821<br />
+                Public key for samba-common-3.0.10-1.4E.9.i386.rpm is not installed<br />
+                Retrieving GPG key from http://mirror.centos.org/centos/RPM-GPG-KEY-centos4<br />
+                Importing GPG key 0x443E1821 &quot;CentOS-4 key &lt;centos-4key@centos.org&gt;&quot;<br />
+                Key imported successfully<br />
+                Running Transaction Test<br />
+                Finished Transaction Test<br />
+                Transaction Test Succeeded<br />
+                Running Transaction<br />
+                Installing: samba-common                 ######################### [1/2]<br />
+                Installing: samba                        ######################### [2/2]</p>
+                <span class="message">Installed: samba.i386 0:3.0.10-1.4E.9<br />
+                Dependency Installed: samba-common.i386 0:3.0.10-1.4E.9<br />
+                Complete!</span><br />
+              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">配置 Samba </span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <p>　　然后，通过编辑 /etc/samba/smb.conf ，根据需求配置 Samba。在这里，本文的原则是只将文件共享应用于内网，并让将要被共享的目录拥有充分的读写权限属性。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/samba/smb.conf</span><span class="intro"><span class="message">　 </span>← 编辑 Samba 的配置文件</span><br />
+              <br />
+              <span class="message">#======================= Global Settings =====================================<br />
+              [global]                　                 <span class="intro">← 找到这一行（全局设置标签），在此行下面添加如下行：<br />
+              </span><br />
+              </span><span class="after">dos charset = GB2312<span class="message">　 <span class="intro">← 将 Windows 客户端的文字编码设置为简体中文 GB2312</span></span><br />
+              unix charset = GB2312<span class="message">　 <span class="intro">← 指定 Samba 所在的 CentOS 服务端新建文件或目录时的编码为 GB2312 </span></span><br />
+              display charset = GB2312<span class="message">　 <span class="intro">← 指定使用 SWAT（一种通过浏览器控制Samba的工具）时页面的默认文字编码 </span></span><br />
+              directory mask = 0777<span class="message">　 <span class="intro">← 指定新建目录的属性（以下4行）</span></span><br />
+              force directory mode = 0777<br />
+              directory security mask = 0777<br />
+              force directory security mode = 0777<br />
+              create mask = 0777<span class="message">　 <span class="intro">← 指定新建文件的属性（以下4行）</span></span><br />
+              force create mode = 0777<br />
+              security mask = 0777<br />
+              force security mode = 0777</span><span class="message"><br />
+              <br />
+              </span><span class="before">workgroup = MYGROUP</span><span class="message">　 <span class="intro">← 找到此行，将工作组名称改为 Windows 网络所定义的工作组名</span><br />
+              <span class="intro">　↓</span><br />
+              </span><span class="after">workgroup = WORKGROUP</span><span class="message">　 <span class="intro">← 变为此状态，这里以 Windows XP 默认的“WORKGROUP”为例</span><br />
+                 <br />
+</span><span class="before">;   hosts allow = 192.168.1. 192.168.2. 127.</span><span class="message">　 <span class="intro">← 找到此行，去掉行首的“;”，并制定访问限制</span><br />
+                 <span class="intro">　↓</span><br />
+                 </span><span class="after">hosts allow = 192.168.0. 127.</span><span class="message">　 <span class="intro">← 变为此状态，指定内网IP地址及本地，只允许这两种情况的访问</span></span><br />
+<br />
+<span class="intro">然后在配置文件的末尾填如下几行，定义公众共享目录：</span><br />
+<br />
+<span class="after">[public]<br />
+comment = Public Stuff<br />
+path = /home/samba<span class="message">　 <span class="intro">← 指定共享目录位置</span></span><br />
+public = yes<br />
+writable = yes<span class="message">　 <span class="intro">← 赋予共享目录写入权限的属性</span></span></span></td>
+            </tr>
+          </table>
+          <p>　　接下来，创建将要通过 Samba 共享给 Windows 网络的专用目录。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">mkdir /home/samba</span><span class="message">　 <span class="intro">← 建立共享文件专用目录</span><br />
+              <br />
+              [root@sample ~]# </span><span class="command">chown -R nobody. /home/samba</span><span class="message">　 <span class="intro">← 设置专用目录归属为 nobody </span><br />
+              <br />
+              [root@sample ~]# </span><span class="command">chmod 777 /home/samba<span class="message">　 <span class="intro">← 将专用目录属性设置为 777 </span></span></span></td>
+            </tr>
+          </table>
+          <br />
+          　　在进行到服务端的连接之前，需要预先对用于登录 Samba 的用户进行设置。这里我们以 CentOS 中 Samba 标准的 Samba 用户数据库管理工具“smbpasswd”为例，创建用于登录 Samba 的用户数据。这里需要注意的一点：用 smbpasswd 创建用户的前提是，系统用户中存在该用户 -- 在基于系统用户之上，才可以创建该用户在 Samba 用户数据库中的信息。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td height="84" bgcolor="#000000" class="message">[root@sample ~]# <span class="command">smbpasswd -a centospub</span>　 <span class="intro">← 将系统用户 centospub（例）加入到 Samba 用户数据库</span><br />
+                <br />
+                New SMB password:　 <span class="intro">← 输入该用户用于登录 Samba 的密码</span><br />
+                Retype new SMB password:　 <span class="intro">← 再次确认输入该密码</span><br />
+              Added user centospub.</td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">启动 Samba 服务</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+      <p>　　在启动 Samba 服务之前，首先将防火墙设置中 Samba 所用到的端口进行开放。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">vi /etc/sysconfig/iptables</span>　 <span class="intro">← 编辑 iptables 配置文件</span><br />
+                <br />
+                -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 25 -j ACCEPT　 <span class="intro">← 找到此行，在下面添加如下行：</span><br />
+                <span class="after">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 139 -j ACCEPT<br />
+                -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 445 -j ACCEPT<br />
+                -A RH-Firewall-1-INPUT -p udp -m udp --dport 137 -j ACCEPT<br />
+                -A RH-Firewall-1-INPUT -p udp -m udp --dport 138 -j ACCEPT</span><span class="intro"><br />
+                </span><br />
+                [root@sample ~]# <span class="command">/etc/rc.d/init.d/iptables restart</span>　 <span class="intro">← 重新启动 iptables ，使新的规则生效 </span><br />
+                Flushing firewall rules:                                   　　　　　　　　　[  <span class="after">OK</span>  ]<br />
+                Setting chains to policy ACCEPT: filter                    　　[  <span class="after">OK</span>  ]<br />
+                Unloading iptables modules:                                　　　　　　[  <span class="after">OK</span>  ]<br />
+                Applying iptables firewall rules:                          　　　　　[  <span class="after">OK</span>  ]<span class="intro"><br />
+              </span></td>
+            </tr>
+          </table>
+          <p>　　最后，启动 Samba 服务。</p>
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">chkconfig smb on</span>　 <span class="intro">← 设置 Samba 自启动</span><br />
+                <br />
+                [root@sample ~]# <span class="command">chkconfig --list smb　 <span class="intro">← 确认 Samba 启动标签，确认 2-5 为 on 的状态</span></span><br />
+              smb             0:off   1:off   <span class="att1">2:on    3:on    4:on    5:on</span>    6:off<br />
+              <br />
+              [root@sample ~]# <span class="command">/etc/rc.d/init.d/smb start</span>　 <span class="intro">← 启动 Samba 服务</span><br />
+              Starting SMB services:　　　　　　                                     [  <span class="after">OK</span>  ]<br />
+              Starting NMB services:　　　　　　                                     [  <span class="after">OK</span>  ]</td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">从 Windows 客户端连接到 Samba 服务器</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <p>　　在服务端启动 Samba 服务后，我们就可以从 Windows 客户端通过 Windows 网络连接到 Samba。这里以 Windows XP 为例，说明如下连接过程：<br />
+          <br />
+          1、从桌面打开“网上邻居”，并点击“查看工作组计算机”选项；<br />
+          <br />
+          <img src="samba/samba01.gif" width="597" height="413" />          <br />
+          <br />
+          2、确认出现 Samba 服务端的连接，并双击该连接；（本站文档的主机名以 Sample 为例）<br />
+          <br />
+          <img src="samba/samba02.gif" width="597" height="413" />          <br />
+          <br />
+      3、输入在服务端预先设置好的 Samba 用户的用户名及密码；（用户名同系统用户名，密码需要输入在通过 smbpasswd 为该系统用户设置的 Samba 专用的密码。）<br />
+            <br />
+            <img src="samba/samba03.gif" width="597" height="413" />      <br />
+            <br />
+          4、然后确认能够连接到 Samba 服务器，并出现根目录及 Samba 专用共享目录。<br />
+          <br />
+          <img src="samba/samba04.gif" width="597" height="413" /><br />
+          <br />
+          　　最后，在相应目录进行新建、修改以及删除文件的操作，测试相应权限的可操作性。</p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

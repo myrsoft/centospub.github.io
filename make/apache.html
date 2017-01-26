@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 用 Apache 构建 HTTP 服务器 &gt;</strong>  （最近更新日：2006/08/26）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　对于大多数的网络服务器，最广泛的功能就是开通HTTP服务，达到开放和发布网站的目的。目前绝大多数的网络交互程序，例如论坛、社区等等也是基于HTTP而建立的。<br />
+          <br />
+　　在这里，我们通过Web服务器软件中使用量超过半数的自由软件Apache，来构建一台能够满足实际要求的多功能Web服务器，使它能够在我们发布网页的基础上，实现可以运行Perl、PHP的等等语言编写的交互程序，以及在虚拟主机、保密方面的功能。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装HTTP（Apache）服务器及相关组件</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先来安装Apache服务器及相关组件。这里使用yum命令来在线安装。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install httpd</span>　            <span class="intro">← 在线安装httpd</span><br />
+                    <br />
+                    <span class="message">Setting up Install Process<br />
+                Setting up repositories<br />
+                dag                       100% |=========================| 1.1 kB    00:00<br />
+                update                    100% |=========================|  951 B    00:00<br />
+                base                      100% |=========================| 1.1 kB    00:00<br />
+                addons                    100% |=========================|  951 B    00:00<br />
+                extras                    100% |=========================| 1.1 kB    00:00<br />
+                Reading repository metadata in from local files<br />
+                Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+                Finished<br />
+                Parsing package install arguments<br />
+                Resolving Dependencies<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for httpd to pack into transaction set.<br />
+                httpd-2.0.52-28.ent.cento 100% |=========================|  62 kB    00:00<br />
+                ---&gt; Package httpd.i386 0:2.0.52-28.ent.centos4 set to be updated<br />
+                --&gt; Running transaction check<br />
+                --&gt; Processing Dependency: libaprutil-0.so.0 for package: httpd<br />
+                --&gt; Processing Dependency: apr &gt;= 0.9.4-24.2 for package: httpd<br />
+                --&gt; Processing Dependency: libapr-0.so.0 for package: httpd<br />
+                --&gt; Processing Dependency: httpd-suexec for package: httpd<br />
+                --&gt; Restarting Dependency Resolution with new changes.<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Downloading header for apr to pack into transaction set.<br />
+                apr-0.9.4-24.5.c4.1.i386. 100% |=========================| 7.5 kB    00:00<br />
+                ---&gt; Package apr.i386 0:0.9.4-24.5.c4.1 set to be updated<br />
+                ---&gt; Downloading header for httpd-suexec to pack into transaction set.<br />
+                httpd-suexec-2.0.52-28.en 100% |=========================|  22 kB    00:00<br />
+                ---&gt; Package httpd-suexec.i386 0:2.0.52-28.ent.centos4 set to be updated<br />
+                ---&gt; Downloading header for apr-util to pack into transaction set.<br />
+                apr-util-0.9.4-21.i386.rp 100% |=========================| 5.2 kB    00:00<br />
+                ---&gt; Package apr-util.i386 0:0.9.4-21 set to be updated<br />
+                --&gt; Running transaction check</span>
+                <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                  Package                 Arch       Version          Repository        Size<br />
+                  =============================================================================<br />
+                  Installing:<br />
+                  httpd                   i386       2.0.52-28.ent.centos4  update            888 k<br />
+                  Installing for dependencies:<br />
+                  apr                     i386       0.9.4-24.5.c4.1  base               88 k<br />
+                  apr-util                i386       0.9.4-21         base               51 k<br />
+                  httpd-suexec            i386       2.0.52-28.ent.centos4  update             28 k</p>
+                <p class="message">Transaction Summary<br />
+                  =============================================================================<br />
+                  Install      4 Package(s)<br />
+                  Update       0 Package(s)<br />
+                  Remove       0 Package(s)<br />
+                  Total download size: 1.0 M<br />
+                  Downloading Packages:<br />
+                  (1/4): apr-0.9.4-24.5.c4. 100% |=========================|  88 kB    00:00<br />
+                  (2/4): httpd-suexec-2.0.5 100% |=========================|  28 kB    00:00<br />
+                  (3/4): httpd-2.0.52-28.en 100% |=========================| 888 kB    00:02<br />
+                  (4/4): apr-util-0.9.4-21. 100% |=========================|  51 kB    00:00<br />
+                  warning: rpmts_HdrFromFdno: V3 DSA signature: NOKEY, key ID 443e1821<br />
+                  Public key for apr-0.9.4-24.5.c4.1.i386.rpm is not installed<br />
+                  Retrieving GPG key from http://mirror.centos.org/centos/RPM-GPG-KEY-centos4<br />
+                  Importing GPG key 0x443E1821 &quot;CentOS-4 key &lt;centos-4key@centos.org&gt;&quot;<br />
+                  Key imported successfully<br />
+                  Running Transaction Test<br />
+                  Finished Transaction Test<br />
+                  Transaction Test Succeeded<br />
+                  Running Transaction<br />
+                  Installing: apr                          ######################### [1/4]<br />
+                  Installing: apr-util                     ######################### [2/4]<br />
+                  Installing: httpd                        ######################### [3/4]<br />
+                  Installing: httpd-suexec                 ######################### [4/4]</p>
+                <span class="message">Installed: httpd.i386 0:2.0.52-28.ent.centos4<br />
+                  Dependency Installed: apr.i386 0:0.9.4-24.5.c4.1 apr-util.i386  0:0.9.4-21 httpd-suexec.i386 0:2.0.52-28.ent.centos4<br />
+              Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+          　　为了使服务器开通HTTP服务后能够运行PHP编写的交互程序，接下来安装PHP。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install php</span>　 <span class="intro">← 在线安装PHP</span><br />
+                <br />
+                <span class="message">Setting up Install Process<br />
+Setting up repositories<br />
+Reading repository metadata in from local files<br />
+Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+Finished<br />
+Parsing package install arguments<br />
+Resolving Dependencies<br />
+--&gt; Populating transaction set with selected packages. Please wait.<br />
+---&gt; Downloading header for php to pack into transaction set.<br />
+php-4.3.9-3.15.i386.rpm   100% |=========================|  23 kB    00:00<br />
+---&gt; Package php.i386 0:4.3.9-3.15 set to be updated<br />
+--&gt; Running transaction check<br />
+--&gt; Processing Dependency: php-pear for package: php<br />
+--&gt; Restarting Dependency Resolution with new changes.<br />
+--&gt; Populating transaction set with selected packages. Please wait.<br />
+---&gt; Downloading header for php-pear to pack into transaction set.<br />
+php-pear-4.3.9-3.15.i386. 100% |=========================|  33 kB    00:00<br />
+---&gt; Package php-pear.i386 0:4.3.9-3.15 set to be updated<br />
+--&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+<p class="message">=============================================================================<br />
+  Package                 Arch       Version          Repository        Size<br />
+  =============================================================================<br />
+  Installing:<br />
+  php                     i386       4.3.9-3.15       update            1.3 M<br />
+  Installing for dependencies:<br />
+  php-pear                i386       4.3.9-3.15       update            266 k</p>
+<p class="message">Transaction Summary<br />
+  =============================================================================<br />
+  Install      2 Package(s)<br />
+  Update       0 Package(s)<br />
+  Remove       0 Package(s)<br />
+  Total download size: 1.6 M<br />
+  Downloading Packages:<br />
+  (1/2): php-pear-4.3.9-3.1 100% |=========================| 266 kB    00:00<br />
+  (2/2): php-4.3.9-3.15.i38 100% |=========================| 1.3 MB    00:01<br />
+  Running Transaction Test<br />
+  Finished Transaction Test<br />
+  Transaction Test Succeeded<br />
+  Running Transaction<br />
+  Installing: php                          ######################### [1/2]<br />
+  Installing: php-pear                     ######################### [2/2]</p>
+<span class="message">Installed: php.i386 0:4.3.9-3.15<br />
+  Dependency Installed: php-pear.i386 0:4.3.9-3.15<br />
+  Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+          　　为了使PHP应用程序的执行效率大幅度提高，我们安装Zend。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget http://downloads.zend.com/optimizer/3.0.1/ZendOptimizer-3.0.1-linux-glibc21-i386.tar.gz</span>　 <span class="intro">← 下载Zend的源代码</span><br />
+                <br />
+                <p class="message">--13:19:06--  http://downloads.zend.com/optimizer/3.0.1/ZendOptimizer-3.0.1-linux-glibc21-i386.tar.gz<br />
+  =&gt; `ZendOptimizer-3.0.1-linux-glibc21-i386.tar.gz'<br />
+                Resolving downloads.zend.com... 66.98.224.81<br />
+                Connecting to downloads.zend.com|66.98.224.81|:80... connected.<br />
+                HTTP request sent, awaiting response... 200 OK<br />
+                Length: 6,358,090 (6.1M) [application/gzip]</p>
+                <p class="message">100%[====================================&gt;] 6,358,090    240.53K/s    ETA 00:00</p>
+                <span class="message">13:19:33 (238.15 KB/s) - `ZendOptimizer-3.0.1-linux-glibc21-i386.tar.gz' saved [6358090/6358090]<br />
+                <br />
+                [root@sample ~]#</span> <span class="command">tar zxvf ZendOptimizer-3.0.1-linux-glibc21-i386.tar.gz</span>                  　<span class="intro">← 展开被压缩的源代码</span><br />
+  <br />
+                  <span class="message">[root@sample ~]#</span> <span class="command">cd ZendOptimizer*</span>                  　 <span class="intro">← 进入Zend的源代码目录</span><br />
+  <br />
+              <span class="message">[root@sample ZendOptimizer-3.0.1-linux-glibc21-i386]#</span> <span class="command">./install.sh</span>            　<span class="intro">← 运行安装脚本</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后会出现对话方式的安装向导，图样如下：<br />
+          <br />
+[1] 选择OK，进入安装向导。<br /> 
+<br />
+<img src="zend/zend01.gif" width="720" height="400" /><br />
+<br />
+[2] 阅读协议后，选择EXIT。<br />
+<br />
+<img src="zend/zend02.gif" width="720" height="400" /><br />
+<br />
+[3] 选择Yes同意使用协议。<br />
+<br />
+<img src="zend/zend03.gif" width="720" height="400" /><br />
+<br />
+[4] 设置安装目录，这里以默认的/usr/local/Zend为例，然后选择OK进入下一步。 <br />
+<br />
+<img src="zend/zend04.gif" width="720" height="400" /> <br />
+<br />
+[5] 设置PHP配置文件所在的位置，一般为/etc（默认），如果PHP的配置文件在别处的话，请根据实际情况设置。<br />
+<br />
+<img src="zend/zend05.gif" width="720" height="400" /><br />
+<br />
+[6] 被询问是否使用Apache服务器，这里选择Yes。<br />
+<br />
+<img src="zend/zend06.gif" width="720" height="400" /><br />
+<br />
+[7] 设置Apache的路径，这里保持默认，选择OK进入下一步。<br />
+<br />
+<img src="zend/zend07.gif" width="720" height="400" /><br />
+<br />
+[8] 选择OK进入下一步。<br />
+<br />
+<img src="zend/zend08.gif" width="720" height="400" /><br />
+<br />
+[9] 然后开始安装…稍等片刻，安装完成后，提示安装成功，选择OK进入下一步。<br />
+<br />
+<img src="zend/zend09.gif" width="720" height="400" /><br />
+<br />
+[10] 选择No，不重新启动HTTP服务（由于Apache也刚刚安装完毕，还没有被启动过。为了安全，等我们将Apache配置完毕后，再启动HTTP服务。）。然后会出现命令行 -- Zend Optimizer安装完毕。 <br />
+<br />
+<img src="zend/zend10.gif" width="720" height="400" /> <br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ZendOptimizer-3.0.1-linux-glibc21-i386]# <span class="command">cd</span>　 <span class="intro">← 回到root根目录</span><br />
+      <br />
+      [root@sample ~]# <span class="command">rm -rf ZendOptimizer*　 <span class="intro">← 删除安装后遗留的源文件及目录</span></span></td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">配置HTTP（Apache）服务器</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　接下来，为了使服务器更安全以及更加符合我们的实际要求，对默认的设置进行一些必要的更改。尤其在一些细节方面，越少向外界透露服务器的信息，就越能保证服务器的安全。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf/httpd.conf</span>　 <span class="intro">← 编辑Apache的配置文件</span><br />
+      <br />
+      <span class="message">#<br />
+# Don't give away too much information about all the subcomponents<br />
+# we are running.  Comment out this line if you don't mind remote sites<br />
+# finding out what major optional modules you are running</span><br />
+<span class="before">ServerTokens OS</span>　<span class="intro"> ← 找到这一行，将“OS”改为“Prod”（在出现错误页的时候不显示服务器操作系统的名称）<br />
+　↓</span><br />
+<span class="after">ServerTokens Prod</span>                    　 <span class="intro">← 变为此状态</span><br />
+<br />
+<span class="message"># <br />
+# Optionally add a line containing the server version and virtual host<br />
+# name to server-generated pages (internal error documents, FTP directory<br />
+# listings, mod_status and mod_info output etc., but not CGI generated<br />
+# documents or custom error documents).<br />
+# Set to &quot;EMail&quot; to also include a mailto: link to the ServerAdmin.<br />
+# Set to one of:  On | Off | EMail<br />
+#</span><br />
+<span class="before">ServerSignature On</span>　 <span class="intro">← 找到这一行，将“On”改为“Off”<br />
+　↓</span><br />
+<span class="after">ServerSignature Off</span>　 <span class="intro">← 在错误页中不显示Apache的版本</span><br />
+<br />
+<span class="message">#<br />
+# ServerAdmin: Your address, where problems with the server should be<br />
+# e-mailed.  This address appears on some server-generated pages, such<br />
+# as error documents.  e.g. admin@your-domain.com<br />
+#</span><br />
+<span class="before">ServerAdmin root@localhost</span>　 <span class="intro">← 将管理员邮箱设置为自己常用的邮箱 <br />
+　↓</span><br />
+<span class="after">ServerAdmin yourname@yourserver.com</span>　 <span class="intro">← 根据实际情况修改默认设置</span><br />
+<br />
+<span class="message">#<br />
+# ServerName gives the name and port that the server uses to identify itself.<br />
+# This can often be determined automatically, but we recommend you specify<br />
+# it explicitly to prevent problems during startup.<br />
+#<br />
+# If this is not set to valid DNS name for your host, server-generated<br />
+# redirections will not work.  See also the UseCanonicalName directive.<br />
+#<br />
+# If your host doesn't have a registered DNS name, enter its IP address here.<br />
+# You will have to access it by its address anyway, and this will make<br />
+# redirections work in a sensible way.<br />
+#</span><br />
+<span class="before">#ServerName new.host.name:80</span>　 <span class="intro">← 修改主机名<br />
+　↓</span><br />
+<span class="after">ServerName www.centospub.com:80</span>　 <span class="intro">← 根据实际情况修改，端口号保持默认的80</span><br />
+<br />
+<span class="message">#<br />
+# Possible values for the Options directive are &quot;None&quot;, &quot;All&quot;,<br />
+# or any combination of:<br />
+#   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews<br />
+#<br />
+# Note that &quot;MultiViews&quot; must be named *explicitly* --- &quot;Options All&quot;<br />
+# doesn't give it to you.<br />
+#<br />
+# The Options directive is both complicated and important.  Please see<br />
+# http://httpd.apache.org/docs-2.0/mod/core.html#options<br />
+# for more information.<br />
+#</span><br />
+<span class="before">Options Indexes FollowSymLinks</span>　<span class="intro"> ← 找到这一行，删除“Indexes”，并添加“Includes”、“ExecCGI”<br />
+　↓</span><br />
+<span class="after">Options Includes ExecCGI FollowSymLinks</span>　 <span class="intro">← 允许服务器执行CGI及SSI</span><br />
+<br />
+<span class="message">#<br />
+# AddHandler allows you to map certain file extensions to &quot;handlers&quot;:<br />
+# actions unrelated to filetype. These can be either built into the server<br />
+# or added with the Action directive (see below)<br />
+#<br />
+# To use CGI scripts outside of ScriptAliased directories:<br />
+# (You will also need to add &quot;ExecCGI&quot; to the &quot;Options&quot; directive.)<br />
+#</span><br />
+<span class="before">#AddHandler cgi-script .cgi</span>　 <span class="intro">← 找到这一行，去掉行首的“#”，并在行尾添加“.pl”<br />
+　↓</span><br />
+<span class="after">AddHandler cgi-script .cgi </span><span class="att1">.pl</span>　 <span class="intro">← 允许扩展名为.pl的CGI脚本运行</span><br />
+<br />
+<span class="message">#<br />
+# AllowOverride controls what directives may be placed in .htaccess files.<br />
+# It can be &quot;All&quot;, &quot;None&quot;, or any combination of the keywords:<br />
+#   Options FileInfo AuthConfig Limit<br />
+#</span><br />
+<span class="before">AllowOverride None</span>　 <span class="intro">← 找到这一行，将“None”改为“All”<br />
+　↓</span><br />
+<span class="after">AllowOverride All</span>　 <span class="intro">← 变为此状态，允许.htaccess</span><br />
+<br />
+<span class="message"># <br />
+# The following directives define some format nicknames for use with<br />
+# a CustomLog directive (see below).<br />
+#</span><br />
+<span class="before">LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; combined</span>　 <span class="intro">← 找到这一行<br />
+　↓</span><br />
+<span class="after">LogFormat &quot;%h %l %u %t \&quot;%</span><span class="att1">!414</span><span class="after">r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; combined</span>　 <span class="intro">← 改为此状态（添加“!414”到规则中，对于过长的日志不记录）</span><br />
+<br />
+<span class="message">#<br />
+# Specify a default charset for all pages sent out. This is<br />
+# always a good idea and opens the door for future internationalisation<br />
+# of your web site, should you ever want it. Specifying it as<br />
+# a default does little harm; as the standard dictates that a page<br />
+# is in iso-8859-1 (latin1) unless specified otherwise i.e. you<br />
+# are merely stating the obvious. There are also some security<br />
+# reasons in browsers, related to javascript and URL parsing<br />
+# which encourage you to always set a default char set.<br />
+#</span><br />
+<span class="before">AddDefaultCharset UTF-8</span>　 <span class="intro">← 找到这一行，在行首添加“#”<br />
+　↓</span><br />
+<span class="after">#AddDefaultCharset UTF-8</span>　<span class="intro"> ← 不使用UTF-8作为网页的默认编码</span><br />
+<span class="after">AddDefaultCharset GB2312</span>　 <span class="intro">← 并接着添加这一行（添加GB2312为默认编码）</span><br />
+<br />
+<span class="message">&lt;Directory &quot;/var/www/icons&quot;&gt;</span>　 <span class="intro">← 找到这一个标签，并在标签中更改相应选项</span><br />
+　　<span class="before"><s>Options Indexes MultiViews</s></span>　 <span class="intro">← 找到这一行，将“Indexes”删除</span><br />
+　　　                  
+<span class="intro">↓</span><br />
+　　<span class="after">Options MultiViews</span> 　 <span class="intro">← 变为此状态（不在浏览器上显示树状目录结构）</span><br />
+<span class="message">AllowOverride None<br />
+Order allow,deny<br />
+Allow from all<br />
+&lt;/Directory&gt;</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">rm -f /etc/httpd/conf.d/welcome.conf</span> <span class="command">/var/www/error/noindex.html</span>　 <span class="intro">← 删除测试页</span></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">启动HTTP服务</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　然后，启动HTTP服务。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">chkconfig httpd on</span>　 <span class="intro">← 设置HTTP服务自启动</span><br />
+        <br />
+        <span class="message">[root@sample ~]#</span> <span class="command">chkconfig --list httpd</span><br />
+        <span class="message">httpd           0:off   1:off </span><span class="att1">2:on    3:on    4:on    5:on</span><span class="message"> 6:off</span> 　 <span class="intro">← 确认2--5为on的状态就OK</span><br />
+        <br />
+          <span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd start</span>　              <span class="intro">← 启动HTTP服务</span><br />
+          <span class="message">Starting httpd:                                            　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span>　<span class="intro">← 启动成功会出现OK</span><br />
+          <span class="att2">如果启动失败的话，会出现错误信息。原因可能是因为httpd.conf文件编辑过程中的失误，请检查httpd.conf。</span>
+      </td>
+  </tr>
+</table>
+<br />
+　        　然后，初步对HTTP服务进行简单测试。如下：<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">echo hello &gt;&gt; /var/www/html/index.html</span>　 <span class="intro">← 建立测试页</span> </td>
+  </tr>
+</table>
+<br />
+　　然后，在下面输入服务器的IP地址，或域名（通过ifconfig命令可以看到IP地址；或者通过前面介绍过的“动态域名的申请”中的方法设置成功的域名来测试。）<br />
+<br />
+<!-- Begin WebSitePulse.com code -->
+<table width=468 height=60 border=0 cellpadding=0 cellspacing=0><form
+method="post" action="http://www.websitepulse.com//tools.php3"
+target="tools">
+<tr><td colspan=3><img src="http://www.websitepulse.com//tools-ad/k.gif"
+width=468 height=1></td></tr>
+<tr><td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1
+height=18></td>
+<td><a href="http://www.websitepulse.com" target="_blank"><img
+src="http://www.websitepulse.com//tools-ad/468-60-1.gif" width=466
+height=18 border=0 alt="WebSitePulse.com - free webmaster tools"></a></td>
+<td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1
+height=18></td>
+</tr>
+<tr>
+<td width=1><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1
+height=40></td>
+<td> <font face="sans-serif" size="2"><b>Hostname:</b> <input type="text"
+name="host" size="20">
+
+<select name="test">
+<option value="web">Website test</option>
+</select> <input type="submit" name="do" value="Go!"></font></td>
+<td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1
+height=40></td>
+</tr><tr><td colspan=3><img
+src="http://www.websitepulse.com//tools-ad/k.gif" width=468
+height=1></td></tr>
+</form></table>
+<br />
+　　      如果成功的话会出现类似如下的页面：<br />
+<br />
+<img src="zend/apachetest.gif" width="564" height="340" border="1" />
+<!-- End WebSitePulse.com code -->
+<br />
+<br />
+　　然后，删除刚刚建立的测试页。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">rm -f /var/www/html/index.html</span>　 <span class="intro">← 删除测试页</span> </td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">对HTTP服务进行全面测试</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+[1] 对HTML格式网页正确显示的测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /var/www/html/index.html</span>　 <span class="intro">← 建立测试页，内容如下：</span><br />
+      <br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World!&lt;/title&gt;<br />
+&lt;body&gt;<br />
+Hello,World!<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址”或者“http://你的域名”，如果出现“Hello,World！”，并且浏览器读取编码为简体中文，就OK。<br />
+<br />
+　　为了在这之后测试.htaccess，将默认为主页的index.html测试页删除。 <br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">rm -f /var/www/html/index.html</span>　 <span class="intro">← 删除刚刚测试用的网页</span> </td>
+  </tr>
+</table>
+<br />
+[2] 对CGI的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /var/www/html/test.cgi</span>　 <span class="intro">← 建立CGI测试页，内容如下：</span><br />
+      <br />
+      <span class="conffile">#!/usr/bin/perl<br />
+      print &quot;Content-Type: text/html\n\n&quot;;<br />
+      print &quot;&lt;html&gt;&lt;body&gt;&quot;;
+      <br />
+      print &quot;Hello,World!CGI is working!&lt;br&gt;&quot;;<br />
+      print &quot;&lt;/body&gt;&lt;/html&gt;&quot;;<br />
+      </span><br />
+      <span class="message">[root@sample ~]#</span> <span class="command">chmod 755 /var/www/html/test.cgi</span>              　 <span class="intro">← 然后将CGI测试文件属性设置为755</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/test.cgi”或者“http://你的域名/test.cgi”，如果正确显示“Hello,World!CGI is working!”，说明对于CGI的支持没有问题。<br />
+<br />
+[3] 对PHP的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample html]#</span> <span class="command">vi /var/www/html/test.php</span>　 <span class="intro">← 建立PHP测试文件，内容如下：</span><br />
+        <br />
+        <span class="conffile">&lt;?php<br />
+          phpinfo();<br />
+          ?&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/test.php”或者“http://你的域名/test.php”后，正确的显示出了服务器上PHP的详细信息，说明对PHP可以正确的支持。<br />
+<br />
+<br />
+[4] 对SSI进行测试 <br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /var/www/html/test.shtml</span>　 <span class="intro">← 建立SSI测试页，内容如下：</span><br />
+      <br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World!&lt;/title&gt;<br />
+&lt;body&gt;<br />
+TEST SSI<br />
+&lt;!--#config timefmt=&quot;%Y/%m/%d %H:%M:%S&quot; --&gt;<br />
+&lt;!--#echo var=&quot;DATE_LOCAL&quot; --&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址/test.shtml”或者“http://你的域名/test.shtml”，如果正确显示当时的日期和时间，说明对于SSI的支持没有问题。<br />
+<br />
+[5] 对.htaccess的支持进行测试<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /var/www/html/index.shtml</span>　 <span class="intro">← 建立.htaccess测试用的页，内容如下：</span><br />
+      <br />
+      <span class="conffile">&lt;html&gt;<br />
+&lt;head&gt;<br />
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB2312&quot;&gt;<br />
+&lt;title&gt;Hello,World!&lt;/title&gt;<br />
+&lt;body&gt;<br />
+The name of the file is &lt;!--#echo var=&quot;DOCUMENT_NAME&quot; --&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt; </span></td>
+  </tr>
+</table>
+<br />
+　　然后在浏览器中输入“http://服务器IP地址”或者“http://你的域名”，如果显示“Forbidden”，说明.htaccess正常。<br />
+<br />
+　　然后建立一个.htaccess文件，并定义相应规则，如下：<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample html]#</span> <span class="command">vi /var/www/html/.htaccess</span>　 <span class="intro">← 建立.htaccess文件，内容如下：</span><br />
+      <br />
+      <span class="conffile">DirectoryIndex index.shtml</span></td>
+  </tr>
+</table>
+<br />
+　　这时，再次在浏览器中输入“http://服务器IP地址”或者“http://你的域名”，如果正确显示“  The name of the file is index.shtml”，说明.htaccess中的规则生效状态，OK。<br />
+<br />
+[6] 删除测试用的遗留文件<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample html]#</span> <span class="command">rm -f /var/www/html/* /var/www/html/.htaccess</span>　          <span class="intro">← 删除测试用过的遗留文件</span></td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

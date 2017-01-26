@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 虚拟主机的构建 &gt;</strong>  （最近更新日：2006/08/27）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　根据前面介绍的HTTP服务器的设置方法，我们已经拥有发布网页以及运行一些网站交互式程序的条件。但是，我们的服务器做为一台独立的主机，对于外界  来说，只拥有一个Global  IP地址。也就是说，从某种意义上，在当前的状态下，它作为一台服务器，仅能供一个用户用于发布Web--因为不管让多少个域名指向我们的主机，都等于指  向了仅有的一个IP地址（访问的是同一个网站）。比如在CentOS下，默认的Web目录是/var/www/html/，如果我们将网页放置在这个目录  下，当服务器的IP地址或者指向服务器IP的域名被访问时，所能浏览到的只是/var/www/html/目录下放置的网页的内容。<br />
+          <br />
+　　虽然通过开放用户目录Web发布权限的方法也能够实现多用户使用同一台服务器，但对于拥有域名（类似于“yourname.yeah.net”的指向  一个地址的免费域名除外）的一般用户，他们无法将它们的域名指向它们的用户Web目录--因为域名指向的是IP地址，而服务器又只拥有一个Global  IP地址。<br />
+<br />
+　　在这里，我们通过构建虚拟主机，来实现一台服务器可以放置多个独立网站的功能。简单地说，虚拟主机就是将一台服务器虚拟为多台服务器，使得虽然服务器  只有一个Global IP地址，但当不同的域名指向服务器仅有的一个Global  IP地址时，通过定义好的虚拟主机的规则，来识别哪些域名该指向服务器中哪个Web目录，从而达到服务器中有多个Web目录（包括一般用户的Web目录）  （多个网站），也可以通过多个域名指向同一个Global IP地址来实现不同的多个网站在同一台服务器上的同时运作。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">关于域名</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　在这里所说的域名，指的是顶级域名或本站前面介绍过的动态域名。这些域名都是指向一个IP地址的。为了测试虚拟主机，请准备好至少两个以上的域名。可根据 <a href="freedomain.html"><strong>动态域名的申请（no-ip.com）</strong></a> 中介绍的方法来添加两个以上的余名。<br />
+<br />
+　　在这里为了具体，以将本站主域名www.centospub.com指向/var/www/html/、digeast.no-ip.info指向/home/digeast/public_html/为例加以说明。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">虚拟主机的配置</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　在Apache的主配置文件“httpd.conf”中，提供了虚拟主机的配置选项，我们只需修改其中虚拟主机的部分语句，就可以达到构建虚拟主机的  目的。但是鉴于虚拟主机可能是更新、修改比较频繁的项目之一（域名的增删、变化等等），我们在/etc/httpd/conf.d/目录下新建一个虚拟主  机的配置文件。如下：<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf/httpd.conf</span>　               <span class="intro">← 编辑Apache配置文件</span><br />
+                <span class="message"><br />
+                </span><span class="before">#NameVirtualHost *:80</span><span class="message">　 <span class="intro">← 找到这一行，去掉行首的#</span><br />
+                <span class="intro">　↓</span><br />
+                </span><span class="after">NameVirtualHost *:80</span><span class="message">　 <span class="intro">← 变为此状态</span><br />
+                <br />
+                #<br />
+                # VirtualHost example:<br />
+                # Almost any Apache directive may go into a VirtualHost container.<br />
+                # The first VirtualHost section is used for requests without a known<br />
+                # server name.<br />
+                #<br />
+                #&lt;VirtualHost *:80&gt;<br />
+                #    ServerAdmin webmaster@dummy-host.example.com<br />
+                #    DocumentRoot /www/docs/dummy-host.example.com<br />
+                #    ServerName dummy-host.example.com<br />
+                #    ErrorLog logs/dummy-host.example.com-error_log<br />
+                #    CustomLog logs/dummy-host.example.com-access_log common<br />
+                #&lt;/VirtualHost&gt;</span><span class="conffile">　<span class="intro">← 找到这一行，在其下添加如下绿色字体部分：</span></span><br />
+                <br />
+                <p class="conffile"><span class="after">&lt;VirtualHost *:80&gt;<br />
+                ServerAdmin yourname@yourserver.com<br />
+                DocumentRoot /var/www/html</span>　　　　　　　　　　　　　　<span class="intro">← www.centospub.com所定义的规则</span> <br />
+                <span class="after">ServerName www.centospub.com <br />
+                ErrorLog logs/error_log<br />
+                CustomLog logs/access_log combined<br />
+&lt;/VirtualHost&gt;</span></p>
+                <span class="after">&lt;VirtualHost *:80&gt;<br />
+                ServerAdmin yourname@yourserver.com<br />
+                DocumentRoot /home/centospub/public_html</span><span class="message">　　　　　　　　</span><span class="intro">← digeast.no-ip.info所定义的规则</span><span class="message"><br />
+                </span><span class="after">ServerName digeast.no-ip.info<br />
+                ErrorLog logs/centospub_error_log<br />
+                CustomLog logs/centospub_access_log common<br />
+&lt;/VirtualHost&gt;</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后重新启动HTTP服务，使虚拟主机的设置生效。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/httpd restart</span> 　 <span class="intro">← 重新启动HTTP服务</span> <br />
+                <br />
+                <span class="message">Stopping httpd:　　　　　　　　　　　                                            [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting httpd:　　　　　　　　　　　                                            [  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">测试虚拟主机</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　通过虚拟主机配置文件中定义好的不同的域名访问，看是否能够按照定义好的规则指向相应的目录（网站）。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">echo &quot;My site is www.centospub.com &quot; &gt;&gt; /var/www/html/index.html</span>　 <span class="intro">← 建立www.centospub.com指向/var/www/html/下的测试页</span><br />
+                <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">echo &quot;My site is digeast.no-ip.com&quot; &gt;&gt; /home/centospub/public_html/index.html</span>　 <span class="intro">← 建立digeast.no-ip.com指向/home/centospub/public_html/下的测试页</span><br /></td>
+            </tr>
+          </table>
+          <br />
+          　　然后分别在浏览器输入两个域名，如果每次都能够显示出相应域名的页面，说明虚拟主机已正常工作。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">rm -f /var/www/html/index.html</span>　 <span class="intro">← 删除测试用的遗留文件</span><br />
+                <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">rm -f /home/centospub/public_html/index.html</span>　 <span class="intro">← 删除测试用的遗留文件</span></td>
+            </tr>
+          </table>
+          <br />
+          　　如果以后需要增加或改动虚拟主机等，可以通过修改虚拟主机配置文件（/etc/httpd/conf.d/virtualhost.conf），添加新的虚拟主机规则来实现。 <br />
+          <br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+	<style type="text/css">
+<!--
+.STYLE1 {color: #999999}
+-->
+    </style>
+		<link rel="stylesheet" type="text/css" href="./css/centospub.css">
+		<link rel="shortcut icon" href="favicon.ico" >
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="current-tab-label"><a href="index.html">前　言</a></td>
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="make.html">配置详解</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+		<div id="docs-content"><br />
+		  　　服务器和个人电脑最本质的区别无非服务器是为了提供服务而存在。然而，通过一些软件也可以把我们的使用中的个人电脑模拟成一台（Web）服务器，比如 Win98 下用 PWS ， Win2K 下用 IIS ，或者在 Windows 下安装 Win32 版的 Apache 等等。但是，这些方式也使得一方面服务器的可定制性变得很差，另一方面，使服务器在承载服务负担的同时，时时刻刻都有受到由于 Windows 操作系统本身在服务器方面的脆弱性而遭受攻击，导致崩溃的可能性。<br />
+          <br />
+　　所以，在这里我们用Linux这个服务器专用操作系统来搭建一台安全、稳定、可定制性强的服务器，来满足我们发布网页、以及架设论坛等等多功能交互程序的需要。<br />
+<br />
+　　Linux的发行版也有数多种，在这里，我们采用 CentOS 这个 Linux 发行版。CentOS 是 RHEL（Red Hat  Enterprise  Linux）源代码再编译的产物，而且在 RHEL 的基础上修正了不少已知的 Bug ，相对于其他 Linux 发行版，其稳定性值得信赖。另外，由于  Fedora Core 计划也归根于 Red Hat 系，所以在绝大多数情况下，使用 Fedora  Core 的朋友，也同样能够通过本站介绍的各种 CentOS 方面相关的技巧、方法来完成服务器的构建和维护工作。但相对于稳定性来说，Fedora Core 更侧重于最新技术，更面向于桌面应用以及开发测试，这也导致 Fedora Core 的稳定性被考虑在了次要的方面。所以在这里，不建议使用 Fedora Core 来构建网络服务器。
+<p><strong><br />
+  [目　　标]</strong><br />
+  <br />
+  　　* 对服务器完全自主、自由的配置<br />
+  　　* 实现 Web 发布、并通过虚拟主机实现多用户共享 Web 服务器资源<br />
+  　　* 对 Perl、PHP、JSP的支持，以及 MySQL 数据库的支持<br />
+  　　* 通过 FTP 服务器的构建实现远程文件传送<br />
+   　　* 通过 SSH 远程控制服务器<br />
+  　　* 自主 E-mail 服务器的构建<br />
+  　　* 服务器端病毒监测以及安全监测的系统化<br />
+  　　* 。。。。。。<br />
+  <br />
+  <br />
+  <strong>[基本条件]</strong><br />
+  <br />
+  　　* 一台配置说的过去的计算机（极力推荐使用自用 PC 以外的另一台计算机）<br />
+  　　* 7*24 全天候的网络接入（PPPoE或其他能够获得独立 Global IP 地址的接入方式即可）<br />
+  　　* 自用 PC 与将要构建的服务器组成的局域网环境（服务器端的配置可通过自用PC来操作）<br />
+  　　* 。。。。。。<br />
+  　　* 如果无以上条件，也可以通过 VMWare 在 Windows 下构建<br />
+  　　<span class="STYLE1">（基于 Windows 的 VMWare 所构建的 CentOS 服务器无多大的应用意义，仅限于学习用）</span></p>
+		  <p>&nbsp;</p>
+
+       <hr>
+
+			<div id="docs-footer">
+				Copyright &copy; Chao Chen , All rights reserved . </div>
+			<br>
+			<br>
+	</div></body>
+</html>       

@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 构建 MySQL 数据库服务器 &gt;</strong>  （最近更新日：2006/08/30）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在提到网站构架的时候，我们经常能够看到“LAMP”的说法，它就是“Linux + Apache + MySQL + PHP”。  MySQL+PHP的协同成功案例已经很多了。比如国外的PHPBB，VBB，国内的Discuz!论坛等等程序，都是用PHP +  MySQL实现的。和那些商务专用数据库比起来，MySQL的功能和规模可能被好多人说的逊色一些，但对于我们个人来说，它的功能已经算是完备。而且，通  过Discuz!官方论坛上同时在线人数的数目，也可以证明MySQL的稳定性。<br />
+          <br />
+　　这里，介绍一下CentOS下MySQL数据库服务器的构建方法。 <br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">安装MySQL及相关组件</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先，安装MySQL。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install mysql-server</span>　 <span class="intro">← 安装MySQL</span><br />
+                <br />
+                <span class="message">Setting up Install Process<br />
+Setting up repositories<br />
+dag                       100% |=========================| 1.1 kB    00:00<br />
+update                    100% |=========================|  951 B    00:00<br />
+base                      100% |=========================| 1.1 kB    00:00<br />
+addons                    100% |=========================|  951 B    00:00<br />
+extras                    100% |=========================| 1.1 kB    00:00<br />
+Reading repository metadata in from local files<br />
+primary.xml.gz            100% |=========================| 106 kB    00:00<br />
+update    : ################################################## 261/261<br />
+Added 5 new packages, deleted 0 old in 2.02 seconds<br />
+Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+Finished<br />
+Parsing package install arguments<br />
+Resolving Dependencies<br />
+--&gt; Populating transaction set with selected packages. Please wait.<br />
+---&gt; Downloading header for mysql-server to pack into transaction set.<br />
+mysql-server-4.1.20-1.RHE 100% |=========================|  29 kB    00:00<br />
+---&gt; Package mysql-server.i386 0:4.1.20-1.RHEL4.1 set to be updated<br />
+--&gt; Running transaction check<br />
+--&gt; Processing Dependency: libmysqlclient.so.14(libmysqlclient_14) for package: mysql-server<br />
+--&gt; Processing Dependency: perl-DBD-MySQL for package: mysql-server<br />
+--&gt; Processing Dependency: perl-DBI for package: mysql-server<br />
+--&gt; Processing Dependency: perl(DBI) for package: mysql-server<br />
+--&gt; Processing Dependency: mysql = 4.1.20-1.RHEL4.1 for package: mysql-server<br />
+--&gt; Processing Dependency: libmysqlclient.so.14 for package: mysql-server<br />
+--&gt; Processing Dependency: libmysqlclient_r.so.14(libmysqlclient_14) for package: mysql-server<br />
+--&gt; Processing Dependency: libmysqlclient_r.so.14 for package: mysql-server<br />
+--&gt; Restarting Dependency Resolution with new changes.<br />
+--&gt; Populating transaction set with selected packages. Please wait.<br />
+---&gt; Downloading header for perl-DBD-MySQL to pack into transaction set.<br />
+perl-DBD-MySQL-2.9004-3.1 100% |=========================| 5.4 kB    00:00<br />
+---&gt; Package perl-DBD-MySQL.i386 0:2.9004-3.1 set to be updated<br />
+---&gt; Downloading header for mysql to pack into transaction set.<br />
+mysql-4.1.20-1.RHEL4.1.i3 100% |=========================|  35 kB    00:00<br />
+---&gt; Package mysql.i386 0:4.1.20-1.RHEL4.1 set to be updated<br />
+---&gt; Downloading header for perl-DBI to pack into transaction set.<br />
+perl-DBI-1.40-8.i386.rpm  100% |=========================|  11 kB    00:00<br />
+---&gt; Package perl-DBI.i386 0:1.40-8 set to be updated<br />
+--&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+<p class="message">=============================================================================<br />
+  Package                 Arch       Version          Repository        Size<br />
+  =============================================================================<br />
+  Installing:<br />
+  mysql-server            i386       4.1.20-1.RHEL4.1  update            9.8 M<br />
+  Installing for dependencies:<br />
+  mysql                   i386       4.1.20-1.RHEL4.1  update            2.9 M<br />
+  perl-DBD-MySQL          i386       2.9004-3.1       base              111 k<br />
+  perl-DBI                i386       1.40-8           base              466 k</p>
+<p class="message">Transaction Summary<br />
+  =============================================================================<br />
+  Install      4 Package(s)<br />
+  Update       0 Package(s)<br />
+  Remove       0 Package(s)<br />
+  Total download size: 13 M<br />
+  Downloading Packages:<br />
+  (1/4): perl-DBD-MySQL-2.9 100% |=========================| 111 kB    00:00<br />
+  (2/4): mysql-server-4.1.2 100% |=========================| 9.8 MB    00:11<br />
+  (3/4): mysql-4.1.20-1.RHE 100% |=========================| 2.9 MB    00:03<br />
+  (4/4): perl-DBI-1.40-8.i3 100% |=========================| 466 kB    00:01<br />
+  Running Transaction Test<br />
+  Finished Transaction Test<br />
+  Transaction Test Succeeded<br />
+  Running Transaction<br />
+  Installing: perl-DBI                     ######################### [1/4]<br />
+  Installing: mysql                        ######################### [2/4]<br />
+  Installing: perl-DBD-MySQL               ######################### [3/4]<br />
+  Installing: mysql-server                 ######################### [4/4]</p>
+<span class="message">Installed: mysql-server.i386 0:4.1.20-1.RHEL4.1<br />
+Dependency Installed: mysql.i386 0:4.1.20-1.RHEL4.1 perl-DBD-MySQL.i386 0:2.9004-3.1 perl-DBI.i386 0:1.40-8<br />
+Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，安装PHP访问MySQL数据库的工具“php-mysql”。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">yum -y install php-mysql</span>　 <span class="intro">← 安装php-mysql</span><br />
+                <br />
+                <span class="message">Setting up Install Process<br />
+Setting up repositories<br />
+Reading repository metadata in from local files<br />
+Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+Finished<br />
+Parsing package install arguments<br />
+Resolving Dependencies<br />
+--&gt; Populating transaction set with selected packages. Please wait.<br />
+---&gt; Downloading header for php-mysql to pack into transaction set.<br />
+php-mysql-4.3.9-3.15.i386 100% |=========================|  18 kB    00:00<br />
+---&gt; Package php-mysql.i386 0:4.3.9-3.15 set to be updated<br />
+--&gt; Running transaction check </span>
+                <p class="message">Dependencies Resolved</p>
+<p class="message">=============================================================================<br />
+  Package                 Arch       Version          Repository        Size<br />
+  =============================================================================<br />
+  Installing:<br />
+  php-mysql               i386       4.3.9-3.15       update             35 k</p>
+<p class="message">Transaction Summary<br />
+  =============================================================================<br />
+  Install      1 Package(s)<br />
+  Update       0 Package(s)<br />
+  Remove       0 Package(s)<br />
+  Total download size: 35 k<br />
+  Downloading Packages:<br />
+  (1/1): php-mysql-4.3.9-3. 100% |=========================|  35 kB    00:00<br />
+  Running Transaction Test<br />
+  Finished Transaction Test<br />
+  Transaction Test Succeeded<br />
+  Running Transaction<br />
+  Installing: php-mysql                    ######################### [1/1]</p>
+<span class="message">Installed: php-mysql.i386 0:4.3.9-3.15<br />
+Complete! </span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">配置MySQL</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，配置MySQL。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/my.cnf</span>　              <span class="intro">← 编辑MySQL的配置文件</span><br />
+                <br />
+                <span class="message">[mysqld]<br />
+datadir=/var/lib/mysql<br />
+socket=/var/lib/mysql/mysql.sock<br />
+# Default to using old password format for compatibility with mysql 3.x<br />
+# clients (those using the mysqlclient10 compatibility package).<br />
+old_passwords=1</span>　              <span class="intro">← 找到这一行，在这一行的下面添加新的规则，让MySQL的默认编码为UTF-8</span><br />
+<span class="after">default-character-set = utf8</span>　 <span class="intro">← 添加这一行</span><br />
+<br />
+<span class="intro">然后在配置文件的文尾填加如下语句：</span><br />
+<br />
+<span class="after">[mysql]<br />
+default-character-set = utf8</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">启动MySQL服务</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　启动MySQL，并让MySQL在系统重新启动后随系统自动启动。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# <span class="command">chkconfig mysqld on</span>　 <span class="intro">← 设置MySQL服务随系统启动自启动</span><br />
+<br />
+[root@sample ~]# <span class="command">chkconfig --list mysqld</span>　 <span class="intro">← 确认MySQL自启动</span><br />
+mysqld          0:off   1:off <span class="att1">2:on    3:on    4:on    5:on</span> 6:off　 <span class="intro">← 如果2--5为on的状态就OK</span><br />
+                <br />
+              [root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/mysqld start</span>　              <span class="intro">← 启动MySQL服务</span><br />
+                <br />
+                <span class="message">Initializing MySQL database:　　　　　　　　                               [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting MySQL:                                            　　　　　　　　　　　　　[  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">MySQL初始环境设定</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1]为MySQL的root用户设置密码<br />
+          <br />
+　　MySQL在刚刚被安装的时候，它的root用户是没有被设置密码的。首先来设置MySQL的root密码。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">mysql -u root</span>　              <span class="intro">← 用root用户登录MySQL服务器</span><br />
+      <br />
+      <span class="message">Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+Your MySQL connection id is 2 to server version: 4.1.20      </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p><span class="message">mysql&gt;</span> <span class="command">select user,host,password from mysql.user;</span>　              <span class="intro">← 查看用户信息</span><br />
+  <span class="message">+------+------------------------------+---------------+<br />
+  | user | host                  　　　　　　　　　| password　|<br />
+  +------+------------------------------+---------------+<br />
+  | root | localhost　　　　             　　　|          　　　　　　|　              </span><span class="intro">← root密码为空</span><span class="message"> <br />
+  | root | sample.centospub.com　 |　　　　　　          |　              </span><span class="intro">← root密码为空</span><span class="message"><br />
+  |　　　| sample.centospub.com |          　　　　　　|<br />
+  |　　　| localhost　　　　　　             |          　　　　　　|<br />
+  +------+------------------------------+---------------+</span><br />
+  <span class="message">4 rows in set (0.00 sec)</span></p>
+<p><span class="message">mysql&gt;</span> <span class="command">set password for root@localhost=password('</span><span class="att1">在这里填入root密码</span><span class="command">');</span>　              <span class="intro">← 设置root密码</span><br />
+  <span class="message">Query OK, 0 rows affected (0.01 sec)</span></p>
+<p><span class="message">mysql&gt;</span> <span class="command">set password for root@'sample.centospub.com'=password('在这里填入root密码');</span>　              <span class="intro">← 设置root密码</span><br />
+  <span class="message">Query OK, 0 rows affected (0.01 sec)</span></p>
+<p><span class="message">mysql&gt;</span> <span class="command">select user,host,password from mysql.user;</span>　              <span class="intro">← 查看用户信息</span><br />
+  <span class="message">+------+--------------------------------+--------------------------+<br />
+  | user | host　　　　　　　　　　| password　　         　　|<br />
+  +------+--------------------------------+--------------------------+<br />
+  | root | localhost　　　　　　　　| </span><span class="att1">19b68057189b027f</span><span class="message"> |　 </span><span class="intro">← root密码被设置</span><span class="message"><br />
+  | root | sample.centospub.com　　 | </span><span class="att1">19b68057189b027f</span><span class="message"> |　 </span><span class="intro">← root密码被设置</span><span class="message"><br />
+  |      　　 | sample.centospub.com　　 |                  　　　　　　　　　|<br />
+  |      　　       | localhost　　　　　　　　|　　　　　　　　　                  |<br />
+  +------+--------------------------------+--------------------------+<br />
+  4 rows in set (0.01 sec)</span></p>
+<span class="message">mysql&gt;</span> <span class="command">exit</span>　              <span class="intro">← 退出MySQL服务器</span><br />
+<span class="message">Bye</span></td>
+  </tr>
+</table>
+<br />
+　      　然后，测试一下root密码有没有生效。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">mysql -u root</span><span class="message">　              </span><span class="intro">← 通过空密码用root登录</span><span class="message"><br />
+        <br />
+        ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)　              </span><span class="intro">← 出现此错误信息说明密码设置成功</span><span class="message"><br />
+        <br />
+        [root@localhost ~]# </span><span class="command">mysql -u root -h sample.centospub.com</span><span class="message">　</span><span class="intro"> ← 通过空密码用root登录</span><span class="message"><br />
+        <br />
+        ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)　              </span><span class="intro">← 出现此错误信息说明密码设置成功</span><span class="message"><br />
+        <br />
+        [root@sample ~]# </span><span class="command">mysql -u root -p</span><span class="message">　              </span><span class="intro">← 通过密码用root登录</span><span class="message"><br />
+        Enter password:　              </span><span class="intro">← 在这里输入密码</span><span class="message"><br />
+        <br />
+        Welcome to the MySQL monitor.  Commands end with ; or \g.　              </span><span class="intro">← 确认用密码能够成功登录</span><span class="message"><br />
+        Your MySQL connection id is 5 to server version: 4.1.20 </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p class="message">mysql&gt; <span class="command">exit</span><br />
+  Bye<br />
+  <br />
+  [root@sample ~]# <span class="command">mysql -u root -h sample.centospub.com -p</span>　              <span class="intro">← 通过密码用root登录</span><br />
+  Enter password:　              <span class="intro">← 在这里输入密码</span><br />
+  <br />
+  Welcome to the MySQL monitor.  Commands end with ; or \g.　              <span class="intro">← 确认用密码能够成功登录</span><br />
+  Your MySQL connection id is 6 to server version: 4.1.20</p>
+<p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<span class="message">mysql&gt; </span><span class="command">exit</span><span class="message">　              </span><span class="intro">← 退出MySQL服务器</span><span class="message"><br />
+Bye</span></td>
+  </tr>
+</table>
+<br />
+[2] 删除匿名用户<br />
+<br />
+　　在MySQL刚刚被安装后，存在用户名、密码为空的用户。这使得数据库服务器有无需密码被登录的可能性。为消除隐患，将匿名用户删除。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">mysql -u root -p</span><span class="message">　              </span><span class="intro">← 通过密码用root登录</span><span class="message"><br />
+  Enter password:　              </span><span class="intro">← 在这里输入密码</span><span class="message"><br />
+  <br />
+  Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+  Your MySQL connection id is 7 to server version: 4.1.20 </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p class="message">mysql&gt; <span class="command">select user,host from mysql.user;</span>　              <span class="intro">← 查看用户信息</span><br />
+  +------+----------------------------+<br />
+  | user | host　　　　　　　　                  |<br />
+  +------+----------------------------+<br />
+  |　　　| localhost             　　　　　　|<br />
+  | root | localhost             　　　　　　|<br />
+  |　　　| sample.centospub.com |<br />
+  | root | sample.centospub.com　 |<br />
+  +------+----------------------------+<br />
+  4 rows in set (0.02 sec)</p>
+<p class="message">mysql&gt; <span class="command">delete from mysql.user where user='';</span>　              <span class="intro">← 删除匿名用户</span><br />
+  Query OK, 2 rows affected (0.17 sec)</p>
+<p class="message">mysql&gt; <span class="command">select user,host from mysql.user;</span>　              <span class="intro">← 查看用户信息</span><br />
+  +------+----------------------------+<br />
+  | user | host　　　　　　　　                  |<br />
+  +------+----------------------------+<br />
+  | root | localhost　　　　　　|<br />
+  | root | sample.centospub.com |<br />
+  +------+----------------------------+<br />
+  2 rows in set (0.00 sec)</p>
+<span class="message">mysql</span>&gt; <span class="command">exit</span>　              <span class="intro">← 退出MySQL服务器</span><br />
+  <span class="message">Bye</span></td>
+  </tr>
+</table>
+<br />
+[3] 删除测试用数据库<br />
+<br />
+　　      在MySQL被安装后，存在名为test的空数据库，将它删除。这里要注意的是，系统默认的还有一个名为mysql的数据库，它用于系统管理，所以请不要删除。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">mysql -u root -p</span>　          <span class="intro">← 通过密码用root登录</span><br />
+Enter password:　 <span class="intro">← 在这里输入密码</span><br />
+Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+Your MySQL connection id is 8 to server version: 4.1.20
+<p>Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p>mysql&gt; <span class="command">show databases;</span>　<span class="intro"> ← 查看系统已存在的数据库</span><br />
+  +-------------+<br />
+  | Database |<br />
+  +-------------+<br />
+  | mysql　　    |<br />
+  | test　　　|<br />
+  +------------+<br />
+  2 rows in set (0.02 sec)</p>
+<p>mysql&gt; <span class="command">drop database test;</span>　 <span class="intro">← 删除名为test的空数据库</span><br />
+  Query OK, 0 rows affected (0.07 sec)</p>
+<p>mysql&gt; <span class="command">show databases;</span>　 <span class="intro">← 查看系统已存在的数据库</span><br />
+  +-------------+<br />
+  | Database |<br />
+  +-------------+<br />
+  | mysql    　　|　 <span class="intro">← 确认名为test的数据库被删除，已不存在</span><br />
+  +-------------+<br />
+  1 row in set (0.00 sec)</p>
+mysql&gt; <span class="command">exit</span>　<span class="intro"> ← 退出MySQL服务器</span><br />
+Bye</td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">测试MySQL</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　下面对MySQL进行测试。包括建立新用户，以及用对关系性数据库进行数据库操作的指令来试着建立数据库及数据表。这里，新建用户以centospub为例。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">mysql -u root -p</span><span class="message">　          </span><span class="intro">← 通过密码用root登录</span><span class="message"><br />
+  Enter password:　 </span><span class="intro">← 在这里输入密码</span><span class="message"><br />
+      <br />
+      Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+      Your MySQL connection id is 9 to server version: 4.1.20 </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">grant all privileges on test.* to centospub@localhost identified by '在这里定义密码';</span>　          <span class="intro">← 建立对test数据库有完全操作权限的名为centospub的用户</span><br />
+        Query OK, 0 rows affected (0.03 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select user from mysql.user where user='centospub';</span>　          <span class="intro">← 确认centospub用户的存在与否</span><br />
+        +---------+<br />
+        | user    　|<br />
+        +---------+<br />
+        | <span class="att1">centospub</span> |　          <span class="intro">← 确认centospub已经被建立</span><br />
+        +---------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">exit</span>　 <span class="intro">← 退出MySQL服务器</span><br />
+        Bye<br />
+        <br />
+        [root@sample ~]# <span class="command">mysql -u centospub -p</span>　 <span class="intro">← 用新建立的centospub用户登录MySQL服务器</span><br />
+        Enter password:　 <span class="intro">← 在这里输入密码</span><br />
+        <br />
+        Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+        Your MySQL connection id is 10 to server version: 4.1.20</p>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+      <p class="message">mysql&gt; <span class="command">create database test;</span>　 <span class="intro">← 建立名为test的数据库</span><br />
+        Query OK, 1 row affected (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span>　 <span class="intro">← 查看系统已存在的数据库</span><br />
+        +-------------+<br />
+        | Database |<br />
+        +-------------+<br />
+        | test     　　　|<br />
+        +-------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">use test</span>　 <span class="intro">← 连接到数据库</span><br />
+        Database changed<br />
+        <br />
+        mysql&gt; <span class="command">create table test(num int, name varchar(50));</span>　 <span class="intro">← 在数据库中建立表</span><br />
+        Query OK, 0 rows affected (0.03 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show tables;</span>　 <span class="intro">← 查看数据库中已存在的表</span><br />
+        +-------------------+<br />
+        | Tables_in_test |<br />
+        +-------------------+<br />
+        | test　　　　　|<br />
+        +-------------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">insert into test values(1,'Hello World!');</span>　 <span class="intro">← 插入一个值到表中</span><br />
+        Query OK, 1 row affected (0.02 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　 <span class="intro">← 查看数据库中的表的信息</span><br />
+        +------+-------------------+<br />
+        | num  | name         　　　　　|<br />
+        +------+-------------------+<br />
+        |    1 　　| <span class="att1">Hello World! </span>　|<br />
+        +------+-------------------+<br />
+        1 row in set (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">update test set name='Hello Everyone!';</span>　 <span class="intro">← 更新表的信息，赋予新的值</span><br />
+        Query OK, 1 row affected (0.00 sec)<br />
+        Rows matched: 1  Changed: 1  Warnings: 0</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　 <span class="intro">← 查看数据库中的表的信息</span><br />
+        +------+----------------------+<br />
+        | num  | name　　　　　            |<br />
+        +------+----------------------+<br />
+        |    1 　　| <span class="att1">Hello Everyone!</span> |　 <span class="intro">← 确认被更新到新的值</span><br />
+        +------+----------------------+<br />
+        1 row in set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">delete from test where num=1;</span>　 <span class="intro">← 删除表内的值</span><br />
+        Query OK, 1 row affected (0.00 sec)</p>
+      <p class="message">mysql&gt; <span class="command">select * from test;</span>　 <span class="intro">← 确认删除结果</span><br />
+        Empty set (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">drop table test;</span>　 <span class="intro">← 删除表</span><br />
+        Query OK, 0 rows affected (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show tables;</span>　 <span class="intro">← 查看表信息</span><br />
+        Empty set (0.00 sec)　 <span class="intro">← 确认表已被删除</span></p>
+      <p class="message">mysql&gt; <span class="command">drop database test;</span>　 <span class="intro">← 删除名为test的数据库</span><br />
+        Query OK, 0 rows affected (0.01 sec)</p>
+      <p class="message">mysql&gt; <span class="command">show databases;</span>　 <span class="intro">← 查看已存在的数据库</span><br />
+        Empty set (0.01 sec)　 <span class="intro">← 确认test数据库已被删除（这里非root用户的关系，看不到名为mysql的数据库）</span></p>
+      <span class="message">mysql&gt;</span> <span class="command">exit</span>　 <span class="intro">← 退出MySQL服务器</span><br />
+      <span class="message">Bye</span></td>
+  </tr>
+</table>
+<br />
+　　        然后，删除测试用过的遗留用户。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">mysql -u root -p</span><span class="message">　          </span><span class="intro">← 通过密码用root登录</span><span class="message"><br />
+  Enter password:　 </span><span class="intro">← 在这里输入密码<br />
+  </span><span class="message"><br />
+  Welcome to the MySQL monitor.  Commands end with ; or \g.<br />
+  Your MySQL connection id is 12 to server version: 4.1.20 </span>
+      <p class="message">Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p class="message">mysql&gt; <span class="command">revoke all privileges on *.* from centospub@localhost;</span>　          <span class="intro">← 取消centospub用户对数据库的操作权限</span><br />
+  Query OK, 0 rows affected (0.00 sec)</p>
+<p class="message">mysql&gt; <span class="command">delete from mysql.user where user='centospub' and host='localhost';</span>　          <span class="intro">← 删除centospub用户</span><br />
+  Query OK, 1 row affected (0.01 sec)</p>
+<p class="message">mysql&gt; <span class="command">select user from mysql.user where user='centospub';</span>　          <span class="intro">← 查找用户centospub，确认已删除与否</span><br />
+  Empty set (0.01 sec)　          <span class="intro">← 确认centospub用户已不存在</span></p>
+<p class="message">mysql&gt; <span class="command">flush privileges;</span>　          <span class="intro">← 刷新，使以上操作生效</span><br />
+  Query OK, 0 rows affected (0.01 sec)</p>
+<span class="message">mysql&gt;</span> <span class="intro">exit</span><br />
+  <span class="message">Bye</span></td>
+  </tr>
+</table>
+<br />
+　　最后，重新启动一次HTTP服务，让php-mysql反映到HTTP服务中。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">/etc/rc.d/init.d/httpd restart</span>　          <span class="intro">← 重新启动HTTP服务</span><br />
+Stopping httpd:　　　　　　　　　　　　                                            [  <span class="after">OK</span>  ]<br />
+Starting httpd:　　　　　　　　　　　　                                            [  <span class="after">OK</span>  ]</td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

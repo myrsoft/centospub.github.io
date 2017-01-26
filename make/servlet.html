@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+	</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; Servlet/JSP服务器的构建（Tomcat5） &gt;</strong>  （最近更新日：2006/09/21）<br />
+	  　　<span class="before"><strong>本文启发于本站成员 <a href="http://www.centospub.com/bbs/viewpro.php?uid=11" target="_blank">xaay</a> 原创文档“ <a href="http://www.centospub.com/bbs/viewthread.php?tid=127&amp;extra=page=1" target="_blank">CENTOS4配置JSP教程</a> ”。</strong></span><br />
+	  　[原文URL：<a href="http://www.centospub.com/bbs/viewthread.php?tid=127&amp;extra=page%3D1" target="_blank">http://www.centospub.com/bbs/viewthread.php?tid=127&amp;extra=page%3D1</a> （论坛注册用户可见）] </p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　所谓 Java Servlet ，是指用 Java 语言，实现动态网页的创建的功能，一般把简单的把它称为“Servlet”（无中文译文）的情况比较常见。和它处于同等类别的技术还有我们知道的Perl、PHP、ASP等等。Servlet算是J2EE中的一部分，所以在企业应用方面，Servlet技术被广泛的应用着。而所谓的JSP是Servlet技术的延伸，Servlet程序就是通过JSP来自动生成的。通常Servlet和JSP被混为一谈的情况比较多见，但严格上说，Servlet和JSP是两种不同的技术…但也正因为它们通常作为“搭档”，JSP也被认作是Servlet的一种功能。<br />
+          <br />
+          　　下面我们就介绍一下在CentOS下构建Servlet/JSP服务器的方法。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">必要组件的安装</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1] 卸载CentOS系统默认的Java编译器--gcj。<br />
+          <br />
+          　　为了默认使用Sun的javac作为Java的编译器，首先删除CentOS系统默认的Java编译器--gcj。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">rpm -qa | grep gcj</span><span class="message"><span class="intro">　 ← 确认gcj的版本号</span><br />
+              <br />
+              libgcj-3.4.5-2<br />
+              libgcj-devel-3.4.5-2<br />
+              </span><span class="att1">java-1.4.2-gcj-compat</span><span class="message">-1.4.2.0-27jpp<span class="intro">　 ← 根据版本号卸载gcj</span><br />
+              </span>
+                <p class="message">[root@sample ~]# <span class="command">yum -y remove java-1.4.2-gcj-compat</span><span class="intro">　 ← 卸载gcj</span><br />
+                  <br />
+                Setting up Remove Process<br />
+                Resolving Dependencies<br />
+                --&gt; Populating transaction set with selected packages. Please wait.<br />
+                ---&gt; Package java-1.4.2-gcj-compat.noarch 0:1.4.2.0-27jpp set to be erased<br />
+                --&gt; Running transaction check</p>
+              <p class="message">Dependencies Resolved</p>
+              <p class="message">=============================================================================<br />
+              Package                 Arch       Version          Repository        Size<br />
+              =============================================================================<br />
+              Removing:<br />
+              java-1.4.2-gcj-compat   noarch     1.4.2.0-27jpp    installed         2.2 k</p>
+              <p class="message">Transaction Summary<br />
+              =============================================================================<br />
+              Install      0 Package(s)<br />
+              Update       0 Package(s)<br />
+              Remove       1 Package(s)<br />
+              Total download size: 0<br />
+              Downloading Packages:<br />
+              Running Transaction Test<br />
+              Finished Transaction Test<br />
+              Transaction Test Succeeded<br />
+              Running Transaction<br />
+              Removing  : java-1.4.2-gcj-compat        ######################### [1/1]</p>
+              <span class="message">Removed: java-1.4.2-gcj-compat.noarch 0:1.4.2.0-27jpp<br />
+              Complete!</span></td>
+            </tr>
+          </table>
+          <br />
+      [2] 下载J2SDK。<br />
+      <br />
+      　　下载页面：<a href="http://java.sun.com/javase/downloads/index.jsp" target="_blank">http://java.sun.com/javase/downloads/index.jsp</a> ，找到“<span class="att1">JDK 5.0 Update X </span>”（本文档编辑时，最新版本为8）后面的“<span class="att1">Download</span>”，在出现下载页面的时候，要先点击“<span class="att1">Accept License Agreement </span>”的基础上，选择“<span class="att1">Linux self-extracting file</span>”，下载并保存到客户端（自用PC）的适当位置。<br />
+      <br />
+      <span class="before"><strong>重要：在以上整个下载过程中，请用IE浏览器来操作！<br />
+      　　　当前存在的Bug之一：用Firefox或Mozilla浏览器下载的二进制压缩包，在服务器上运行会报错。对此，只能期待Sun对其改进。</strong></span> <br />
+      <br />
+      　　然后，通过FTP方式上传到服务器上。<span class="att1">并将其置于root用户的根目录下</span>。（您也可以通过闪存或其他任何方便的方式来移动到服务器上。）<br />
+      　　如果您还没有构建FTP服务器，并想通过FTP方式转移，请参照本站“ <a href="make/proftpd.html"><strong>用 ProFTPD 构建 FTP 服务器</strong></a> ”及“ <strong><a href="make/smartftp.html">用 FTP 客户端软件连接到服务器</a></strong> ”。<br />
+            <br />
+            [3] 安装J2SDK。<br />
+      </p>
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">chown root. jdk-1_5_0_08-linux-i586.bin</span><span class="message"><span class="intro">　 ← 改变二进制压缩包的归属为root </span><br />
+              <br />
+              [root@sample ~]# </span><span class="command">chmod 700 jdk-1_5_0_08-linux-i586.bin</span><span class="message"><span class="intro">　 ← 改变属性为700</span><br />
+              <br />
+              [root@sample ~]# </span><span class="command">./jdk-1_5_0_08-linux-i586.bin</span><span class="message"><span class="intro">　 ← 执行，解压二进制包 </span><br />
+              <br />
+              Sun Microsystems, Inc. Binary Code License Agreement </span>
+                <p class="message">for the JAVA 2 PLATFORM STANDARD EDITION DEVELOPMENT<br />
+                KIT 5.0</p>
+                <p class="message">SUN MICROSYSTEMS, INC.  (&quot;SUN&quot;) IS WILLING TO LICENSE<br />
+                THE SOFTWARE IDENTIFIED BELOW TO YOU ONLY UPON THE<br />
+                CONDITION THAT YOU ACCEPT ALL OF THE TERMS CONTAINED IN<br />
+                THIS BINARY CODE LICENSE AGREEMENT AND SUPPLEMENTAL<br />
+                LICENSE TERMS (COLLECTIVELY &quot;AGREEMENT&quot;).  PLEASE READ<br />
+                THE AGREEMENT CAREFULLY.  BY DOWNLOADING OR INSTALLING<br />
+                THIS SOFTWARE, YOU ACCEPT THE TERMS OF THE AGREEMENT.<br />
+                INDICATE ACCEPTANCE BY SELECTING THE &quot;ACCEPT&quot; BUTTON AT<br />
+                THE BOTTOM OF THE AGREEMENT.  IF YOU ARE NOT WILLING TO<br />
+                BE BOUND BY ALL THE TERMS, SELECT THE &quot;DECLINE&quot; BUTTON<br />
+                AT THE BOTTOM OF THE AGREEMENT AND THE DOWNLOAD OR<br />
+                INSTALL PROCESS WILL NOT CONTINUE.</p>
+                <p class="message">1.  DEFINITIONS.  &quot;Software&quot; means the identified above<br />
+                in binary form, any other machine readable materials<br />
+                (including, but not limited to, libraries, source<br />
+                files, header files, and data files), any updates or<br />
+                <span class="intro">……………………………………<br />
+……………………………………<br />
+……中间阅读协议信息省略……<br />
+……协议阅读中按空格翻页……<br />
+……………………………………<br />
+……………………………………</span><br />
+H.  Termination for Infringement.  Either party may<br />
+terminate this Agreement immediately should any<br />
+Software become, or in either party's opinion be likely<br />
+to become, the subject of a claim of infringement of<br />
+any intellectual property right.</p>
+                <p class="message">For inquiries please contact:  Sun Microsystems, Inc.,<br />
+                4150 Network Circle, Santa Clara, California 95054,<br />
+                U.S.A.  (LFI#143333/Form ID#011801)</p>
+                <span class="message">Do you agree to the above license terms? [yes or no]<br />
+                </span><span class="command">yes</span><span class="message"><span class="intro">　 ← 输入yes，同意协议</span><br />
+                <br />
+                Unpacking...<br />
+                Checksumming...<br />
+                0<br />
+                0<br />
+                Extracting...<br />
+                UnZipSFX 5.42 of 14 January 2001, by Info-ZIP (Zip-Bugs@lists.wku.edu).<br />
+                creating: jdk1.5.0_08/<br />
+                creating: jdk1.5.0_08/jre/<br />
+                creating: jdk1.5.0_08/jre/bin/<br />
+                inflating: jdk1.5.0_08/jre/bin/java<br />
+                inflating: jdk1.5.0_08/jre/bin/keytool<br />
+                inflating: jdk1.5.0_08/jre/bin/policytool<br />
+                inflating: jdk1.5.0_08/jre/bin/kinit<br />
+                inflating: jdk1.5.0_08/jre/bin/klist<br />
+                inflating: jdk1.5.0_08/jre/bin/ktab<br />
+                inflating: jdk1.5.0_08/jre/bin/rmiregistry<br />
+                inflating: jdk1.5.0_08/jre/bin/rmid<br />
+                inflating: jdk1.5.0_08/jre/bin/tnameserv<br />
+                </span><span class="intro">……………………………………<br />
+                ……………………………………<br />
+                ………中间提示信息省略………<br />
+                ……………………………………<br />
+                ……………………………………</span><span class="message"><br />
+                Creating jdk1.5.0_08/lib/tools.jar<br />
+                Creating jdk1.5.0_08/jre/lib/rt.jar<br />
+                Creating jdk1.5.0_08/jre/lib/jsse.jar<br />
+                Creating jdk1.5.0_08/jre/lib/charsets.jar<br />
+                Creating jdk1.5.0_08/jre/lib/ext/localedata.jar<br />
+                Creating jdk1.5.0_08/jre/lib/plugin.jar<br />
+                Creating jdk1.5.0_08/jre/lib/javaws.jar<br />
+                Creating jdk1.5.0_08/jre/lib/deploy.jar <br />
+                <br />
+                [root@sample ~]# </span><span class="command">mv jdk1.5.0_08/ /usr/local/</span><span class="message"><span class="intro">　 ← 将解压后的目录移动至/usr/local/<br />
+                <br />
+                </span>[root@sample ~]# </span><span class="command">rm -f jdk-1_5_0_08-linux-i586.bin</span> <span class="intro">　 ← 删除安装后遗留的源文件</span></td>
+            </tr>
+          </table>
+          <br />
+          [4] 安装Tomcat5<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget http://apache.justdn.org/tomcat/tomcat-5/v5.0.28/bin/jakarta-tomcat-5.0.28.tar.gz</span><span class="intro">　 ← 下载tomcat</span><br />
+              <br />
+              <span class="message">--19:51:58--  http://apache.justdn.org/tomcat/tomcat-5/v5.0.28/bin/jakarta-tomcat-5.0.28.tar.gz<br />
+              =&gt; `jakarta-tomcat-5.0.28.tar.gz'<br />
+              Resolving apache.justdn.org... 61.129.78.119<br />
+              Connecting to apache.justdn.org|61.129.78.119|:80... connected.<br />
+              HTTP request sent, awaiting response... 302 Found<br />
+              Location: ftp://justdn.org/apache/tomcat/tomcat-5/v5.0.28/bin/jakarta-tomcat-5.0.28.tar.gz [following]<br />
+              --19:51:59--  ftp://justdn.org/apache/tomcat/tomcat-5/v5.0.28/bin/jakarta-tomcat-5.0.28.tar.gz<br />
+              =&gt; `jakarta-tomcat-5.0.28.tar.gz'<br />
+              Resolving justdn.org... 61.129.78.119<br />
+              Connecting to justdn.org|61.129.78.119|:21... connected.<br />
+              Logging in as anonymous ... Logged in!<br />
+              ==&gt; SYST ... done.    ==&gt; PWD ... done.<br />
+              ==&gt; TYPE I ... done.  ==&gt; CWD /apache/tomcat/tomcat-5/v5.0.28/bin ... done.<br />
+              ==&gt; PASV ... done.    ==&gt; RETR jakarta-tomcat-5.0.28.tar.gz ... done. </span>
+              <p class="message"> [                                &lt;=&gt;  ] 10,718,313   236.29K/s</p>
+                <span class="message">19:53:11 (152.98 KB/s) - `jakarta-tomcat-5.0.28.tar.gz' saved [10718313]<br />    
+                    <br />
+                  [root@sample ~]# </span><span class="command">tar zxvf jakarta-tomcat-5.0.28.tar.gz</span><span class="message"><span class="intro">　 ← 展开被压缩的tar文件</span><br />
+                    <br />
+                    [root@sample ~]# </span><span class="command">mv jakarta-tomcat-5.0.28 /usr/local/tomcat</span> <span class="intro">　 ← 移动被展开的目录到相应目录<br />
+                    <br />
+                    </span><span class="message">[root@sample ~]#</span><span class="command"> rm -f jakarta-tomcat-5.0.28.tar.gz<span class="intro">　  ← 删除安装后遗留的源文件</span></span></td>
+            </tr>
+          </table>
+          <br />
+          [5] 安装mod_jk。<br />
+          <br />
+          　　在安装mod_jk之前，要首先安装httpd-devel，以便于用apxs命令来让mod_jk模块的安装顺利进行。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample modules]#</span> <span class="command">yum -y install httpd-devel</span><span class="intro">　  ← 在线安装httpd-devel<br />
+</span><br />
+              <span class="message">Setting up Install Process<br />
+              Setting up repositories<br />
+              dag                       100% |=========================| 1.1 kB    00:00<br />
+              update                    100% |=========================|  951 B    00:00<br />
+              base                      100% |=========================| 1.1 kB    00:00<br />
+              addons                    100% |=========================|  951 B    00:00<br />
+              extras                    100% |=========================| 1.1 kB    00:00<br />
+              Reading repository metadata in from local files<br />
+              Reducing Dag RPM Repository for Red Hat Enterprise Linux to included packages only<br />
+              Finished<br />
+              Parsing package install arguments<br />
+              Resolving Dependencies<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for httpd-devel to pack into transaction set.<br />
+              httpd-devel-2.0.52-28.ent 100% |=========================|  28 kB    00:00<br />
+              ---&gt; Package httpd-devel.i386 0:2.0.52-28.ent.centos4 set to be updated<br />
+              --&gt; Running transaction check<br />
+              --&gt; Processing Dependency: apr-util-devel for package: httpd-devel<br />
+              --&gt; Processing Dependency: apr-devel for package: httpd-devel<br />
+              --&gt; Processing Dependency: pcre-devel for package: httpd-devel<br />
+              --&gt; Restarting Dependency Resolution with new changes.<br />
+              --&gt; Populating transaction set with selected packages. Please wait.<br />
+              ---&gt; Downloading header for apr-devel to pack into transaction set.<br />
+              apr-devel-0.9.4-24.5.c4.2 100% |=========================|  32 kB    00:00<br />
+              ---&gt; Package apr-devel.i386 0:0.9.4-24.5.c4.2 set to be updated<br />
+              ---&gt; Downloading header for apr-util-devel to pack into transaction set.<br />
+              apr-util-devel-0.9.4-21.i 100% |=========================|  25 kB    00:00<br />
+              ---&gt; Package apr-util-devel.i386 0:0.9.4-21 set to be updated<br />
+              ---&gt; Downloading header for pcre-devel to pack into transaction set.<br />
+              pcre-devel-4.5-3.2.RHEL4. 100% |=========================| 6.8 kB    00:00<br />
+              ---&gt; Package pcre-devel.i386 0:4.5-3.2.RHEL4 set to be updated<br />
+              --&gt; Running transaction check </span>
+              <p class="message">Dependencies Resolved</p>
+                <p class="message">=============================================================================<br />
+                Package                 Arch       Version          Repository        Size<br />
+                =============================================================================<br />
+                Installing:<br />
+                httpd-devel             i386       2.0.52-28.ent.centos4  base              145 k<br />
+                Installing for dependencies:<br />
+                apr-devel               i386       0.9.4-24.5.c4.2  base              503 k<br />
+                apr-util-devel          i386       0.9.4-21         base              239 k<br />
+                pcre-devel              i386       4.5-3.2.RHEL4    base               96 k</p>
+                <p class="message">Transaction Summary<br />
+                =============================================================================<br />
+                Install      4 Package(s)<br />
+                Update       0 Package(s)<br />
+                Remove       0 Package(s)<br />
+                Total download size: 983 k<br />
+                Downloading Packages:<br />
+                (1/4): apr-devel-0.9.4-24 100% |=========================| 503 kB    00:04<br />
+                (2/4): apr-util-devel-0.9 100% |=========================| 239 kB    00:08<br />
+                (3/4): pcre-devel-4.5-3.2 100% |=========================|  96 kB    00:02<br />
+                (4/4): httpd-devel-2.0.52 100% |=========================| 145 kB    00:03<br />
+                Running Transaction Test<br />
+                Finished Transaction Test<br />
+                Transaction Test Succeeded<br />
+                Running Transaction<br />
+                Installing: apr-devel                    ######################### [1/4]<br />
+                Installing: apr-util-devel               ######################### [2/4]<br />
+                Installing: pcre-devel                   ######################### [3/4]<br />
+                Installing: httpd-devel                  ######################### [4/4]</p>
+                <p><span class="message">Installed: httpd-devel.i386 0:2.0.52-28.ent.centos4<br />
+                Dependency Installed: apr-devel.i386 0:0.9.4-24.5.c4.2 apr-util-devel.i386 0:0.9.4-21 pcre-devel.i386 0:4.5-3.2.RHEL4<br />
+                Complete!</span>
+			  </td>
+            </tr>
+          </table>
+          <br />
+          　　然后安装JK2。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample modules]#</span> <span class="command">wget http://archive.apache.org/dist/jakarta/tomcat-connectors/jk2/jakarta-tomcat-connectors-jk2-src-current.tar.gz</span><span class="intro">　  ← 下载JK2的源代码</span><br />
+              <br />
+              <span class="message">--09:13:57--  http://archive.apache.org/dist/jakarta/tomcat-connectors/jk2/jakarta-tomcat-connectors-jk2-src-current.tar.gz<br />
+              =&gt; `jakarta-tomcat-connectors-jk2-src-current.tar.gz'<br />
+              Resolving archive.apache.org... 192.87.106.226<br />
+              Connecting to archive.apache.org|192.87.106.226|:80... connected.<br />
+              HTTP request sent, awaiting response... 200 OK<br />
+              Length: 907,088 (886K) [application/x-tar]                </span>
+              <p class="message">100%[====================================&gt;] 907,088      268.51K/s    ETA 00:00</p>
+                <p><span class="message">09:14:01 (267.76 KB/s) - `jakarta-tomcat-connectors-jk2-src-current.tar.gz' saved [907088/907088]<br />  
+                  <br />  
+                  [root@sample ~]# </span><span class="command">tar zxvf jakarta-tomcat-connectors-jk2-src-current.tar.gz</span><span class="message"><span class="intro">　  ← 解开被压缩的源代码</span><br />
+                    <br />
+                    [root@sample ~]# </span><span class="command">cd jakarta-tomcat-connectors-jk2*/jk/native2 </span><span class="message"><span class="intro">　  ← 进入相应目录</span><br />
+                    <br />
+                    [root@sample native2]# </span><span class="command">./configure --with-apxs2=/usr/sbin/apxs</span><span class="message"><span class="intro">　  ← 配置</span><br />
+                    <br />
+                    checking build system type... i686-redhat-linux-gnu<br />
+                    checking host system type... i686-redhat-linux-gnu<br />
+                    checking target system type... i686-redhat-linux-gnu<br />
+                    checking for a BSD-compatible install... /usr/bin/install -c<br />
+                    checking whether build environment is sane... yes<br />
+                    checking for gawk... gawk<br />
+                    checking whether make sets $(MAKE)... yes<br />
+                    checking for gcc... gcc<br />
+                    checking for C compiler default output... a.out<br />
+                    checking whether the C compiler works... yes<br />
+                    checking whether we are cross compiling... no<br />
+                    </span><span class="intro">……………………………………<br />
+                    ……………………………………<br />
+                    ……中间提示信息省略…………<br />
+                    ……………………………………<br />
+                    ……………………………………</span><span class="message"><br />
+                    checking checking for iis...... not provided<br />
+                    checking checking for iPlanet...... not provided<br />
+                    checking for tomcat33 location... not provided<br />
+                    checking for tomcat40 location... not provided<br />
+                    checking for tomcat41 location... not provided<br />
+                    configure: creating ./config.status<br />
+                    config.status: creating Makefile<br />
+                    config.status: creating server/apache13/Makefile<br />
+                    config.status: creating server/apache13/Makefile.apxs<br />
+                    config.status: creating server/apache2/Makefile<br />
+                    config.status: creating server/apache2/Makefile.apxs<br />
+                    config.status: creating ../build.properties<br />
+                    config.status: creating scripts/build/unix/dummy<br />
+                    config.status: executing depfiles commands<br />
+                    <br />
+                    [root@sample native2]# </span><span class="command">make</span><span class="message"><span class="intro">　  ← 编译</span><br />
+                    <br />
+                    list=' server/apache2'; \<br />
+                    for i in $list; do \<br />
+                    echo &quot;Making $target in $i&quot;; \<br />
+                    if test &quot;$i&quot; != &quot;.&quot;; then \<br />
+                    (cd $i &amp;&amp; make) || exit 1; \<br />
+                    fi; \<br />
+                    done;<br />
+                    Making  in server/apache2<br />
+                    make[1]: Entering directory `/root/jakarta-tomcat-connectors-jk2-2.0.4-src/jk/native2/server/apache2'<br />
+                    mkdir -p ../../../build/jk2/apache2/usr/lib/httpd/modules<br />
+                    /bin/sh /usr/lib/apr/build/libtool --silent  --mode=compile gcc  -O2 -g -pipe -m32 <br />
+                    </span><span class="intro">……………………………………<br />
+                    ……………………………………<br />
+                    ……中间提示信息省略…………<br />
+                    ……………………………………<br />
+                    ……………………………………</span><span class="message"><br />
+                    /bin/sh /usr/lib/apr/build/libtool --silent  --mode=install /bin/cp ../../../build/jk2/apache2/mod_jk2.la `pwd`/../../../build/jk2/apache2//usr/lib/httpd/modules<br />
+                    libtool: install: warning: remember to run `libtool --finish /usr/lib/httpd/modules'<br />
+                    /bin/cp ../../../build/jk2/apache2//usr/lib/httpd/modules/mod_jk2.so ../../../build/jk2/apache2/mod_jk2.so<br />
+                    make[1]: Leaving directory `/root/jakarta-tomcat-connectors-jk2-2.0.4-src/jk/native2/server/apache2'<br />
+                    <br />
+                    [root@sample native2]# </span><span class="command">cd ../build/jk2/apache2</span><span class="message"><span class="intro">　  ← 进入mod_jk2所在的相应目录</span><br />
+                    <br />
+                    [root@sample apache2]# </span><span class="command">apxs -n jk2 -i mod_jk2.so</span><span class="message"><span class="intro">　  ← 为Apache安装JK2模块</span><br />
+                    <br />
+                    /usr/lib/httpd/build/instdso.sh SH_LIBTOOL='/bin/sh /usr/lib/apr/build/libtool' mod_jk2.so /usr/lib/httpd/modules<br />
+                    /bin/sh /usr/lib/apr/build/libtool --mode=install cp mod_jk2.so /usr/lib/httpd/modules/<br />
+                    cp mod_jk2.so /usr/lib/httpd/modules/mod_jk2.so<br />
+                    Warning!  dlname not found in /usr/lib/httpd/modules/mod_jk2.so.<br />
+                    Assuming installing a .so rather than a libtool archive.<br />
+                    chmod 755 /usr/lib/httpd/modules/mod_jk2.so<br />
+                    <br />
+                    [root@sample apache2]# </span><span class="command">cp ../../../conf/workers2.properties /etc/httpd/conf/</span><span class="message"><span class="intro">　  ← 复制Apache相关的配置文件到相应目录</span><br />
+                    <br />
+                    [root@sample apache2]# </span><span class="command">cd</span><span class="message"><span class="intro">　  ← 回到root跟目录</span><br />
+                    <br />
+              [root@sample ~]# </span><span class="command">rm -rf jakarta-tomcat-connectors-jk2*　</span><span class="intro"> ← 删除安装遗留的源文件</span>                
+              </td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">定义相关环境变量</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">vi /etc/profile</span><span class="intro">　 ← 编辑环境变量文件，添加如下语句到文件文尾</span><br />
+                  <span class="message"><br />
+                </span><span class="after">export JAVA_HOME=/usr/local/jdk1.5.0_08<br />
+                export PATH=$PATH:$JAVA_HOME/bin<br />
+                export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar<br />
+                export TOMCAT_HOME=/usr/local/tomcat<br />
+                export CATALINA_HOME=/usr/local/tomcat<br />
+              export CLASSPATH=$CLASSPATH:$CATALINA_HOME/common/lib</span><span class="message"><br />
+              <br />
+              [root@sample ~]# </span><span class="command">source /etc/profile</span><span class="intro">　 ← 使环境变量生效</span></td>
+            </tr>
+          </table>    
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">配置Tomcat和Apache</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          [1] 配置Tomcat。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000" class="message">[root@sample ~]# <span class="command">vi /usr/local/tomcat/conf/web.xml</span><span class="intro">　 ← 编辑web.xml</span><br />
+              <br />
+&lt;servlet&gt;<br />
+&lt;servlet-name&gt;default&lt;/servlet-name&gt;<br />
+&lt;servlet-class&gt;<br />
+org.apache.catalina.servlets.DefaultServlet<br />
+&lt;/servlet-class&gt;<br />
+&lt;init-param&gt;<br />
+&lt;param-name&gt;debug&lt;/param-name&gt;<br />
+&lt;param-value&gt;0&lt;/param-value&gt;<br />
+&lt;/init-param&gt;<br />
+&lt;init-param&gt;<br />
+&lt;param-name&gt;listings&lt;/param-name&gt;<br />
+<span class="before">&lt;param-value&gt;true&lt;/param-value&gt;</span><span class="intro">　 ← 找到这一行，将true改为false </span><br />
+<span class="intro">　↓</span><br />
+<span class="after">&lt;param-value&gt;false&lt;/param-value&gt;</span><span class="intro">　 ← 变为此状态，禁止查看目录结构信息 </span><br />
+&lt;/init-param&gt;<br />
+&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br />
+&lt;/servlet&gt;<br />
+<br />
+[root@sample ~]# <span class="command">vi /usr/local/tomcat/conf/server.xml</span><span class="intro">　 ← 编辑server.xml</span><br />
+<br />
+&lt;Host name=&quot;localhost&quot; debug=&quot;0&quot; appBase=&quot;webapps&quot;<br />
+unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;<br />
+xmlValidation=&quot;false&quot; xmlNamespaceAware=&quot;false&quot;&gt;<span class="intro">　 ← 找到这一行，接这一行添加下面的语句：</span><br />
+<span class="after">&lt;Context path=&quot;&quot; docBase=&quot;/var/www/html&quot; debug=&quot;0&quot;<span class="intro">　 ← 指定Web根目录，这里以/var/www/html为例</span><br />
+reloadable=&quot;true&quot; crossContext=&quot;true&quot;/&gt;</span></td>
+            </tr>
+          </table>
+          <br />
+          [2] 配置Apache的相关设置。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/httpd/conf/workers2.properties</span><span class="intro"><span class="message">　 </span>← 修改JK2的配置文件，添加如下行到文尾：</span><br />
+                <span class="after"><br />
+              [uri:/servlets-examples/*]<br />
+              [uri:/jsp-examples/*]</span><br />
+              <br />
+              <span class="message">[root@sample usr]# </span><span class="command">vi /etc/httpd/conf/httpd.conf</span><span class="message"><span class="intro">　 ← 编辑Apache的配置文件</span><br />
+              <br />
+              LoadModule cgi_module modules/mod_cgi.so<span class="intro">　 ← 找到这一行，在下面添加如下新的行</span><br />
+              </span><span class="after">LoadModule jk2_module modules/mod_jk2.so<span class="intro"><span class="message">　 </span>← 添加此行，为Apache添加JK2的模块<br />
+              </span></span><span class="message"><br />
+              [root@sample ~]# </span><span class="command">/etc/rc.d/init.d/httpd restart</span><span class="message"><br />
+              Stopping httpd:　　　　　　　　　　                                            [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting httpd:　　　　　　　　　　                                            [  </span><span class="after">OK</span><span class="message"> ]</span></td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">启动Tomcat</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　首先为Tomcat编辑一段启动脚本，并置于/etc/rc.d/init.d目录下，让Tomcat和httpd一样作为一项系统服务，并随系统自动启动。
+          <br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/rc.d/init.d/tomcat</span><span class="intro"><span class="message">　 </span>← 建立Tomcat启动脚本，如下：<br />
+                <br />
+              </span>
+                <p class="conffile">#!/bin/bash<br />
+                #<br />
+                # Startup script for the tomcat<br />
+                #<br />
+                # chkconfig: 345 80 15<br />
+                # description: Tomcat is a Servlet+JSP Engine.</p>
+                <p class="conffile"># Source function library.<br />
+                . /etc/rc.d/init.d/functions</p>
+                <p class="conffile">start(){<br />
+                if [ -z $(/sbin/pidof java) ]; then<br />
+                echo &quot;Starting tomcat&quot;<br />
+                /usr/local/tomcat/bin/startup.sh<br />
+                touch /var/lock/subsys/tomcat<br />
+                else<br />
+                echo &quot;tomcat allready running&quot;<br />
+                fi<br />
+                }</p>
+                <p class="conffile">stop(){<br />
+                if [ ! -z $(/sbin/pidof java) ]; then<br />
+                echo &quot;Shutting down tomcat&quot;<br />
+                /usr/local/tomcat/bin/shutdown.sh<br />
+                until [ -z $(/sbin/pidof java) ]; do :; done<br />
+                rm -f /var/lock/subsys/tomcat<br />
+                else<br />
+                echo &quot;tomcat not running&quot;<br />
+                fi<br />
+                }</p>
+                <p class="conffile">case &quot;$1&quot; in<br />
+                start)<br />
+                start<br />
+                ;;<br />
+                stop)<br />
+                stop<br />
+                ;;<br />
+                restart)<br />
+                stop<br />
+                start<br />
+                ;;<br />
+                status)<br />
+                /usr/local/tomcat/bin/catalina.sh version<br />
+                ;;<br />
+                *)<br />
+                echo &quot;Usage: $0 {start|stop|restart|status}&quot;<br />
+                esac</p>
+                <span class="conffile">exit 0</span><br />
+                  <br />
+                    <span class="message">[root@sample ~]# </span><span class="command">chmod 755 /etc/rc.d/init.d/tomcat</span><span class="message"><span class="intro">　 ← 将启动脚本属性设置为755（使之可执行）</span><br />
+                    <br />
+                    [root@sample ~]# <span class="command">chkconfig --add tomcat</span><span class="intro">　 ← 将Tomcat加入到chkconfig中</span><br />
+                    <br />
+[root@sample ~]# <span class="command">chkconfig tomcat on</span> <span class="intro">　 ← 将Tomcat设置为自启动</span><br />
+<br />
+[root@sample ~]# <span class="command">chkconfig --list tomcat</span><span class="intro">　 ← 确认Tomcat服务状态</span><br />
+tomcat          0:off   1:off <span class="att1">2:on    3:on    4:on    5:on</span> 6:off<span class="intro">　 ← 确认2~5为on的状态就OK</span><br />
+                    <br />
+                    [root@sample ~]# </span><span class="command">/etc/rc.d/init.d/tomcat start</span><span class="message"><span class="intro">　 ← 启动Tomcat </span><br />
+                    <br />
+                    Starting tomcat<br />
+                    Using CATALINA_BASE:   /usr/local/tomcat<br />
+                    Using CATALINA_HOME:   /usr/local/tomcat<br />
+                    Using CATALINA_TMPDIR: /usr/local/tomcat/temp<br />
+                    Using JAVA_HOME:       /usr/local/jdk1.5.0_08
+                    </span></td>
+            </tr>
+      </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333"><span class="table-title">测试Servlet/JSP</span></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <p><br />
+          [1] 在浏览器上输入 http://你的IP地址（或你的域名）/jsp-examples ，确认是否出现如下画面：<br />
+          <br />
+          <img src="servlet/jsp-examples.gif" width="836" height="639" border="1" /><br />      
+          <br />
+          　　如果出现如上画面，说明JSP正常工作。<br />
+          <br />
+          [2] 在浏览器上输入 http://你的IP地址（或你的域名）/servlets-examples ，确认是否出现如下画面：<br />
+          <br />
+          <img src="servlet/servlet-examples.gif" width="837" height="553" border="1" /><br />
+          <br />　　
+          如果出现如上画面，说明JSP正常工作。<br />
+</p>
+          <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+          </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

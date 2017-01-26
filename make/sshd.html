@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt;<strong>用OpenSSH构建SSH服务器</strong>&gt;</strong>  （最近更新日：2006/09/23）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　SSH服务和Telnet服务一样，通过远程登录登录到系统，在远程操控系统。但它与Telnet的不同点就是：Telnet在传输的过程中是平文传输，而SSH是将传输内容加密，在传送的过程中保证了传送内容的保密性，从而提高了系统的安全性。
+      <br />
+<br />
+　　在这里，我们不准备将SSH服务作为用户上传下载文件的工具。我们只用SSH服务的开通为远程管理系统提供方便。另外在用户认证方式上，为了服务器和用户的安全，禁止用户密码的认证方式，而基于“钥匙”的方式。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">SSH相关配置文件的修改</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　首先修改SSH的配置文件。如下：<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">vi /etc/ssh/sshd_config</span>　            <span class="intro">← 用vi打开SSH的配置文件</span><br />
+                <br />
+                <span class="before">#Protocol 2,1</span>　<span class="intro">← 找到此行将行头“#”删除，再将行末的“,1”删除，只允许SSH2方式的连接</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">Protocol 2</span>　<span class="intro">← 修改后变为此状态，仅使用SSH2</span><br />
+                <span class="before"><br />
+                #ServerKeyBits 768</span>　<span class="intro">← 找到这一行，将行首的“#”去掉，并将768改为1024</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">ServerKeyBits 1024</span>　<span class="intro">← 修改后变为此状态，将ServerKey强度改为1024比特<br />
+                </span><br />
+                <span class="before">#PermitRootLogin yes</span> 　<span class="intro">← 找到这一行，将行首的“#”去掉，并将yes改为no</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">PermitRootLogin no</span>  　<span class="intro">← 修改后变为此状态，不允许用root进行登录<br />
+                </span><br />
+                <span class="before">#PasswordAuthentication yes</span>　<span class="intro">← 找到这一行，将yes改为no</span><br />
+                <span class="intro">　↓</span><br />
+                <span class="after">PasswordAuthentication no</span>　<span class="intro">← 修改后变为此状态，不允许密码方式的登录</span><br />
+<br />
+<span class="before">#PermitEmptyPasswords no</span>　              <span class="intro">← 找到此行将行头的“#”删除，不允许空密码登录</span><br />
+<span class="intro">　↓</span><br />
+<span class="after">PermitEmptyPasswords no</span>　              <span class="intro">← 修改后变为此状态，禁止空密码进行登录</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后保存并退出。（vi保存退出的命令为ZZ）<br />
+          <br />
+          　　因为我们只想让SSH服务为管理系统提供方便，所以在不通过外网远程管理系统的情况下，只允许内网客户端通过SSH登录到服务器，以最大限度减少不安全因素。设置方法如下：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]# </span><span class="command">vi /etc/hosts.deny</span><span class="message">　 <span class="intro">← 修改屏蔽规则，在文尾添加相应行</span><br />  
+                <br />  
+                </span>
+                <p class="message">#<br />
+                # hosts.deny    This file describes the names of the hosts which are<br />
+                #               *not* allowed to use the local INET services, as decided<br />
+                #               by the '/usr/sbin/tcpd' server.<br />
+                #<br />
+                # The portmap line is redundant, but it is left to remind you that<br />
+                # the new secure portmap uses hosts.deny and hosts.allow.  In particular<br />
+                # you should know that NFS uses portmap!</p>
+                    <p class="message"><span class="after">sshd: ALL</span>　 <span class="intro">← 添加这一行，屏蔽来自所有的SSH连接请求</span><br />
+                    <br />
+                [root@sample ~]# <span class="command">vi /etc/hosts.allow</span>　 <span class="intro">← 修改允许规则，在文尾添加相应行</span></p>
+                <p class="message">#<br />
+                # hosts.allow   This file describes the names of the hosts which are<br />
+                #               allowed to use the local INET services, as decided<br />
+                #               by the '/usr/sbin/tcpd' server.<br />
+                #</p>
+              <span class="after">sshd: 192.168.0.</span>　 <span class="intro">← 添加这一行，只允许来自内网的SSH连接请求</span>				</td>
+            </tr>
+          </table>
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">重新启动SSH服务</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　在修改完SSH的配置文件后，需要重新启动SSH服务才能使新的设置生效。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">/etc/rc.d/init.d/sshd restart</span>　 <span class="intro">← 重新启动SSH服务器</span><br />
+                <br />
+                <span class="message">Stopping sshd:　　　　　　　　　　　　                                             [  </span><span class="after">OK</span><span class="message"> ]<br />
+              Starting sshd:　　　　　　　　　　　　                                             [ </span><span class="after">OK</span><span class="message"> ]</span>　              <span class="intro">← SSH服务器重新启动成功</span></td>
+            </tr>
+          </table>
+          <br />
+          　　这时，在远程终端（自用PC等等）上，用SSH客户端软件以正常的密码的方式是无法登录服务器的。为了在客户能够登录到服务器，我们接下来建立SSH用的公钥与私钥，以用于客户端以“钥匙”的方式登录SSH服务器。<br />
+          <br />
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">SSH2的公钥与私钥的建立</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　登录为一个一般用户，基于这个用户建立公钥与私钥。（这里以centospub用户为例）<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">su - centospub</span>　<span class="intro">← 登录为一般用户</span>centospub<br />
+                <br />
+                <span class="message">[centospub@sample ~]$</span> <span class="command">ssh-keygen -t rsa</span> 　<span class="intro">← 建立公钥与私钥</span><br />
+                <span class="message">Generating public/private rsa key pair.<br />
+                Enter file in which to save the key (/home/kaz/.ssh/id_rsa):</span> 　<span class="intro">← 钥匙的文件名，这里保持默认直接回车</span><br />
+                <span class="message">Created directory '/home/kaz/.ssh'<br />
+                Enter passphrase (empty for no passphrase):</span> 　<span class="intro">← 输入口令</span><br />
+                <span class="message">Enter same passphrase again:</span> 　 <span class="intro">← 再次输入口令</span><br />
+                <span class="message">Your identification has been saved in /home/kaz/.ssh/id_rsa.<br />
+Your public key has been saved in /home/kaz/.ssh/id_rsa.pub.<br />
+The key fingerprint is:<br />
+tf:rs:e3:7s:28:59:5s:93:fe:33:84:01:cj:65:3b:8e centospub@sample.centospub.com</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后确认一下公钥与密钥的建立，以及对应于客户端的一些处理。<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[centospub@sample ~]$</span> <span class="command">cd ~/.ssh</span>　 <span class="intro">← 进入用户SSH配置文件的目录</span><br />
+                <br />
+                <span class="message">[centospub@sample .ssh]$</span> <span class="command">ls -l</span>　 <span class="intro">← 列出文件</span><br />
+                <span class="message">total 16
+                <br />
+-rw-------   1 centospub centospub  951  Sep  4 19:22 </span><span class="att1">id_rsa</span>　 <span class="intro">← 确认私钥已被建立</span><br />
+<span class="message">-rw-r--r--   1 centospub centospub  241  Sep  4 19:22 </span><span class="att1">id_rsa.pub</span>　 <span class="intro">← 确认公钥已被建立</span><br />
+<br />
+<span class="message">[centospub@sample .ssh]$</span> <span class="command">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span>　 <span class="intro">← 公钥内容输出到相应文件中</span><br />
+<br />
+<span class="message">[centospub@sample .ssh]$</span> <span class="command">rm -f ~/.ssh/id_rsa.pub</span>　 <span class="intro">← 删除原来的公钥文件</span><br />
+<br />
+<span class="message">[centospub@sample .ssh]$</span> <span class="command">chmod 400 ~/.ssh/authorized_keys</span>　 <span class="intro">← 将新建立的公钥文件属性设置为400</span></td>
+            </tr>
+          </table>
+          <br />
+          　　然后，将私钥通过安全的方式转移到欲通过SSH连接到服务器的PC上。这里，以通过3.5寸磁盘为介质为例：<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">centospub@sample .ssh]$</span> <span class="command">exit</span> 　 <span class="intro">← 退出一般用户的登录（返回root的登录）</span><br />
+                <br />
+                <span class="message">[root@sample ~]#</span> <span class="command">mount /mnt/floppy/</span>　 <span class="intro">← 加载软盘驱动器</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">mv /home/centospub/.ssh/id_rsa /mnt/floppy/</span> 　<span class="intro">← 将刚刚建立的私钥移动到软盘</span><br />
+<br />
+<span class="message">[root@sample ~]#</span> <span class="command">umount /mnt/floppy/</span> 　<span class="intro">← 卸载软盘驱动器</span></td>
+            </tr>
+          </table>
+          <br />
+          　　这样，我们通过对应于centospub用户的私钥，就可以在远程终端上通过SSH客户端连接到服务器了。但服务器生成的私钥匙不能被客户端直接应用…详细请见下一节。 <br />
+          <br />
+      <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       

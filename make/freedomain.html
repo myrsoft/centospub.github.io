@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta name="description" content="CentOS服务器构建">
+		<meta name="keywords" content="Centos, 服务器构建, Server, 服务器, Enterprise, Linux, news, software, download, downloads, free, community, forums, bulletin, boards, open, source, opensource, gpl, UNIX, web site, weblog, blogs, ISO, FAQ, whitebox, WBEL, WBL, taolinux" />
+	<title>CentOS Pub  --- 纯中文 CentOS 攻略站</title>
+		<link rel="stylesheet" type="text/css" href="../css/centospub.css">
+		<link rel="stylesheet" type="text/css" href="make.css">
+</head>
+
+
+	<body>
+	<div id="docs-header">
+			<a href="http://www.centospub.com"><img src="../images/logo.gif" border="0" id="docs-rhlogo"></a> 
+			<a name="top" id="top"></a>
+			<table class="tab-set" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+					</td>
+					<td class="tab-label"><a href="../index.html">前　言</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../prep.html">预　习</a></td>
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="current-tab-label"><a href="../make.html">配置详解</a></td> 
+					<td class="current-tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="http://www.centospub.com/bbs" target="_blank">技术论坛</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../whatsnew.html">最近更新</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+					<td class="tab-label"><a href="../about.html">About</a></td> 
+					<td class="tab-end"></td>
+
+					<td class="tab-spacer"></td>
+
+				</tr>
+			</table>
+	<a href="../about.html"></a>	  </div>
+
+		<div id="docs-headerbar">
+		</div>
+
+	<div id="docs-content">
+	  <p><a href="../make.html">&lt;&lt;&lt; 返回［配置详解］索引 </a><br />
+            <br />
+　　<strong>&lt; 动态域名的申请（no-ip.com） &gt;</strong>  （最近更新日：2006/08/20）</p>
+
+          <table width="100%" border="0">
+            <tr>
+              <td bgcolor="#4665A6"><table  border="0">
+                  <tr>
+                    <td bgcolor="#333333" class="table-title">前　　言</td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <br />
+          　　通过PPPoE方式xDSL接入网络的用户，每次获得的IP地址是变化的。我们不可能让别人用IP地址来访问我们的服务器，而且普通免费的二级域名又  无法应付服务器IP即时的变化。所以，需要申请一个动态域名，通过服务端对域名指向的实时控制，达到无论服务器IP地址怎样变化，外部用户在任何时候都能  通过此域名来正常访问服务器的目的。<br />
+          <br />
+　　在国内，有一些动态域名提供商，比如比较有代表性的  3322.org ，但功能都比较单一。在这里，我们选择人气、评价比较高的国外动态域名提供商 no-ip.com  提供的动态域名。当然，按照您的个人喜好，选择任何一个服务商提供的动态域名都能实现同样的功能，只要您知道相应服务商提供的动态域名的设置方法。<br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">动态域名的申请</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+[1] 打开no-ip.com的用户申请页面 <a href="http://www.no-ip.com/newUser.php" target="_blank">http://www.no-ip.com/newUser.php</a> <br />
+<br />
+<br />
+[2] 分别填入前五项必填选项（名、姓、E-mail、密码和密码的确认）以及后面的“How did you hear about  us?”（通过什么方式得知no-ip.com的）的选择，其他选项可填可不填，然后一定不要忘了在最后的是否同意协议（“I have read  and agree to the following terms of service”）一栏上打勾同意协议。<br />
+<br />
+[3] 这时去邮箱中查看邮件，会发现从no-ip.com发来的账户激活邮件。邮件正文中，有一个标题为“To activate your  account please click the following URL:”的链接，点击这个链接，在弹出的浏览器窗口中会出现激活成功的信息。<br />
+<br />
+[4] 然后到 <a href="http://www.no-ip.com" target="_blank">no-ip.com</a> 的主页上用刚刚申请的用户名和密码登录。然后会出现用户控制面板，点击左边“Hosts / Redirects”菜单中的“Add”。<br />
+<br />
+<img src="freedomain/freedomain01.gif" width="718" height="462" border="1" /><br />
+<br />
+[5]  在加入新域名的页面中，填入你的主机名（这里以本站的digeast为例），以及域名的形式（这里以默认的“no-ip.info”为例），“Host  Type”一项选择“DNS Host (A)”，然后其他选项保持默认，点击下面的按钮“Create  Host”，顺利的话，会出现加入主机成功的页面。图样如下：<br />
+<br />
+<img src="freedomain/freedomain02.gif" width="719" height="500" border="1" /><br />
+<br />
+　　域名建立成功后会出现成功建立的提示页面，如下：<br />
+<br />
+<img src="freedomain/freedomain03.gif" width="719" height="465" border="1" /><br />
+<br />
+<table width="100%" border="0">
+  <tr>
+    <td bgcolor="#4665A6"><table  border="0">
+      <tr>
+        <td bgcolor="#333333" class="table-title">在服务器端控制域名</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+　　以上域名申请过程，我们可以在我们的自用PC上面完成。管理域名的过程也同样能够在PC上面完成，但每次更新IP地址后都要手动通过网页来更新是没有效率的。这里介绍在服务器端对域名进行控制的方法。<br />
+<br />
+[1]         以root用户登录服务器，下载no-ip域名控制工具。<br />
+<br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">wget http://www.no-ip.com/client/linux/noip-duc-linux.tar.gz</span>　 <span class="intro">← 下载域名控制工具</span><br />
+                <p class="message">--09:13:38--  http://www.no-ip.com/client/linux/noip-duc-linux.tar.gz<br />
+  =&gt; `noip-duc-linux.tar.gz'<br />
+                Resolving www.no-ip.com... 204.16.252.112<br />
+                Connecting to www.no-ip.com|204.16.252.112|:80... connected.<br />
+                HTTP request sent, awaiting response... 200 OK<br />
+                Length: 99,421 (97K) [application/x-tar]</p>
+                <p class="message">100%[====================================&gt;] 99,421        98.67K/s</p>
+                <span class="message">09:13:40 (98.42 KB/s) - `noip-duc-linux.tar.gz' saved [99421/99421]<br />
+                <br />
+              [root@sample ~]#</span> <span class="command">tar zxvf noip-duc-linux.tar.gz</span>　 <span class="intro">← 展开被压缩tar文件</span></td>
+            </tr>
+          </table>
+          <br />
+          [2] 配置no-ip域名控制工具<br />
+          <br />
+          <table width="100%" border="2">
+            <tr>
+              <td bgcolor="#000000"><span class="message">[root@sample ~]#</span> <span class="command">cd noip*</span> 　 <span class="intro">← 进入展开后的no-ip域名控制工具目录</span><br />
+                <br />
+                <span class="message">[root@sample noip-2.1.3]#</span> <span class="command">make</span> 　 <span class="intro">← 编译源代码</span><br />
+<p><span class="message">[root@sample noip-2.1.3]#</span> <span class="command">make install</span>　                <span class="intro">← 开始建立</span></p>
+<p class="message">if [ ! -d /usr/local/bin ]; then mkdir -p /usr/local/bin;fi<br />
+  if [ ! -d /usr/local/etc ]; then mkdir -p /usr/local/etc;fi<br />
+  cp noip2 /usr/local/bin/noip2<br />
+  /usr/local/bin/noip2 -C -c /tmp/no-ip2.conf</p>
+<p class="message">Auto configuration for Linux client of no-ip.com.</p>
+<p class="message">Multiple network devices have been detected.</p>
+<p class="message">Please select the Internet interface from this list.</p>
+<p><span class="message">By typing the number associated with it.<br />
+  0       eth0<br />
+  1       ppp0</span><br />
+  <span class="command">1</span>　                <span class="intro">← 这里选择“1”，将域名指向ppp0的IP地址</span><br />
+  <span class="message">Please enter the login/email string for no-ip.com</span>  <span class="command">yourname@yourserver.com</span>　                <span class="intro">← 这里填入申请域名时的邮箱</span><br />
+  <span class="message">Please enter the password for user 'yourname@yourserver.com'</span>  <span class="command">********</span>　                <span class="intro">← 这里填入域名的密码</span></p>
+<span class="message">Only one host [digeast.no-ip.info] is registered to this account.<br />
+  It will be used.<br />
+  Do you wish to run something at successful update?[N] (y/N) </span>　                <span class="intro">← 直接按回车接受默认，不执行任何程序</span><br />
+  <br />
+  <span class="message">New configuration file '/tmp/no-ip2.conf' created.<br />
+  <br />
+  mv /tmp/no-ip2.conf /usr/local/etc/no-ip2.conf</span><br />
+  <br />
+  <span class="message">[root@sample noip-2.1.3]#</span> <span class="command">chmod 700 redhat.noip.sh</span>                                 　 <span class="intro">← 赋予域名工具执行脚本可执行属性</span><br />
+  <br />
+  <span class="message">[root@sample noip-2.1.3]#</span> <span class="command">cp redhat.noip.sh /usr/bin</span>                 　 <span class="intro">← 复制redhat.noip.sh到/usr/bin目录</span></td>
+            </tr>
+          </table>
+          <br />
+          [3] 域名指向IP地址的更新<br />
+          <br />
+　　在重新启动系统的情况下，只要运行“redhat.noip.sh start”即可更新。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample~]#</span> <span class="command">redhat.noip.sh start</span>　 <span class="intro">← 启动no-ip工具</span><br />
+      <br />
+      <span class="message">Starting no-ip client daemon:　　　　　　                             [ </span><span class="after">OK</span><span class="message"> ]</span>　　<span class="intro">← 启动成功</span></td>
+  </tr>
+</table>
+<br />
+　　在重新拨号连接到网络的情况下，只要运行“redhat.noip.sh restart”即可更新。<br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample~]#</span> <span class="command">redhat.noip.sh restart</span>　 <span class="intro">← 启动no-ip工具 </span><br />
+      <br />
+      <span class="message">Starting no-ip client daemon:　　　　　　                             [ </span><span class="after">OK</span><span class="message"> ]<br />
+      Starting no-ip client daemon:　　　　　　                             [ </span><span class="after">OK</span><span class="message"> ]</span>　　<span class="intro">← 重新启动成功</span></td>
+  </tr>
+</table>
+<br />
+[4] 删除安装源代码 <br />
+<br />
+<table width="100%" border="2">
+  <tr>
+    <td bgcolor="#000000"><span class="message">[root@sample~]#</span> <span class="command">cd</span> 　<span class="intro"> ← 返回root用户根目录</span> <br />
+      <br />
+      <span class="message">[root@sample~]#</span> <span class="command">rm -rf noip*</span>　 <span class="intro">← 删除安装后遗留的源代码</span></td>
+  </tr>
+</table>
+<br />
+[5] 测试动态域名配置 <br />
+<br />
+　　在下面文本框中输入域名（例如digeast.no-ip.info），然后点击“Go!”。<br />
+<br />
+<!-- Begin WebSitePulse.com code -->
+<table width=468 height=60 border=0 cellpadding=0 cellspacing=0><form method="post" action="http://www.websitepulse.com//tools.php3" target="tools">
+<tr><td colspan=3><img src="http://www.websitepulse.com//tools-ad/k.gif" width=468 height=1></td></tr>
+<tr><td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1 height=18></td>
+<td><a href="http://www.websitepulse.com" target="_blank"><img src="http://www.websitepulse.com//tools-ad/468-60-1.gif" width=466 height=18 border=0 alt="WebSitePulse.com - free webmaster tools"></a></td>
+<td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1 height=18></td>
+</tr>
+<tr>
+<td width=1><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1 height=40></td>
+<td> <font face="sans-serif" size="2"><b>Hostname:</b> <input type="text" name="host" size="20"> 
+<select name="test">
+<option value="ns">Hostname test</option>
+</select> <input type="submit" name="do" value="Go!"></font></td>
+<td><img src="http://www.websitepulse.com//tools-ad/k.gif" width=1 height=40></td>
+</tr><tr><td colspan=3><img src="http://www.websitepulse.com//tools-ad/k.gif" width=468 height=1></td></tr>
+</form></table>
+<br />
+　　在测试结果页中，出现的对应的IP地址与服务器ppp0的IP地址相一致的话，说明动态域名已经成功绑定到了服务器上。（查看服务器ppp0的IP地址可通过ifconfig命令） <br />
+<p class="before">注：每次更新IP后，生效要等一段时间，大概不会超过2分钟。</p>
+<!-- End WebSitePulse.com code --><br />
+      <table width="100%" border="0">
+            <tr>
+              <td align="right"><a href="#top">&lt;&lt;&lt; 返回顶端</a></td>
+            </tr>
+      </table>
+          <hr>
+
+		<div id="docs-footer">
+			Copyright &copy; Chao Chen , All rights reserved .<br>
+		    <br>
+	</div>
+	</div>
+	</body>
+</html>       
